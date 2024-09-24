@@ -24,6 +24,10 @@ public class Line {
 
     public ArrayList<Effect> effectModList;
 
+    int maxDrawCountTimer;
+    int drawCountTimerLength;
+    int drawCountTimerSize;
+
     boolean isLastLine;
 
     public Line(String label, String colorCode, String effectCode) {
@@ -36,6 +40,10 @@ public class Line {
         this.effectCode = effectCode;
 
         effectModList = null;
+
+        maxDrawCountTimer = -9999;
+        drawCountTimerLength = -9999;
+        drawCountTimerSize = -9999;
 
         isLastLine = true;
 
@@ -55,6 +63,19 @@ public class Line {
     public Line(String label, String colorCode, String effectCode, boolean isLastLine) {
         this(label, colorCode, effectCode);
         this.isLastLine = isLastLine;
+    }
+
+    public Line(String label, String colorCode, String effectCode, boolean isLastLine, boolean scrollLabel) {
+        this(label, colorCode, effectCode, isLastLine);
+
+        if(scrollLabel) {
+            maxDrawCountTimer = 1;
+            drawCountTimerLength = 2;
+
+            drawCountTimerSize = label.length() / 10;
+            if(drawCountTimerSize == 0) {drawCountTimerSize = 1;}
+            drawCountTimerSize += new Random().nextInt(2);
+        }
     }
 
     public void initEffectModLists(String colorCode) {
@@ -116,7 +137,11 @@ public class Line {
     }
 
     public static void draw(Line line, int drawX, int drawY, BitmapFont font, OrthographicCamera camera) {
-        glyphLayout = new GlyphLayout(font, " ");
+        int maxDrawCount = -9999;
+        if(line.maxDrawCountTimer != -9999 && line.drawCountTimerLength != 0) {
+            maxDrawCount = line.maxDrawCountTimer / line.drawCountTimerLength;
+        }
+        int drawCount = 0;
 
         char[] colorCodeArray = line.colorCode.toUpperCase().toCharArray();
         String colorCodeSectionCountString = "";
@@ -126,6 +151,7 @@ public class Line {
         boolean colorCodeCheck = false;
         int effectIndex = 0;
         int effectIndexCodeCount = 0;
+        glyphLayout = new GlyphLayout(font, " ");
 
         if(camera != null) {
             Screen.spriteBatch.setProjectionMatrix(camera.combined);
@@ -135,6 +161,7 @@ public class Line {
         }
         Screen.spriteBatch.begin();
 
+        // Draw Label Color Code Section By Color Code Section //
         for(int i = 0; i < colorCodeArray.length; i++) {
             char c = colorCodeArray[i];
 
@@ -196,8 +223,18 @@ public class Line {
                 }
 
                 // Draw Label Section //
-                font.draw(Screen.spriteBatch, labelSectionStringSubstring, drawX, drawY);
+                if(line.maxDrawCountTimer == -9999
+                || drawCount < maxDrawCount) {
+                    String labelSectionStringSubstringCopy = labelSectionStringSubstring;
+                    if(line.maxDrawCountTimer != -9999
+                    && drawCount + labelSectionStringSubstringCopy.length() > maxDrawCount) {
+                        int copyStringDrawCount = (drawCount + labelSectionStringSubstringCopy.length()) - maxDrawCount;
+                        labelSectionStringSubstringCopy = labelSectionStringSubstringCopy.substring(0, copyStringDrawCount);
+                    }
+                    font.draw(Screen.spriteBatch, labelSectionStringSubstringCopy, drawX, drawY);
+                }
                 drawX += labelSectionStringSubstring.length() * (int) glyphLayout.width;
+                drawCount += labelSectionStringSubstring.length();
                 colorCodeSectionCountString = "";
                 colorCodeSectionCodeString = "";
             }
@@ -208,6 +245,12 @@ public class Line {
         }
 
         Screen.spriteBatch.end();
+
+        // Update Draw Count Timer //
+        if(line.maxDrawCountTimer != -9999
+        && maxDrawCount < line.label.length()) {
+            line.maxDrawCountTimer += line.drawCountTimerSize;
+        }
     }
 
     public static ArrayList<Line> wrap(Line line, int maxLineCharCount) {
@@ -226,13 +269,15 @@ public class Line {
             defaultColorCodeString = "W";
         }
 
+        boolean scrollLabel = line.maxDrawCountTimer != -9999;
+
         for(String word : line.label.split(" ")) {
             if(currentLabel.length() + word.length() + 1 > maxLineCharCount) {
                 String colorCodeDisplayString = currentColorCode;
                 if(!defaultColorCodeString.isEmpty()) {
                     colorCodeDisplayString = defaultColorCodeString;
                 }
-                wrappedLineList.add(new Line(currentLabel, colorCodeDisplayString, currentEffectCode, false));
+                wrappedLineList.add(new Line(currentLabel, colorCodeDisplayString, currentEffectCode, false, scrollLabel));
 
                 currentLabel = word;
                 colorCodeString = trimColorCode(colorCodeString, 1);
@@ -267,7 +312,7 @@ public class Line {
             if(!defaultColorCodeString.isEmpty()) {
                 colorCodeDisplayString = defaultColorCodeString;
             }
-            wrappedLineList.add(new Line(currentLabel, colorCodeDisplayString, currentEffectCode, false));
+            wrappedLineList.add(new Line(currentLabel, colorCodeDisplayString, currentEffectCode, false, scrollLabel));
         }
 
         if(line.isLastLine
