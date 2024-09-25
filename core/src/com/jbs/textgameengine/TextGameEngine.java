@@ -5,7 +5,7 @@ import com.jbs.textgameengine.screen.Screen;
 import com.jbs.textgameengine.screen.gamescreen.*;
 
 public class TextGameEngine extends ApplicationAdapter {
-	Screen screen;
+	public Screen screen;
 
 	@Override
 	public void create () {

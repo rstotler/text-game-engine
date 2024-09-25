@@ -90,14 +90,16 @@ public class Gradient extends Effect {
     }
 
     public void update(int sectionIndex, BitmapFont font) {
-        if(effectCode.equals("GRAA")) {
-            updateA(sectionIndex, font);
-        } else if(effectCode.equals("GRAB")
-        || effectCode.equals("GRAC")) {
-            updateBCFontColor(sectionIndex, font);
-            updateBC(sectionIndex, font);
-        }  else if(effectCode.equals("GRAD")) {
-            updateD(sectionIndex, font);
+        if(sectionIndex < colorPercentList.size()) {
+            if(effectCode.equals("GRAA")) {
+                updateA(sectionIndex, font);
+            } else if(effectCode.equals("GRAB")
+            || effectCode.equals("GRAC")) {
+                updateBCFontColor(sectionIndex, font);
+                updateBC(sectionIndex, font);
+            }  else if(effectCode.equals("GRAD")) {
+                updateD(sectionIndex, font);
+            }
         }
     }
 

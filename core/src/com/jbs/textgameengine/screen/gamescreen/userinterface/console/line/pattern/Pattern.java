@@ -6,7 +6,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Pattern {
-    public static ArrayList<String> patternList = new ArrayList<>(Arrays.asList("ALTA", "ALTB", "FADI", "FADO", "GRAD", "SHIA", "SHIB"));
+    // Alternate A: Alternates between two colors.
+    // Alternate B: Alternates between three colors.
+    //     Fade In: Fades label section in from black.
+    //    Fade Out: Fades label section out to black.
+    //    Gradient: Fades label section in and out. (Dark/Light/Dark)
+    //   Shimmer A: Alternates between four color shades from dark to light.
+    //   Shimmer B: Alternates between four color shades from light to dark.
+    //    Contrast: First letter is highlighted.
+
+    public static ArrayList<String> patternList = new ArrayList<>(Arrays.asList("ALTA", "ALTB", "FADI", "FADO", "GRAD", "SHIA", "SHIB", "CONT"));
 
     public static String formatColorCode(String label, String patternCode) {
         String newColorCode = "";
@@ -201,6 +210,14 @@ public class Pattern {
                         subPatternWidth = firstStringSectionWidth + primaryColorString.length();
                     }
                     colorCodeString = colorCodeString.substring(0, colorCodeString.length() - subPatternWidth);
+                }
+            }
+
+            else if(patternCode.substring(0, 4).equals("CONT")) {
+                colorCodeString = "1" + primaryColorString;
+
+                for(int i = 0; i < length - 1; i++) {
+                    colorCodeString += "1DD" + primaryColorString;
                 }
             }
         }

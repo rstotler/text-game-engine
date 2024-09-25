@@ -11,6 +11,7 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.UserInterfaceEleme
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import com.jbs.textgameengine.screen.utility.Rect;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InputBar extends UserInterfaceElement {
@@ -24,6 +25,10 @@ public class InputBar extends UserInterfaceElement {
     public String userInput;
     public int updateTimer;
     public int backspaceTimer;
+
+    public ArrayList<String> inputList;
+    public int inputListLimit;
+    public int currentInputIndex;
 
     public InputBar() {
         super();
@@ -56,6 +61,10 @@ public class InputBar extends UserInterfaceElement {
         userInput = "";
         updateTimer = 0;
         backspaceTimer = 0;
+
+        inputList = new ArrayList<>();
+        inputListLimit = 20;
+        currentInputIndex = -1;
 
         int promptX = 0;
         int promptY = 0;
@@ -108,7 +117,7 @@ public class InputBar extends UserInterfaceElement {
         Line.draw(inputDisplayLine, padding, paddingVertical, font, Screen.camera);
     }
 
-    public void enterUserInput(String key) {
+    public void concatinateUserInput(String key) {
         if(key.equals("Space")) {
             key = " ";
         }
@@ -125,5 +134,31 @@ public class InputBar extends UserInterfaceElement {
         }
 
         userInput += key;
+    }
+
+    public void enterUserInput() {
+        inputList.add(0, userInput);
+        if(inputList.size() > inputListLimit) {
+            inputList.remove(inputList.size() - 1);
+        }
+
+        userInput = "";
+        currentInputIndex = -1;
+    }
+
+    public void scrollUserInput(String key) {
+        if(key.equals("Up") && currentInputIndex < inputList.size() - 1) {
+            currentInputIndex += 1;
+        }
+        else if(key.equals("Down") && currentInputIndex > -1) {
+            currentInputIndex -= 1;
+        }
+
+        if(currentInputIndex > -1) {
+            userInput = inputList.get(currentInputIndex);
+        }
+        else {
+            userInput = "";
+        }
     }
 }
