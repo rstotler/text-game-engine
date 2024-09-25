@@ -5,6 +5,7 @@ import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.entity.spaceship.Spaceship;
 import com.jbs.textgameengine.gamedata.world.room.door.Door;
+import com.jbs.textgameengine.gamedata.world.room.hiddenexit.HiddenExit;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
@@ -17,6 +18,7 @@ public class Room {
 
     public HashMap<String, Room> exitMap;
     public HashMap<String, Door> doorMap;
+    public HashMap<String, HiddenExit> hiddenExitMap;
 
     public ArrayList<Spaceship> spaceshipList;
     public ArrayList<Mob> mobList;
@@ -29,9 +31,11 @@ public class Room {
 
         exitMap = new HashMap<>();
         doorMap = new HashMap<>();
+        hiddenExitMap = new HashMap<>();
         for(String direction : Arrays.asList("North", "East", "South", "West", "Northeast", "Southeast", "Southwest", "Northwest")) {
             exitMap.put(direction, null);
             doorMap.put(direction, null);
+            hiddenExitMap.put(direction, null);
         }
 
         spaceshipList = new ArrayList<>();

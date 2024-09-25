@@ -95,7 +95,7 @@ public class Galaxy {
         Line cotuRoom05Name = new Line("Bridge To The Spaceport", "7CONT3CONT4CONT9CONT", "", true, true);
         Location cotuRoom05Location = new Location(cottonTailName.label, lagoMorphaName.label, 1, cotuAreaName.label, 5);
         Room cotuRoom05 = new Room(cotuRoom05Name, null, cotuRoom05Location);
-        cotuRoom05.createExit("North", cotuRoom04);
+        cotuRoom05.createExit("North", cotuRoom04, "Automatic", 777);
         areaCOTU.roomList.add(cotuRoom05);
 
         // Room 06 - Launch Pad //

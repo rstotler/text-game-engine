@@ -110,7 +110,8 @@ public class Look extends Action {
         }
 
         else if(actionType.equals("Look")) {
-            if(parentEntity.room != null) {
+            if(parentEntity.isPlayer
+            && parentEntity.room != null) {
                 parentEntity.room.display();
             }
         }

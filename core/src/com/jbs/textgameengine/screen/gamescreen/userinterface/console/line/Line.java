@@ -130,7 +130,7 @@ public class Line {
         // Returns The Height Of The Space Between Lines
 
         if(isLastLine) {
-            return 20;
+            return 30;
         }
 
         return 10;

@@ -8,6 +8,12 @@ public class Door {
     public Door(String type, int keyNum) {
         this.type = type;
         this.keyNum = keyNum;
-        status = "Closed";
+
+        if(keyNum != -9999) {
+            status = "Locked";
+        }
+        else {
+            status = "Closed";
+        }
     }
 }
