@@ -1,5 +1,7 @@
 package com.jbs.textgameengine.gamedata.world;
 
+import com.jbs.textgameengine.gamedata.entity.spaceship.Spaceship;
+
 public class Location {
     public String galaxy;
     public String solarSystem;
@@ -7,12 +9,16 @@ public class Location {
     public String area;
     public int roomIndex;
 
+    public Spaceship spaceship;
+
     public Location(String galaxy, String solarSystem, int planetoidIndex, String area, int roomIndex) {
         this.galaxy = galaxy;
         this.solarSystem = solarSystem;
         this.planetoidIndex = planetoidIndex;
         this.area = area;
         this.roomIndex = roomIndex;
+
+        spaceship = null;
     }
 
     public Location(String galaxy, String solarSystem, int planetoidIndex, String area) {

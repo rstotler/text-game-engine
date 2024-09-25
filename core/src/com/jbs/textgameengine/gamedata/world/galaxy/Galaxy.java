@@ -6,6 +6,7 @@ import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
 import com.jbs.textgameengine.gamedata.world.planetoid.Star;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.gamedata.world.solarsystem.SolarSystem;
+import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class Galaxy {
         debugGalaxy.put(cottonTailName.label, galaxyCottonTail);
 
         // Solar System - Lago Morpha //
-        Line lagoMorphaName = new Line("Lago Morpha System", "5CONT7CONT6CONT", "", true, true);
+        Line lagoMorphaName = new Line("Lago Morpha", "5CONT6CONT", "", true, true);
         Location lagoMorphaLocation = new Location(cottonTailName.label, lagoMorphaName.label);
         SolarSystem systemLagoMorpha = new SolarSystem(lagoMorphaName, lagoMorphaLocation);
         galaxyCottonTail.solarSystemMap.put(lagoMorphaName.label, systemLagoMorpha);
@@ -59,9 +60,22 @@ public class Galaxy {
         // Room 00 - Center Of The Universe //
         Line cotuRoom00Name = new Line("Center Of The Universe", "7CONT3CONT4CONT8CONT", "", true, true);
         Location cotuRoom00Location = new Location(cottonTailName.label, lagoMorphaName.label, 1, cotuAreaName.label, 0);
-        Room cotuRoom00 = new Room(cotuRoom00Name, cotuRoom00Location);
+        Room cotuRoom00 = new Room(cotuRoom00Name, null, cotuRoom00Location);
         areaCOTU.roomList.add(cotuRoom00);
 
         return debugGalaxy;
+    }
+
+    public static Room getRoom(String targetGalaxy, String targetSolarSystem, int planetoidIndex, String targetArea, int roomIndex) {
+        if(GameScreen.galaxyList.containsKey(targetGalaxy)
+        && GameScreen.galaxyList.get(targetGalaxy).solarSystemMap.containsKey(targetSolarSystem)
+        && planetoidIndex < GameScreen.galaxyList.get(targetGalaxy).solarSystemMap.get(targetSolarSystem).planetoidList.size()
+        && GameScreen.galaxyList.get(targetGalaxy).solarSystemMap.get(targetSolarSystem).planetoidList.get(planetoidIndex).isPlanet
+        && ((Planet) GameScreen.galaxyList.get(targetGalaxy).solarSystemMap.get(targetSolarSystem).planetoidList.get(planetoidIndex)).areaMap.containsKey(targetArea)
+        && roomIndex < ((Planet) GameScreen.galaxyList.get(targetGalaxy).solarSystemMap.get(targetSolarSystem).planetoidList.get(planetoidIndex)).areaMap.get(targetArea).roomList.size()) {
+            return ((Planet) GameScreen.galaxyList.get(targetGalaxy).solarSystemMap.get(targetSolarSystem).planetoidList.get(planetoidIndex)).areaMap.get(targetArea).roomList.get(roomIndex);
+        }
+
+        return null;
     }
 }

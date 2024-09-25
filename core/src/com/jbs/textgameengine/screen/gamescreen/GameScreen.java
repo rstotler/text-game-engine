@@ -9,8 +9,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.jbs.textgameengine.Settings;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.entity.player.Player;
-import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.galaxy.Galaxy;
+import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.Screen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.UserInterface;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
@@ -28,7 +28,9 @@ public class GameScreen extends Screen {
 
         userInterface = new UserInterface();
         galaxyList = Galaxy.loadDebugGalaxy();
-        player = new Player(new Location("Cotton Tail Nebula", "Lago Morpha System", 1, "Center Of The Universe", 0));
+
+        Room startRoom = Galaxy.getRoom("Cotton Tail Nebula", "Lago Morpha", 1, "Center Of The Universe", 0);
+        player = new Player(startRoom);
 
         initInputProcessor();
     }

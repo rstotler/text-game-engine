@@ -6,9 +6,7 @@ import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import com.jbs.textgameengine.screen.utility.Utility;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.jbs.textgameengine.screen.gamescreen.GameScreen.userInterface;
@@ -126,9 +124,8 @@ public class Look extends Action {
 
             // Look //
             else if(actionType.equals("Look")) {
-                Room targetRoom = parentEntity.getRoom();
-                if(targetRoom != null) {
-                    targetRoom.display();
+                if(parentEntity.room != null) {
+                    parentEntity.room.display();
                 }
             }
 
