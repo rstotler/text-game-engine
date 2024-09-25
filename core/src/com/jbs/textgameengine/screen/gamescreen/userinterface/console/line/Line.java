@@ -136,6 +136,21 @@ public class Line {
         return 10;
     }
 
+    public static String getUnderlineString(String label) {
+        float endPercent = .20f;
+        int dashCount = (int) (label.length() * endPercent);
+        String underlineString = "";
+        for(int i = 0; i < label.length(); i++) {
+            if(i < dashCount || i >= label.length() - dashCount) {
+                underlineString += "-";
+            } else {
+                underlineString += "=";
+            }
+        }
+
+        return underlineString;
+    }
+
     public static void draw(Line line, int drawX, int drawY, BitmapFont font, OrthographicCamera camera) {
         int maxDrawCount = -9999;
         if(line.maxDrawCountTimer != -9999 && line.drawCountTimerLength != 0) {

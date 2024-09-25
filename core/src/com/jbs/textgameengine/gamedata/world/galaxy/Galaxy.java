@@ -63,6 +63,48 @@ public class Galaxy {
         Room cotuRoom00 = new Room(cotuRoom00Name, null, cotuRoom00Location);
         areaCOTU.roomList.add(cotuRoom00);
 
+        // Room 01 - Standing On A Crystal Bridge //
+        Line cotuRoom01Name = new Line("Standing On A Crystal Bridge", "9CONT3CONT2CONT8SHIAC6CONT", "", true, true);
+        Location cotuRoom01Location = new Location(cottonTailName.label, lagoMorphaName.label, 1, cotuAreaName.label, 1);
+        Room cotuRoom01 = new Room(cotuRoom01Name, null, cotuRoom01Location);
+        cotuRoom01.createExit("South", cotuRoom00);
+        areaCOTU.roomList.add(cotuRoom01);
+
+        // Room 02 - A Peaceful Garden //
+        Line cotuRoom02Name = new Line("A Peaceful Garden", "2CONT9CONT6SHIAG", "", true, true);
+        Location cotuRoom02Location = new Location(cottonTailName.label, lagoMorphaName.label, 1, cotuAreaName.label, 2);
+        Room cotuRoom02 = new Room(cotuRoom02Name, null, cotuRoom02Location);
+        cotuRoom02.createExit("South", cotuRoom01);
+        areaCOTU.roomList.add(cotuRoom02);
+
+        // Room 03 - In A Wooden Cabin //
+        Line cotuRoom03Name = new Line("In A Wooden Cabin", "3CONT2CONT7SHIADO5CONT", "", true, true);
+        Location cotuRoom03Location = new Location(cottonTailName.label, lagoMorphaName.label, 1, cotuAreaName.label, 3);
+        Room cotuRoom03 = new Room(cotuRoom03Name, null, cotuRoom03Location);
+        cotuRoom03.createExit("East", cotuRoom02, "Manual", 1234);
+        areaCOTU.roomList.add(cotuRoom03);
+
+        // Room 04 - Spaceport Entrance //
+        Line cotuRoom04Name = new Line("Spaceport Entrance", "10CONT8CONT", "", true, true);
+        Location cotuRoom04Location = new Location(cottonTailName.label, lagoMorphaName.label, 1, cotuAreaName.label, 4);
+        Room cotuRoom04 = new Room(cotuRoom04Name, null, cotuRoom04Location);
+        cotuRoom04.createExit("North", cotuRoom00, "Automatic");
+        areaCOTU.roomList.add(cotuRoom04);
+
+        // Room 05 - Bridge To The Spaceport //
+        Line cotuRoom05Name = new Line("Bridge To The Spaceport", "7CONT3CONT4CONT9CONT", "", true, true);
+        Location cotuRoom05Location = new Location(cottonTailName.label, lagoMorphaName.label, 1, cotuAreaName.label, 5);
+        Room cotuRoom05 = new Room(cotuRoom05Name, null, cotuRoom05Location);
+        cotuRoom05.createExit("North", cotuRoom04);
+        areaCOTU.roomList.add(cotuRoom05);
+
+        // Room 06 - Launch Pad //
+        Line cotuRoom06Name = new Line("Launch Pad", "7CONT3CONT", "", true, true);
+        Location cotuRoom06Location = new Location(cottonTailName.label, lagoMorphaName.label, 1, cotuAreaName.label, 6);
+        Room cotuRoom06 = new Room(cotuRoom06Name, null, cotuRoom06Location);
+        cotuRoom06.createExit("North", cotuRoom05);
+        areaCOTU.roomList.add(cotuRoom06);
+
         return debugGalaxy;
     }
 

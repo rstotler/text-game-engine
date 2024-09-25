@@ -2,7 +2,7 @@ package com.jbs.textgameengine.gamedata.entity.mob.action.general;
 
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
-import com.jbs.textgameengine.gamedata.world.room.Room;
+import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import com.jbs.textgameengine.screen.utility.Utility;
 
@@ -23,21 +23,21 @@ public class Look extends Action {
             Look lookAction = new Look();
 
             // Look Direction //
-            if(inputList.size() == 2 && Action.directionList.contains(inputList.get(1))) {
-                lookAction.targetDirection = Action.getDirectionFromSubstring(inputList.get(1));
+            if(inputList.size() == 2 && Location.directionList.contains(inputList.get(1))) {
+                lookAction.targetDirection = Location.getDirectionFromSubstring(inputList.get(1));
                 lookAction.actionType = "Look Direction";
             }
 
             // Look Direction # //
-            else if(inputList.size() == 3 && Action.directionList.contains(inputList.get(1)) && Utility.isInteger(inputList.get(2))) {
-                lookAction.targetDirection = Action.getDirectionFromSubstring(inputList.get(1));
+            else if(inputList.size() == 3 && Location.directionList.contains(inputList.get(1)) && Utility.isInteger(inputList.get(2))) {
+                lookAction.targetDirection = Location.getDirectionFromSubstring(inputList.get(1));
                 lookAction.directionCount = Integer.valueOf(inputList.get(2));
                 lookAction.actionType = "Look Direction #";
             }
 
             // Look Direction # Entity //
-            else if(inputList.size() >= 4 && Action.directionList.contains(inputList.get(1)) && Utility.isInteger(inputList.get(2))) {
-                lookAction.targetDirection = Action.getDirectionFromSubstring(inputList.get(1));
+            else if(inputList.size() >= 4 && Location.directionList.contains(inputList.get(1)) && Utility.isInteger(inputList.get(2))) {
+                lookAction.targetDirection = Location.getDirectionFromSubstring(inputList.get(1));
                 lookAction.directionCount = Integer.valueOf(inputList.get(2));
                 List<String> targetEntityStringList = inputList.subList(3, inputList.size());
                 lookAction.targetEntityString = targetEntityStringList.stream().collect(Collectors.joining(" "));
@@ -45,8 +45,8 @@ public class Look extends Action {
             }
 
             // Look Direction Entity //
-            else if(inputList.size() >= 3 && Action.directionList.contains(inputList.get(1))) {
-                lookAction.targetDirection = Action.getDirectionFromSubstring(inputList.get(1));
+            else if(inputList.size() >= 3 && Location.directionList.contains(inputList.get(1))) {
+                lookAction.targetDirection = Location.getDirectionFromSubstring(inputList.get(1));
                 List<String> targetEntityStringList = inputList.subList(2, inputList.size());
                 lookAction.targetEntityString = targetEntityStringList.stream().collect(Collectors.joining(" "));
                 lookAction.actionType = "Look Direction Entity";
@@ -81,6 +81,7 @@ public class Look extends Action {
 
             else {
                 userInterface.console.writeToConsole(new Line("Examine what?", "8CONT4CONT1DY", "", true, true));
+                return null;
             }
 
             return lookAction;
@@ -90,49 +91,31 @@ public class Look extends Action {
     }
 
     public void initiate(Mob parentEntity) {
-        if(actionType.equals("Look")) {
+        if(actionType.equals("Look Direction")) {
+        }
 
-            // Look Direction //
-            if(actionType.equals("Look Direction")) {
+        else if(actionType.equals("Look Direction #")) {
+        }
 
+        else if(actionType.equals("Look Direction # Entity")) {
+        }
+
+        else if(actionType.equals("Look Direction Entity")) {
+        }
+
+        else if(actionType.equals("Look Entity In Container")) {
+        }
+
+        else if(actionType.equals("Look Entity")) {
+        }
+
+        else if(actionType.equals("Look")) {
+            if(parentEntity.room != null) {
+                parentEntity.room.display();
             }
+        }
 
-            // Look Direction # //
-            else if(actionType.equals("Look Direction #")) {
-
-            }
-
-            // Look Direction # Entity //
-            else if(actionType.equals("Look Direction # Entity")) {
-
-            }
-
-            // Look Direction Entity //
-            else if(actionType.equals("Look Direction Entity")) {
-
-            }
-
-            // Look Entity In Container //
-            else if(actionType.equals("Look Entity In Container")) {
-
-            }
-
-            // Look Entity //
-            else if(actionType.equals("Look Entity")) {
-
-            }
-
-            // Look //
-            else if(actionType.equals("Look")) {
-                if(parentEntity.room != null) {
-                    parentEntity.room.display();
-                }
-            }
-
-            // Look Target //
-            else if(actionType.equals("Look Target")) {
-
-            }
+        else if(actionType.equals("Look Target")) {
         }
     }
 }
