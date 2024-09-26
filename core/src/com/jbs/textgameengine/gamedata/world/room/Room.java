@@ -95,7 +95,7 @@ public class Room {
                     }
                     else if(!exitMap.get(direction).isLit()) {
                         exitName = "( Darkness )";
-                        exitNameColorCode = "2DR9FADO1DR";
+                        exitNameColorCode = "2DR1DW1DW1DDW1DDW1DDDW1DDDW1DDDGR1DDDGR2DR";
                     }
                     else {
                         exitName = exitMap.get(direction).name.label;
@@ -207,7 +207,7 @@ public class Room {
     public void displayDark() {
 
         // Name & Underline //
-        Line nameLine = new Line("Darkness..", "1DW1DW1DDW1DDW1DDDW1DDDW1DDGR1DDGR1DDDGR1DDDGR", "", false, true);
+        Line nameLine = new Line("Darkness..", "1DW1DW1DDW1DDW1DDDW1DDDW1DDDGR1DDDGR1DDDGR1DDDGR", "", false, true);
         GameScreen.userInterface.console.writeToConsole(nameLine);
         Line underlineLine = new Line(Line.getUnderlineString("Darkness.."), "10ALTADY", "", false, true);
         GameScreen.userInterface.console.writeToConsole(underlineLine);
@@ -227,7 +227,7 @@ public class Room {
                 spaceColorCode = "1W";
             }
             String exitName = "( Darkness )";
-            String exitNameColorCode = "2DR1DW1DW1DDW1DDW1DDDW1DDDW1DDGR1DDGR2DR";
+            String exitNameColorCode = "2DR1DW1DW1DDW1DDW1DDDW1DDDW1DDDGR1DDDGR2DR";
             if(exitMap.containsKey(direction)
             && exitMap.get(direction) != null
             && exitMap.get(direction).isLit()) {
@@ -323,6 +323,9 @@ public class Room {
     public void createEntity(String entityType, int id) {
         if(entityType.equals("Mob")) {
             mobList.add(Mob.load(id, this));
+        }
+        else if(entityType.equals("Spaceship")) {
+            spaceshipList.add(Spaceship.load(id, this));
         }
     }
 
