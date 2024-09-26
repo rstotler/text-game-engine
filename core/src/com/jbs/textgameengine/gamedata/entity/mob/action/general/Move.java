@@ -54,7 +54,7 @@ public class Move extends Action {
         }
 
         else if(actionType.equals("Direction")) {
-            Room parentRoom = parentEntity.room;
+            Room parentRoom = parentEntity.location.room;
 
             // Message - You can't go that way. //
             if((parentRoom.exitMap.containsKey(targetDirection)
@@ -81,7 +81,7 @@ public class Move extends Action {
             // Move //
             else {
                 Room newRoom = parentRoom.exitMap.get(targetDirection);
-                parentEntity.room = newRoom;
+                parentEntity.location.room = newRoom;
 
                 boolean closedCheck = false;
                 boolean lockedCheck = false;
@@ -115,7 +115,10 @@ public class Move extends Action {
                         GameScreen.userInterface.console.writeToConsole(new Line("The door opens and closes as you pass through.", "4CONT5CONT6CONT4CONT7CONT3CONT4CONT5CONT7CONT1DY", "", true, true));
                     }
 
-                    parentEntity.room.display();
+                    if(parentEntity.location != null
+                    && parentEntity.location.room != null) {
+                        parentEntity.location.room.display();
+                    }
                 }
             }
         }

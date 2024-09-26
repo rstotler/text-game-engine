@@ -1,6 +1,11 @@
 package com.jbs.textgameengine.gamedata.world;
 
 import com.jbs.textgameengine.gamedata.entity.spaceship.Spaceship;
+import com.jbs.textgameengine.gamedata.world.area.Area;
+import com.jbs.textgameengine.gamedata.world.galaxy.Galaxy;
+import com.jbs.textgameengine.gamedata.world.planetoid.Planetoid;
+import com.jbs.textgameengine.gamedata.world.room.Room;
+import com.jbs.textgameengine.gamedata.world.solarsystem.SolarSystem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,38 +13,40 @@ import java.util.Arrays;
 public class Location {
     public static ArrayList<String> directionList = new ArrayList<>(Arrays.asList("north", "nort", "nor", "no", "n", "east", "eas", "ea", "e", "south", "sout", "sou", "so", "s", "west", "wes", "we", "w", "northeast", "northeas", "northea", "northe", "ne", "southeast", "southeas", "southea", "southe", "se", "southwest", "southwes", "southwe", "southw", "sw", "northwest", "northwes", "northwe", "northw", "nw"));
 
-    public String galaxy;
-    public String solarSystem;
-    public int planetoidIndex;
-    public String area;
-    public int roomIndex;
-
+    public Galaxy galaxy;
+    public SolarSystem solarSystem;
+    public Planetoid planetoid;
+    public Area area;
+    public Room room;
     public Spaceship spaceship;
 
-    public Location(String galaxy, String solarSystem, int planetoidIndex, String area, int roomIndex) {
+    public Location(Galaxy galaxy, SolarSystem solarSystem, Planetoid planetoid, Area area, Room room, Spaceship spaceship) {
         this.galaxy = galaxy;
         this.solarSystem = solarSystem;
-        this.planetoidIndex = planetoidIndex;
+        this.planetoid = planetoid;
         this.area = area;
-        this.roomIndex = roomIndex;
-
-        spaceship = null;
+        this.room = room;
+        this.spaceship = spaceship;
     }
 
-    public Location(String galaxy, String solarSystem, int planetoidIndex, String area) {
-        this(galaxy, solarSystem, planetoidIndex, area, -1);
+    public Location(Galaxy galaxy, SolarSystem solarSystem, Planetoid planetoid, Area area, Room room) {
+        this(galaxy, solarSystem, planetoid, area, room, null);
     }
 
-    public Location(String galaxy, String solarSystem, int planetoidIndex) {
-        this(galaxy, solarSystem, planetoidIndex, "", -1);
+    public Location(Galaxy galaxy, SolarSystem solarSystem, Planetoid planetoid, Area area) {
+        this(galaxy, solarSystem, planetoid, area, null);
     }
 
-    public Location(String galaxy, String solarSystem) {
-        this(galaxy, solarSystem, -1, "", -1);
+    public Location(Galaxy galaxy, SolarSystem solarSystem, Planetoid planetoid) {
+        this(galaxy, solarSystem, planetoid, null, null);
     }
 
-    public Location(String galaxy) {
-        this(galaxy, "", -1, "", -1);
+    public Location(Galaxy galaxy, SolarSystem solarSystem) {
+        this(galaxy, solarSystem, null, null, null);
+    }
+
+    public Location(Galaxy galaxy) {
+        this(galaxy, null, null, null, null);
     }
 
     public static String getDirectionFromSubstring(String directionSubstring) {

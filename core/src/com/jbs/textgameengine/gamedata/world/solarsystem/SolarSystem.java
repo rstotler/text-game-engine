@@ -15,7 +15,14 @@ public class SolarSystem {
     public SolarSystem(Line name, Location location) {
         this.name = name;
         this.location = location;
+        this.location.solarSystem = this;
 
         planetoidList = new ArrayList<>();
+    }
+
+    public void update() {
+        for(Planetoid planetoid : planetoidList) {
+            planetoid.update();
+        }
     }
 }

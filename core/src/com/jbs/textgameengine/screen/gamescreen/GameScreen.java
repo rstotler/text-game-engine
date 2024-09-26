@@ -10,8 +10,8 @@ import com.jbs.textgameengine.Settings;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.Move;
 import com.jbs.textgameengine.gamedata.entity.player.Player;
+import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.galaxy.Galaxy;
-import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.Screen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.UserInterface;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
@@ -24,14 +24,20 @@ public class GameScreen extends Screen {
     public static HashMap<String, Galaxy> galaxyList;
     public static Player player;
 
+    public int frameTimer;
+    public boolean fastMode;
+
     public GameScreen() {
         super();
 
         userInterface = new UserInterface();
         galaxyList = Galaxy.loadDebugGalaxy();
 
-        Room startRoom = Galaxy.getRoom("Cotton Tail Nebula", "Lago Morpha", 1, "Center Of The Universe", 0);
-        player = new Player(startRoom);
+        Location startLocation = Galaxy.getRoom("Cotton Tail Nebula", "Lago Morpha", 1, "Center Of The Universe", 0).location;
+        player = new Player(startLocation);
+
+        frameTimer = 0;
+        fastMode = false;
 
         initInputProcessor();
     }
@@ -58,6 +64,13 @@ public class GameScreen extends Screen {
                         Graphics.DisplayMode currentMode = Gdx.graphics.getDisplayMode();
                         Gdx.graphics.setFullscreenMode(currentMode);
                     }
+                }
+
+                // Toggle Fast Mode //
+                else if((Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
+                && key.equals("F")) {
+                    System.out.println("??");
+                    fastMode = !fastMode;
                 }
 
                 // InputBar Input //
@@ -110,6 +123,17 @@ public class GameScreen extends Screen {
 
     public String update() {
         userInterface.inputBar.update();
+
+        if(frameTimer == 0
+        && player.location != null
+        && player.location.solarSystem != null) {
+            player.location.solarSystem.update();
+        }
+
+        if(!fastMode) {frameTimer += 1;}
+        if(fastMode || frameTimer >= 60) {
+            frameTimer = 0;
+        }
 
         return "";
     }

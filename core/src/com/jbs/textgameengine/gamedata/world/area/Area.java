@@ -15,6 +15,7 @@ public class Area {
     public Area(Line name, Location location) {
         this.name = name;
         this.location = location;
+        this.location.area = this;
 
         roomList = new ArrayList<>();
     }

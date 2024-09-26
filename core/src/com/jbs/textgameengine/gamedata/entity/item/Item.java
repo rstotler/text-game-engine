@@ -1,7 +1,7 @@
 package com.jbs.textgameengine.gamedata.entity.item;
 
 import com.jbs.textgameengine.gamedata.entity.Entity;
-import com.jbs.textgameengine.gamedata.world.room.Room;
+import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
 import java.util.ArrayList;
@@ -13,8 +13,8 @@ public class Item extends Entity {
     public ArrayList<Integer> keyList;
     public ArrayList<Item> containerItemList;
 
-    public Item(Room startRoom) {
-        super(startRoom);
+    public Item(Location startLocation) {
+        super(startLocation);
 
         pocket = "General";
 
@@ -22,8 +22,8 @@ public class Item extends Entity {
         containerItemList = null;
     }
 
-    public static Item load(int id, Room startRoom) {
-        Item item = new Item(startRoom);
+    public static Item load(int id, Location startLocation) {
+        Item item = new Item(startLocation);
 
         // 1 - A Silver Key //
         if(id == 1) {

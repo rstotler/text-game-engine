@@ -27,7 +27,8 @@ public class Room {
     public Room(Line name, Line description, Location location) {
         this.name = name;
         this.description = description;
-        this.location = location;
+        this.location = new Location(location.galaxy, location.solarSystem, location.planetoid, location.area, null, location.spaceship);
+        this.location.room = this;
 
         exitMap = new HashMap<>();
         doorMap = new HashMap<>();
@@ -322,10 +323,13 @@ public class Room {
 
     public void createEntity(String entityType, int id) {
         if(entityType.equals("Mob")) {
-            mobList.add(Mob.load(id, this));
+            mobList.add(Mob.load(id, this.location));
+        }
+        else if(entityType.equals("Item")) {
+            itemList.add(Item.load(id, this.location));
         }
         else if(entityType.equals("Spaceship")) {
-            spaceshipList.add(Spaceship.load(id, this));
+            spaceshipList.add(Spaceship.load(id, this.location));
         }
     }
 

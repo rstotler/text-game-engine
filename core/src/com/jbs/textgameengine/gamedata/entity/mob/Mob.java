@@ -3,7 +3,7 @@ package com.jbs.textgameengine.gamedata.entity.mob;
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
-import com.jbs.textgameengine.gamedata.world.room.Room;
+import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
 import java.util.*;
@@ -17,8 +17,8 @@ public class Mob extends Entity {
     public ArrayList<Mob> targetList;
     public Action currentAction;
 
-    public Mob(Room startRoom) {
-        super(startRoom);
+    public Mob(Location startLocation) {
+        super(startLocation);
 
         isPlayer = false;
 
@@ -29,8 +29,8 @@ public class Mob extends Entity {
         currentAction = null;
     }
 
-    public static Mob load(int id, Room startRoom) {
-        Mob mob = new Mob(startRoom);
+    public static Mob load(int id, Location startLocation) {
+        Mob mob = new Mob(startLocation);
 
         // 1 - Greeter Droid //
         if(id == 1) {
