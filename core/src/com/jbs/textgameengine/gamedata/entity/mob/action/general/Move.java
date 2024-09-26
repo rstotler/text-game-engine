@@ -15,6 +15,8 @@ import static com.jbs.textgameengine.screen.gamescreen.GameScreen.userInterface;
 public class Move extends Action {
     public Move() {
         super();
+
+        interruptAction = true;
     }
 
     public Action getActionFromInput(String input, Mob parentEntity) {
@@ -54,15 +56,19 @@ public class Move extends Action {
         else if(actionType.equals("Direction")) {
             Room parentRoom = parentEntity.room;
 
-            // No Such Exit Exists //
-            if(parentRoom.exitMap.containsKey(targetDirection)
-            && parentRoom.exitMap.get(targetDirection) == null) {
+            // Message - You can't go that way. //
+            if((parentRoom.exitMap.containsKey(targetDirection)
+            && parentRoom.exitMap.get(targetDirection) == null)
+
+            || (parentRoom.hiddenExitMap.containsKey(targetDirection)
+            && parentRoom.hiddenExitMap.get(targetDirection) != null
+            && !parentRoom.hiddenExitMap.get(targetDirection).isOpen)) {
                 if(parentEntity.isPlayer) {
                     GameScreen.userInterface.console.writeToConsole(new Line("You can't go that way.", "4CONT3CONT1DY2DDW3CONT5CONT3CONT1DY", "", true, true));
                 }
             }
 
-            // Door Is Locked //
+            // Message - It's locked. //
             else if(parentRoom.doorMap.containsKey(targetDirection)
             && parentRoom.doorMap.get(targetDirection) != null
             && parentRoom.doorMap.get(targetDirection).status.equals("Locked")
@@ -81,6 +87,7 @@ public class Move extends Action {
                 boolean lockedCheck = false;
                 boolean automaticCheck = false;
 
+                // Door Type Checks //
                 if(parentRoom.doorMap.containsKey(targetDirection)
                 && parentRoom.doorMap.get(targetDirection) != null
                 && !parentRoom.doorMap.get(targetDirection).status.equals("Open")) {
@@ -98,6 +105,7 @@ public class Move extends Action {
                     }
                 }
 
+                // Display New Room //
                 if(parentEntity.isPlayer) {
                     if(closedCheck) {
                         GameScreen.userInterface.console.writeToConsole(new Line("You open the door.", "4CONT5CONT4CONT4CONT1DY", "", true, true));

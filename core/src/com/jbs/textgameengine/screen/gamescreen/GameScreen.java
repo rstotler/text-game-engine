@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.jbs.textgameengine.Settings;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
+import com.jbs.textgameengine.gamedata.entity.mob.action.general.Move;
 import com.jbs.textgameengine.gamedata.entity.player.Player;
 import com.jbs.textgameengine.gamedata.world.galaxy.Galaxy;
 import com.jbs.textgameengine.gamedata.world.room.Room;
@@ -75,6 +76,26 @@ public class GameScreen extends Screen {
                         processUserInput(userInterface.inputBar.userInput);
                         userInterface.inputBar.enterUserInput();
                     }
+                }
+
+                // Alt. Movement (Control + Arrow Keys) //
+                else if((Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
+                && (key.equals("Up") || key.equals("Down") || key.equals("Left") || key.equals("Right"))) {
+                    String targetDirection = "";
+                    if(key.equals("Up")) {targetDirection = "North";}
+                    else if(key.equals("Down")) {targetDirection = "South";}
+                    else if(key.equals("Left")) {targetDirection = "West";}
+                    else if(key.equals("Right")) {targetDirection = "East";}
+
+                    Move moveAction = new Move();
+                    if(player.currentAction != null && moveAction.interruptAction) {
+                        userInterface.console.writeToConsole(new Line("You stop what you are doing.", "4CONT5CONT5CONT4CONT4CONT5CONT1DY", "", true, true));
+                        player.currentAction = null;
+                    }
+
+                    moveAction.actionType = "Direction";
+                    moveAction.targetDirection = targetDirection;
+                    moveAction.initiate(player);
                 }
 
                 // Scroll User Input //

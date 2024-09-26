@@ -138,15 +138,25 @@ public class Pattern {
                 }
 
                 String fadiPrimaryColorString = primaryColorString;
-                int charWidthCount = (int) (length * .25);
-                colorCodeString += String.valueOf(charWidthCount) + firstColorMod + fadiPrimaryColorString
-                        + String.valueOf(charWidthCount) + secondColorMod + fadiPrimaryColorString
-                        + String.valueOf(charWidthCount) + thirdColorMod + fadiPrimaryColorString;
+                int charWidthCount = (int) Math.ceil(length / 4.0f);
+
+                colorCodeString += String.valueOf((int) Math.ceil(charWidthCount / 2.0)) + firstColorMod + fadiPrimaryColorString;
+                colorCodeString += String.valueOf(charWidthCount - (int) Math.ceil(charWidthCount / 2.0)) + firstColorMod + fadiPrimaryColorString;
+
+                colorCodeString += String.valueOf((int) Math.ceil(charWidthCount / 2.0)) + secondColorMod + fadiPrimaryColorString;
+                colorCodeString += String.valueOf(charWidthCount - (int) Math.ceil(charWidthCount / 2.0)) + secondColorMod + fadiPrimaryColorString;
+
+                colorCodeString += String.valueOf((int) Math.ceil(charWidthCount / 2.0)) + thirdColorMod + fadiPrimaryColorString;
+                colorCodeString += String.valueOf(charWidthCount - (int) Math.ceil(charWidthCount / 2.0)) + thirdColorMod + fadiPrimaryColorString;
+
                 if(charWidthCount * 4 > length) {
                     charWidthCount = length - (charWidthCount * 3);
                 }
 
-                colorCodeString += String.valueOf(charWidthCount) + fourthColotMod + fadiPrimaryColorString;
+                colorCodeString += String.valueOf((int) Math.ceil(charWidthCount / 2.0)) + fourthColotMod + fadiPrimaryColorString;
+                if(charWidthCount - (int) Math.ceil(charWidthCount / 2.0) > 0) {
+                    colorCodeString += String.valueOf(charWidthCount - (int) Math.ceil(charWidthCount / 2.0)) + fourthColotMod + fadiPrimaryColorString;
+                }
             }
 
             else if(patternCode.substring(0, 4).equals("GRAD")) {

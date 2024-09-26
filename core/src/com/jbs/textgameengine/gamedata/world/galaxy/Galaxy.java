@@ -1,5 +1,6 @@
 package com.jbs.textgameengine.gamedata.world.galaxy;
 
+import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.area.Area;
 import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
@@ -89,6 +90,7 @@ public class Galaxy {
         Location cotuRoom04Location = new Location(cottonTailName.label, lagoMorphaName.label, 1, cotuAreaName.label, 4);
         Room cotuRoom04 = new Room(cotuRoom04Name, null, cotuRoom04Location);
         cotuRoom04.createExit("North", cotuRoom00, "Automatic");
+        cotuRoom04.createEntity("Mob", 1);
         areaCOTU.roomList.add(cotuRoom04);
 
         // Room 05 - Bridge To The Spaceport //
@@ -104,6 +106,13 @@ public class Galaxy {
         Room cotuRoom06 = new Room(cotuRoom06Name, null, cotuRoom06Location);
         cotuRoom06.createExit("North", cotuRoom05);
         areaCOTU.roomList.add(cotuRoom06);
+
+        // Room 07 - A Passage Hidden By Shrubbery //
+        Line cotuRoom07Name = new Line("A Passage Hidden By Shrubbery", "2W8CONT7CONT3CONT9CONT", "", true, true);
+        Location cotuRoom07Location = new Location(cottonTailName.label, lagoMorphaName.label, 1, cotuAreaName.label, 7);
+        Room cotuRoom07 = new Room(cotuRoom07Name, null, cotuRoom07Location);
+        cotuRoom07.createHiddenExit("West", cotuRoom02);
+        areaCOTU.roomList.add(cotuRoom07);
 
         return debugGalaxy;
     }
