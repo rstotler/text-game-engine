@@ -15,8 +15,6 @@ import static com.jbs.textgameengine.screen.gamescreen.GameScreen.userInterface;
 public class Move extends Action {
     public Move() {
         super();
-
-        interruptAction = true;
     }
 
     public Action getActionFromInput(String input, Mob parentEntity) {
@@ -80,8 +78,10 @@ public class Move extends Action {
 
             // Move //
             else {
+                parentEntity.interruptAction();
+
                 Room newRoom = parentRoom.exitMap.get(targetDirection);
-                parentEntity.location.room = newRoom;
+                parentEntity.location = new Location(newRoom.location);
 
                 boolean closedCheck = false;
                 boolean lockedCheck = false;
@@ -112,7 +112,7 @@ public class Move extends Action {
                     } else if(lockedCheck) {
                         GameScreen.userInterface.console.writeToConsole(new Line("You unlock and open the door.", "4CONT7CONT4CONT5CONT4CONT4CONT1DY", "", true, true));
                     } else if(automaticCheck) {
-                        GameScreen.userInterface.console.writeToConsole(new Line("The door opens and closes as you pass through.", "4CONT5CONT6CONT4CONT7CONT3CONT4CONT5CONT7CONT1DY", "", true, true));
+                        GameScreen.userInterface.console.writeToConsole(new Line("The door opens and closes as you walk through.", "4CONT5CONT6CONT4CONT7CONT3CONT4CONT5CONT7CONT1DY", "", true, true));
                     }
 
                     if(parentEntity.location != null

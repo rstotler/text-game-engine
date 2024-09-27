@@ -49,6 +49,15 @@ public class Location {
         this(galaxy, null, null, null, null);
     }
 
+    public Location(Location copyLocation) {
+        galaxy = copyLocation.galaxy;
+        solarSystem = copyLocation.solarSystem;
+        planetoid = copyLocation.planetoid;
+        area = copyLocation.area;
+        room = copyLocation.room;
+        spaceship = copyLocation.spaceship;
+    }
+
     public static String getDirectionFromSubstring(String directionSubstring) {
         directionSubstring = directionSubstring.toLowerCase();
 

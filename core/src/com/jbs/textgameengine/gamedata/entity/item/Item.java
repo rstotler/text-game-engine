@@ -33,6 +33,8 @@ public class Item extends Entity {
             item.keyList.add(12345);
         }
 
+        item.nameKeyList = Entity.createNameKeyList(item.name.label);
+
         return item;
     }
 }

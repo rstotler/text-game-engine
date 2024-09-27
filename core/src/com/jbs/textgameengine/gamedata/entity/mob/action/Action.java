@@ -1,17 +1,16 @@
 package com.jbs.textgameengine.gamedata.entity.mob.action;
 
+import com.jbs.textgameengine.gamedata.entity.mob.action.general.Board;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.Look;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.Move;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Action {
     public static ArrayList<Action> actionList = loadActionList();
 
     public String actionType;
-    public boolean interruptAction;
 
     public String targetEntityString;
     public String targetDirection;
@@ -20,7 +19,6 @@ public class Action {
 
     public Action() {
         actionType = "";
-        interruptAction = false;
 
         targetEntityString = "";
         targetDirection = "";
@@ -39,6 +37,7 @@ public class Action {
 
         actionList.add(new Look());
         actionList.add(new Move());
+        actionList.add(new Board());
 
         return actionList;
     }

@@ -4,6 +4,7 @@ import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.world.Location;
+import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
 import java.util.*;
@@ -37,6 +38,8 @@ public class Mob extends Entity {
             mob.name = new Line("A Greeter Droid", "2CONT8CONT5CONT", "", true, true);
         }
 
+        mob.nameKeyList = Entity.createNameKeyList(mob.name.label);
+
         return mob;
     }
 
@@ -61,6 +64,16 @@ public class Mob extends Entity {
         gear.put("Ring 2", null);
 
         return gear;
+    }
+
+    public boolean interruptAction() {
+        if(currentAction != null) {
+            GameScreen.userInterface.console.writeToConsole(new Line("You stop what you are doing.", "4CONT5CONT5CONT4CONT4CONT5CONT1DY", "", true, true));
+            currentAction = null;
+            return true;
+        }
+
+        return false;
     }
 
     public void addItemToInventory(Item targetItem) {

@@ -102,10 +102,7 @@ public class GameScreen extends Screen {
                     else if(key.equals("Right")) {targetDirection = "East";}
 
                     Move moveAction = new Move();
-                    if(player.currentAction != null && moveAction.interruptAction) {
-                        userInterface.console.writeToConsole(new Line("You stop what you are doing.", "4CONT5CONT5CONT4CONT4CONT5CONT1DY", "", true, true));
-                        player.currentAction = null;
-                    }
+                    player.interruptAction();
 
                     moveAction.actionType = "Direction";
                     moveAction.targetDirection = targetDirection;
@@ -156,12 +153,7 @@ public class GameScreen extends Screen {
         for(Action actionType : Action.actionList) {
             Action targetAction = actionType.getActionFromInput(input.toLowerCase(), player);
             if(targetAction != null) {
-                if(player.currentAction != null && targetAction.interruptAction) {
-                    userInterface.console.writeToConsole(new Line("You stop what you are doing.", "4CONT5CONT5CONT4CONT4CONT5CONT1DY", "", true, true));
-                    player.currentAction = null;
-                }
                 targetAction.initiate(player);
-
                 actionCheck = true;
                 break;
             }

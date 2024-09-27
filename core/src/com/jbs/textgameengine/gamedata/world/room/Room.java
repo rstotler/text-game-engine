@@ -1,5 +1,6 @@
 package com.jbs.textgameengine.gamedata.world.room;
 
+import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.world.Location;
@@ -20,9 +21,9 @@ public class Room {
     public HashMap<String, Door> doorMap;
     public HashMap<String, HiddenExit> hiddenExitMap;
 
-    public ArrayList<Spaceship> spaceshipList;
-    public ArrayList<Mob> mobList;
-    public ArrayList<Item> itemList;
+    public ArrayList<Entity> mobList;
+    public ArrayList<Entity> spaceshipList;
+    public ArrayList<Entity> itemList;
 
     public Room(Line name, Line description, Location location) {
         this.name = name;
@@ -39,8 +40,8 @@ public class Room {
             hiddenExitMap.put(direction, null);
         }
 
-        spaceshipList = new ArrayList<>();
         mobList = new ArrayList<>();
+        spaceshipList = new ArrayList<>();
         itemList = new ArrayList<>();
     }
 
@@ -110,27 +111,12 @@ public class Room {
                 GameScreen.userInterface.console.writeToConsole(exitLine);
             }
 
-            // Spaceships //
-            if(!spaceshipList.isEmpty()) {
-                for(int i = 0; i < spaceshipList.size(); i++) {
-                    Spaceship spaceship = spaceshipList.get(i);
-
-                    if(i == spaceshipList.size() - 1
-                    && mobList.isEmpty() && itemList.isEmpty()) {
-                        isLastLine = true;
-                    }
-
-                    String spaceshipNameLabel = spaceship.name.label + " is sitting on the launch pad.";
-                    String spaceshipNameColorCode = spaceship.name.colorCode + "1W3CONT8CONT3CONT4CONT7CONT3CONT1DY";
-                    Line spaceshipLine = new Line(spaceshipNameLabel, spaceshipNameColorCode, spaceship.name.effectCode, isLastLine, true);
-                    GameScreen.userInterface.console.writeToConsole(spaceshipLine);
-                }
-            }
-
             // Mobs //
             if(!mobList.isEmpty()) {
                 HashMap<String, Integer> mobNameMap = new HashMap<>();
-                for(Mob mob : mobList) {
+                for(Entity entity : mobList) {
+                    Mob mob = (Mob) entity;
+
                     if(mobNameMap.containsKey(mob.name.label)) {
                         int currentCount = mobNameMap.get(mob.name.label);
                         mobNameMap.put(mob.name.label, currentCount + 1);
@@ -141,10 +127,11 @@ public class Room {
                 }
 
                 for(int i = 0; i < mobList.size(); i++) {
-                    Mob mob = mobList.get(i);
+                    Mob mob = (Mob) mobList.get(i);
 
                     if(mobNameMap.containsKey(mob.name.label)) {
-                        if(mobNameMap.size() == 1) {
+                        if(mobNameMap.size() == 1
+                        && spaceshipList.isEmpty() && itemList.isEmpty()) {
                             isLastLine = true;
                         }
 
@@ -165,10 +152,29 @@ public class Room {
                 }
             }
 
+            // Spaceships //
+            if(!spaceshipList.isEmpty()) {
+                for(int i = 0; i < spaceshipList.size(); i++) {
+                    Spaceship spaceship = (Spaceship) spaceshipList.get(i);
+
+                    if(i == spaceshipList.size() - 1
+                    && itemList.isEmpty()) {
+                        isLastLine = true;
+                    }
+
+                    String spaceshipNameLabel = spaceship.name.label + " is sitting on the launch pad.";
+                    String spaceshipNameColorCode = spaceship.name.colorCode + "1W3CONT8CONT3CONT4CONT7CONT3CONT1DY";
+                    Line spaceshipLine = new Line(spaceshipNameLabel, spaceshipNameColorCode, spaceship.name.effectCode, isLastLine, true);
+                    GameScreen.userInterface.console.writeToConsole(spaceshipLine);
+                }
+            }
+
             // Items //
             if(!itemList.isEmpty()) {
                 HashMap<String, Integer> itemNameMap = new HashMap<>();
-                for(Item item : itemList) {
+                for(Entity entity : itemList) {
+                    Item item = (Item) entity;
+
                     if(itemNameMap.containsKey(item.name.label)) {
                         int currentCount = itemNameMap.get(item.name.label);
                         itemNameMap.put(item.name.label, currentCount + 1);
@@ -179,7 +185,7 @@ public class Room {
                 }
 
                 for(int i = 0; i < itemList.size(); i++) {
-                    Item item = itemList.get(i);
+                    Item item = (Item) itemList.get(i);
 
                     if(itemNameMap.containsKey(item.name.label)) {
                         if(itemNameMap.size() == 1) {
@@ -242,25 +248,9 @@ public class Room {
             GameScreen.userInterface.console.writeToConsole(exitLine);
         }
 
-        // Spaceships //
-        if(!spaceshipList.isEmpty()) {
-            if(mobList.isEmpty() && itemList.isEmpty()) {
-                isLastLine = true;
-            }
-
-            String countString = "";
-            String countColorCode = "";
-            if(spaceshipList.size() > 1) {
-                countString = " (" + String.valueOf(spaceshipList.size()) + ")";
-                countColorCode = "2DR" + String.valueOf(spaceshipList.size()).length() + "W1DR";
-            }
-            Line spaceshipsLine = new Line("A spaceship is sitting on the launch pad." + countString, "2W10CONT3CONT8CONT3CONT4CONT7CONT3CONT1DY" + countColorCode, "", isLastLine, true);
-            GameScreen.userInterface.console.writeToConsole(spaceshipsLine);
-        }
-
         // Mobs //
         if(!mobList.isEmpty()) {
-            if(itemList.isEmpty()) {
+            if(spaceshipList.isEmpty() && itemList.isEmpty()) {
                 isLastLine = true;
             }
 
@@ -272,6 +262,22 @@ public class Room {
             }
             Line mobsLine = new Line("There is someone here." + countString, "6CONT3CONT8CONT4CONT1DY" + countColorCode, "", isLastLine, true);
             GameScreen.userInterface.console.writeToConsole(mobsLine);
+        }
+
+        // Spaceships //
+        if(!spaceshipList.isEmpty()) {
+            if(itemList.isEmpty()) {
+                isLastLine = true;
+            }
+
+            String countString = "";
+            String countColorCode = "";
+            if(spaceshipList.size() > 1) {
+                countString = " (" + String.valueOf(spaceshipList.size()) + ")";
+                countColorCode = "2DR" + String.valueOf(spaceshipList.size()).length() + "W1DR";
+            }
+            Line spaceshipsLine = new Line("A spaceship is sitting on the launch pad." + countString, "2W10CONT3CONT8CONT3CONT4CONT7CONT3CONT1DY" + countColorCode, "", isLastLine, true);
+            GameScreen.userInterface.console.writeToConsole(spaceshipsLine);
         }
 
         // Items //
@@ -331,6 +337,30 @@ public class Room {
         else if(entityType.equals("Spaceship")) {
             spaceshipList.add(Spaceship.load(id, this.location));
         }
+    }
+
+    public Entity getEntityFromNameKey(String key, String entityType) {
+        ArrayList<String> listsToSearch = new ArrayList<>();
+        listsToSearch.add(entityType);
+        if(!listsToSearch.contains("Mob")) {listsToSearch.add("Mob");}
+        if(!listsToSearch.contains("Spaceship")) {listsToSearch.add("Spaceship");}
+        if(!listsToSearch.contains("Item")) {listsToSearch.add("Item");}
+
+        for(String listType : listsToSearch) {
+            ArrayList<Entity> targetEntityList = null;
+            if(listType.equals("Mob")) {targetEntityList = mobList;}
+            else if(listType.equals("Spaceship")) {targetEntityList = spaceshipList;}
+            else if(listType.equals("Item")) {targetEntityList = itemList;}
+
+            for(Entity entity : targetEntityList) {
+                if(key.equals("ANY")
+                || entity.nameKeyList.contains(key)) {
+                    return entity;
+                }
+            }
+        }
+
+        return null;
     }
 
     public boolean isLit() {
