@@ -41,13 +41,13 @@ public class Galaxy {
         // Star - Rig Veda //
         Line rigVedaName = new Line("Rig Veda", "4CONT4CONT", "", true, true);
         Location rigVedaLocation = new Location(galaxyCottonTail, systemLagoMorpha);
-        Star starRigVeda = new Star(rigVedaName, rigVedaLocation, 0, -1, 36000, 0);
+        Star starRigVeda = new Star(rigVedaName, rigVedaLocation, 0, -1, 7.25f, 36000, 0);
         systemLagoMorpha.planetoidList.add(starRigVeda);
 
         // Planet - Lapine //
         Line lapineName = new Line("Lapine", "6CONT", "", true, true);
         Location lapineLocation = new Location(galaxyCottonTail, systemLagoMorpha);
-        Planet planetLapine = new Planet(lapineName, lapineLocation, 93000000, -1, 1440, 525600);
+        Planet planetLapine = new Planet(lapineName, lapineLocation, 93000000, -1, 23.45f, 1440, 525600);
         systemLagoMorpha.planetoidList.add(planetLapine);
 
         // Area - Center Of The Universe //

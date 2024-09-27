@@ -12,6 +12,7 @@ import com.jbs.textgameengine.gamedata.entity.mob.action.general.Move;
 import com.jbs.textgameengine.gamedata.entity.player.Player;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.galaxy.Galaxy;
+import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
 import com.jbs.textgameengine.screen.Screen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.UserInterface;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
@@ -35,6 +36,7 @@ public class GameScreen extends Screen {
 
         Location startLocation = Galaxy.getRoom("Cotton Tail Nebula", "Lago Morpha", 1, "Center Of The Universe", 0).location;
         player = new Player(startLocation);
+        ((Planet) (player.location.planetoid)).updateDayNightTimers();
 
         frameTimer = 0;
         fastMode = false;
@@ -69,7 +71,6 @@ public class GameScreen extends Screen {
                 // Toggle Fast Mode //
                 else if((Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
                 && key.equals("F")) {
-                    System.out.println("??");
                     fastMode = !fastMode;
                 }
 

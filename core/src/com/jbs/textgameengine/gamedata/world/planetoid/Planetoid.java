@@ -12,13 +12,20 @@ public class Planetoid {
 
     public int distanceFromCenter;
     public int orbitDirection;
+    public float axialTilt;
 
     public int minuteCountDay;
     public int minuteCountYear;
     public int minutesInDay;
     public int minutesInYear;
 
-    public Planetoid(Line name, Location location, int distanceFromCenter, int orbitDirection, int minutesInDay, int minutesInYear) {
+    public float dawnPercent;
+    public float sunrisePercent;
+    public float noonPercent;
+    public float duskPercent;
+    public float sunsetPercent;
+
+    public Planetoid(Line name, Location location, int distanceFromCenter, int orbitDirection, float axialTilt, int minutesInDay, int minutesInYear) {
         this.name = name;
         this.location = new Location(location.galaxy, location.solarSystem, location.planetoid, null, null, null);
         isPlanet = false;
@@ -26,11 +33,18 @@ public class Planetoid {
 
         this.distanceFromCenter = distanceFromCenter;
         this.orbitDirection = orbitDirection;
+        this.axialTilt = axialTilt;
 
         minuteCountDay = 0;
         minuteCountYear = 0;
         this.minutesInDay = minutesInDay;
         this.minutesInYear = minutesInYear;
+
+        dawnPercent = 0.0f;
+        sunrisePercent = 0.0f;
+        noonPercent = 0.0f;
+        duskPercent = 0.0f;
+        sunsetPercent = 0.0f;
 
         updatePosition();
     }
@@ -59,5 +73,9 @@ public class Planetoid {
             coordinates.x = (float) Math.cos(Math.toRadians((minuteCountYear / (minutesInYear + 0.0f)) * 360)) * distanceFromCenter;
             coordinates.y = (float) (Math.sin(Math.toRadians((minuteCountYear / (minutesInYear + 0.0f)) * 360)) * distanceFromCenter) * orbitDirection;
         }
+    }
+
+    public boolean isDay() {
+        return false;
     }
 }

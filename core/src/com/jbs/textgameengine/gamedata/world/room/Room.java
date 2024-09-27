@@ -334,6 +334,11 @@ public class Room {
     }
 
     public boolean isLit() {
+        if(location.spaceship == null
+        && location.planetoid != null) {
+            return location.planetoid.isDay();
+        }
+
         return false;
     }
 }
