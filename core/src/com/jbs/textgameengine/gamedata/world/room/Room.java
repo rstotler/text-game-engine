@@ -83,11 +83,23 @@ public class Room {
                 }
                 String exitName = "( Nothing )";
                 String exitNameColorCode = "2DR8GRAD1DR";
+
+                // Hidden Exit (Do Not Show) //
                 if(hiddenExitMap.containsKey(direction)
                 && hiddenExitMap.get(direction) != null
                 && !hiddenExitMap.get(direction).isOpen) {
                     // Do Nothing
                 }
+
+                // Spaceship Exit //
+                else if(location.spaceship != null
+                && location.spaceship.boardingRoom == this
+                && location.spaceship.boardingRoomExitDirection.equals(direction)) {
+                    exitName = "( Exit Door )";
+                    exitNameColorCode = "2DR5CONT4CONT2DR";
+                }
+
+                // Normal Exit //
                 else if(exitMap.containsKey(direction) && exitMap.get(direction) != null) {
                     if(doorMap.containsKey(direction)
                     && doorMap.get(direction) != null
@@ -235,6 +247,7 @@ public class Room {
             }
             String exitName = "( Darkness )";
             String exitNameColorCode = "2DR1DW1DW1DDW1DDW1DDDW1DDDW1DDDGR1DDDGR2DR";
+
             if(exitMap.containsKey(direction)
             && exitMap.get(direction) != null
             && exitMap.get(direction).isLit()) {
@@ -313,8 +326,14 @@ public class Room {
         Door door = new Door(doorType, doorKeyNum);
         doorMap.put(targetDirection, door);
 
-        String oppositeDirection = Location.getOppositeDirection(targetDirection);
-        targetRoom.doorMap.put(oppositeDirection, door);
+        if(targetRoom != null) {
+            String oppositeDirection = Location.getOppositeDirection(targetDirection);
+            targetRoom.doorMap.put(oppositeDirection, door);
+        }
+    }
+
+    public void createDoor(String targetDirection, Room targetRoom, String doorType) {
+        createDoor(targetDirection, targetRoom, doorType, -9999);
     }
 
     public void createHiddenExit(String targetDirection, Room targetRoom) {
@@ -367,6 +386,10 @@ public class Room {
         if(location.spaceship == null
         && location.planetoid != null) {
             return location.planetoid.isDay();
+        }
+
+        else if(location.spaceship != null) {
+            return true;
         }
 
         return false;

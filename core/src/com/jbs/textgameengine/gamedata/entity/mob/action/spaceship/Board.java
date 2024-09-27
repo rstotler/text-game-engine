@@ -1,4 +1,4 @@
-package com.jbs.textgameengine.gamedata.entity.mob.action.general;
+package com.jbs.textgameengine.gamedata.entity.mob.action.spaceship;
 
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
@@ -75,7 +75,7 @@ public class Board extends Action {
         else {
             parentEntity.interruptAction();
 
-            parentEntity.location = new Location(targetSpaceship.location);
+            parentEntity.location = new Location(targetSpaceship.boardingRoom.location);
 
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("The door opens and closes as you board the ship.", "4CONT5CONT6CONT4CONT7CONT3CONT4CONT6CONT4CONT4CONT1DY", "", true, true));

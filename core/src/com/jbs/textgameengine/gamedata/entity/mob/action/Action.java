@@ -1,6 +1,6 @@
 package com.jbs.textgameengine.gamedata.entity.mob.action;
 
-import com.jbs.textgameengine.gamedata.entity.mob.action.general.Board;
+import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.Board;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.Look;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.Move;

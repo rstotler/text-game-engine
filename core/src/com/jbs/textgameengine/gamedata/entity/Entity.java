@@ -3,7 +3,8 @@ package com.jbs.textgameengine.gamedata.entity;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
-import java.util.ArrayList;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Entity {
     public int id;
@@ -19,9 +20,14 @@ public class Entity {
     }
 
     public static ArrayList<String> createNameKeyList(String targetString) {
-        ArrayList<String> nameKeyList = new ArrayList<>();
+        List<String> targetStringList = Arrays.asList(targetString.split(" "));
 
-        for(String substring : targetString.split(" ")) {
+        ArrayList<String> nameKeyList = new ArrayList<>();
+        for(int i = 0; i < targetStringList.size(); i++) {
+            List<String> splitString = targetStringList.subList(0, i + 1);
+            String substring = splitString.stream().collect(Collectors.joining(" "));
+
+            System.out.println(substring);
         }
 
         return nameKeyList;

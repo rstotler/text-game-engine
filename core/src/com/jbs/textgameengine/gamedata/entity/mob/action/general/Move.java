@@ -55,12 +55,16 @@ public class Move extends Action {
             Room parentRoom = parentEntity.location.room;
 
             // Message - You can't go that way. //
-            if((parentRoom.exitMap.containsKey(targetDirection)
+            if(((parentRoom.exitMap.containsKey(targetDirection)
             && parentRoom.exitMap.get(targetDirection) == null)
 
             || (parentRoom.hiddenExitMap.containsKey(targetDirection)
             && parentRoom.hiddenExitMap.get(targetDirection) != null
-            && !parentRoom.hiddenExitMap.get(targetDirection).isOpen)) {
+            && !parentRoom.hiddenExitMap.get(targetDirection).isOpen))
+
+            && !(parentRoom.location.spaceship != null
+            && parentRoom.location.spaceship.boardingRoom == parentRoom
+            && parentRoom.location.spaceship.boardingRoomExitDirection == targetDirection)) {
                 if(parentEntity.isPlayer) {
                     GameScreen.userInterface.console.writeToConsole(new Line("You can't go that way.", "4CONT3CONT1DY2DDW3CONT5CONT3CONT1DY", "", true, true));
                 }
@@ -76,50 +80,74 @@ public class Move extends Action {
                 }
             }
 
+            // Message On Ship - You can't leave while the ship is moving. //
+            else if(parentRoom.location.spaceship != null
+            && parentRoom.location.spaceship.boardingRoom == parentRoom
+            && parentRoom.location.spaceship.boardingRoomExitDirection == targetDirection
+            && parentRoom.location.spaceship.location.room == null) {
+                if(parentEntity.isPlayer) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("You can't leave while the ship is moving.", "4CONT3CONT1DY2DW6CONT6CONT4CONT5CONT3CONT6CONT1DY", "", true, true));
+                }
+            }
+
             // Move //
             else {
                 parentEntity.interruptAction();
 
-                Room newRoom = parentRoom.exitMap.get(targetDirection);
-                parentEntity.location = new Location(newRoom.location);
+                Room newRoom = null;
+                if(parentRoom.location.spaceship != null
+                && parentRoom.location.spaceship.boardingRoom == parentRoom
+                && parentRoom.location.spaceship.boardingRoomExitDirection == targetDirection
+                && parentRoom.location.spaceship.location.room != null) {
+                    newRoom = parentRoom.location.spaceship.location.room;
+                }
+                else if(parentRoom.exitMap.containsKey(targetDirection)) {
+                    newRoom = parentRoom.exitMap.get(targetDirection);
+                }
 
-                boolean closedCheck = false;
-                boolean lockedCheck = false;
-                boolean automaticCheck = false;
+                if(newRoom != null) {
+                    parentEntity.location = new Location(newRoom.location);
 
-                // Door Type Checks //
-                if(parentRoom.doorMap.containsKey(targetDirection)
-                && parentRoom.doorMap.get(targetDirection) != null
-                && !parentRoom.doorMap.get(targetDirection).status.equals("Open")) {
-                    if(parentRoom.doorMap.get(targetDirection).type.equals("Manual")) {
-                        if(parentRoom.doorMap.get(targetDirection).status.equals("Closed")) {
-                            closedCheck = true;
+                    boolean closedCheck = false;
+                    boolean lockedCheck = false;
+                    boolean automaticCheck = false;
+
+                    // Door Type Checks //
+                    if(parentRoom.doorMap.containsKey(targetDirection)
+                    && parentRoom.doorMap.get(targetDirection) != null
+                    && !parentRoom.doorMap.get(targetDirection).status.equals("Open")) {
+                        if(parentRoom.doorMap.get(targetDirection).type.equals("Manual")) {
+                            if(parentRoom.doorMap.get(targetDirection).status.equals("Closed")) {
+                                closedCheck = true;
+                            }
+                            else if(parentRoom.doorMap.get(targetDirection).status.equals("Locked")) {
+                                lockedCheck = true;
+                            }
+                            parentRoom.doorMap.get(targetDirection).status = "Open";
                         }
-                        else if(parentRoom.doorMap.get(targetDirection).status.equals("Locked")) {
-                            lockedCheck = true;
+                        else if(parentRoom.doorMap.get(targetDirection).type.equals("Automatic")) {
+                            automaticCheck = true;
                         }
-                        parentRoom.doorMap.get(targetDirection).status = "Open";
                     }
-                    else if(parentRoom.doorMap.get(targetDirection).type.equals("Automatic")) {
-                        automaticCheck = true;
+
+                    // Display New Room //
+                    if(parentEntity.isPlayer) {
+                        if(closedCheck) {
+                            GameScreen.userInterface.console.writeToConsole(new Line("You open the door.", "4CONT5CONT4CONT4CONT1DY", "", true, true));
+                        } else if(lockedCheck) {
+                            GameScreen.userInterface.console.writeToConsole(new Line("You unlock and open the door.", "4CONT7CONT4CONT5CONT4CONT4CONT1DY", "", true, true));
+                        } else if(automaticCheck) {
+                            GameScreen.userInterface.console.writeToConsole(new Line("The door opens and closes as you walk through.", "4CONT5CONT6CONT4CONT7CONT3CONT4CONT5CONT7CONT1DY", "", true, true));
+                        }
+
+                        if(parentEntity.location != null
+                        && parentEntity.location.room != null) {
+                            parentEntity.location.room.display();
+                        }
                     }
                 }
 
-                // Display New Room //
-                if(parentEntity.isPlayer) {
-                    if(closedCheck) {
-                        GameScreen.userInterface.console.writeToConsole(new Line("You open the door.", "4CONT5CONT4CONT4CONT1DY", "", true, true));
-                    } else if(lockedCheck) {
-                        GameScreen.userInterface.console.writeToConsole(new Line("You unlock and open the door.", "4CONT7CONT4CONT5CONT4CONT4CONT1DY", "", true, true));
-                    } else if(automaticCheck) {
-                        GameScreen.userInterface.console.writeToConsole(new Line("The door opens and closes as you walk through.", "4CONT5CONT6CONT4CONT7CONT3CONT4CONT5CONT7CONT1DY", "", true, true));
-                    }
 
-                    if(parentEntity.location != null
-                    && parentEntity.location.room != null) {
-                        parentEntity.location.room.display();
-                    }
-                }
             }
         }
     }
