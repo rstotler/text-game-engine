@@ -36,8 +36,7 @@ public class Launch extends Action {
         }
 
         // Message - The ship must be landed first. //
-        else if(parentEntity.location.spaceship.location.room == null
-        || parentEntity.location.spaceship.status.equals("Launching")) {
+        else if(!parentEntity.location.spaceship.status.equals("Landed")) {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("The ship must be landed first.", "4CONT5CONT5CONT3CONT7CONT5CONT1DY", "", true, true));
             }
@@ -55,10 +54,21 @@ public class Launch extends Action {
         else {
             parentEntity.interruptAction();
 
-            parentEntity.location.spaceship.status = "Launching";
+            parentEntity.location.spaceship.status = "Launch";
+            parentEntity.location.spaceship.currentPhase = 0;
+            parentEntity.location.spaceship.phaseTimer = 3;
+            parentEntity.location.spaceship.location.area = null;
+            parentEntity.location.spaceship.location.room = null;
+
+            if(parentEntity.location.spaceship.hatchStatus.equals("Open")) {
+                parentEntity.location.spaceship.hatchStatus = "Closed";
+            }
+            if(!parentEntity.location.solarSystem.spaceshipList.contains(parentEntity.location.spaceship)) {
+                parentEntity.location.solarSystem.spaceshipList.add(parentEntity.location.spaceship);
+            }
 
             if(parentEntity.isPlayer) {
-                GameScreen.userInterface.console.writeToConsole(new Line("You press a button on the dashboard.", "4CONT6CONT2W7CONT3CONT4CONT9CONT1DY", "", true, true));
+                GameScreen.userInterface.console.writeToConsole(new Line("You press a button on the dashboard.", "4CONT6CONT2W7CONT3CONT4CONT4CONT9CONT1DY", "", true, true));
             }
         }
     }

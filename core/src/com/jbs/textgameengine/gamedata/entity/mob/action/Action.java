@@ -1,5 +1,6 @@
 package com.jbs.textgameengine.gamedata.entity.mob.action;
 
+import com.jbs.textgameengine.gamedata.entity.mob.action.other.Emote;
 import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.Board;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.Look;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
@@ -40,6 +41,7 @@ public class Action {
         actionList.add(new Move());
         actionList.add(new Board());
         actionList.add(new Launch());
+        actionList.add(new Emote());
 
         return actionList;
     }

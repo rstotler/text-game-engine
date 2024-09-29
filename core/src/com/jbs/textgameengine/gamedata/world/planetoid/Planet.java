@@ -31,7 +31,7 @@ public class Planet extends Planetoid {
         if(GameScreen.player.location != null
         && GameScreen.player.location.planetoid == this) {
             if(GameScreen.player.location.room != null
-            && !(GameScreen.player.location.spaceship != null && GameScreen.player.location.spaceship.location.room == null)) {
+            && !(GameScreen.player.location.spaceship != null && !GameScreen.player.location.spaceship.status.equals("Landed"))) {
                 float dayPercent = 0.0f;
                 if(minutesInDay > 0) {
                     dayPercent = (minuteCountDay + 0.0f) / minutesInDay;
@@ -94,5 +94,14 @@ public class Planet extends Planetoid {
     public boolean isDay() {
         return ((minuteCountDay + 0.0f) / minutesInDay) >= dawnPercent
             && ((minuteCountDay + 0.0f) / minutesInDay) < sunsetPercent;
+    }
+
+    public Line getTime() {
+        String timeLineLabel = "";
+        String timeLineColorCode = "";
+
+
+
+        return new Line(timeLineLabel, timeLineColorCode, "", true, true);
     }
 }

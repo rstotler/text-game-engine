@@ -4,15 +4,17 @@ import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.area.Area;
 import com.jbs.textgameengine.gamedata.world.room.Room;
+import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
 import java.util.HashMap;
 
 public class Spaceship extends Entity {
-    // close hatch door when launch
     public HashMap<String, Area> areaMap;
 
-    public String status; // Status: Landed, Orbit, Traveling
+    public String status; // Status: Landed, Launch, Orbit, Traveling
+    public int currentPhase;
+    public int phaseTimer;
 
     public int keyNum;
     public String hatchStatus;
@@ -25,6 +27,9 @@ public class Spaceship extends Entity {
         location.spaceship = this;
 
         areaMap = new HashMap<>();
+
+        currentPhase = 0;
+        phaseTimer = 0;
 
         keyNum = -9999;
         hatchStatus = "Closed";
@@ -81,5 +86,41 @@ public class Spaceship extends Entity {
         spaceship.nameKeyList.add("ship");
 
         return spaceship;
+    }
+
+    public void update() {
+        if(status.equals("Launch")) {
+            updateLaunch();
+        }
+    }
+
+    public void updateLaunch() {
+        phaseTimer += 1;
+
+        if(phaseTimer >= 4) {
+            phaseTimer = 0;
+            currentPhase += 1;
+
+            if(GameScreen.player.location.spaceship == this) {
+                if(currentPhase == 1) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("The ship rumbles as the engines begin to hum.", "4CONT5CONT8CONT3CONT4CONT8CONT6CONT3CONT3CONT1DY", "", true, true));
+                }
+
+                else if(currentPhase == 2) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("The engines *ROAR* as you blast off!", "4CONT8CONT1DY4CONT2DY3CONT4CONT6CONT3CONT1DY", "", true, true));
+                }
+
+                else if(currentPhase == 3) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("The ship rumbles as it makes its fiery ascent.", "4CONT5CONT8CONT3CONT3CONT6CONT4CONT6SHIAR6CONT1DY", "", true, true));
+                }
+
+                else if(currentPhase == 4) {
+                    status = "Orbit";
+                    currentPhase = 0;
+
+                    GameScreen.userInterface.console.writeToConsole(new Line("You being orbiting " + location.planetoid.name.label + ".", "4CONT6CONT9CONT" + location.planetoid.name.colorCode + "1DY", "", true, true));
+                }
+            }
+        }
     }
 }

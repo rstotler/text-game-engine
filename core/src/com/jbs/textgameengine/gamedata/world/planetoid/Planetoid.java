@@ -4,6 +4,8 @@ import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import com.jbs.textgameengine.screen.utility.Point;
 
+import java.util.Random;
+
 public class Planetoid {
     public Line name;
     public Location location;
@@ -35,8 +37,12 @@ public class Planetoid {
         this.orbitDirection = orbitDirection;
         this.axialTilt = axialTilt;
 
-        minuteCountDay = 0;
-        minuteCountYear = 0;
+        int randomYearMinutes = 0;
+        if(minutesInYear > 0) {
+            randomYearMinutes = new Random().nextInt((int) (minutesInYear * .95f));
+        }
+        minuteCountDay = randomYearMinutes % minutesInDay;
+        minuteCountYear = randomYearMinutes;
         this.minutesInDay = minutesInDay;
         this.minutesInYear = minutesInYear;
 

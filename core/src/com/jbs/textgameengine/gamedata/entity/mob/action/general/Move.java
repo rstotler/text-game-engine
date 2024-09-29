@@ -80,13 +80,13 @@ public class Move extends Action {
                 }
             }
 
-            // Message On Ship - You can't leave while the ship is moving. //
+            // Message On Ship - You can't leave while the ship is in use. //
             else if(parentRoom.location.spaceship != null
             && parentRoom.location.spaceship.boardingRoom == parentRoom
             && parentRoom.location.spaceship.boardingRoomExitDirection == targetDirection
-            && parentRoom.location.spaceship.location.room == null) {
+            && !parentRoom.location.spaceship.status.equals("Landed")) {
                 if(parentEntity.isPlayer) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("You can't leave while the ship is moving.", "4CONT3CONT1DY2DW6CONT6CONT4CONT5CONT3CONT6CONT1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("You can't leave while the ship is in use.", "4CONT3CONT1DY2DW6CONT6CONT4CONT5CONT3CONT3CONT3CONT1DY", "", true, true));
                 }
             }
 
