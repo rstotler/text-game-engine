@@ -35,10 +35,10 @@ public class Mob extends Entity {
 
         // 1 - Greeter Droid //
         if(id == 1) {
-            mob.name = new Line("A Greeter Droid", "2CONT8CONT5CONT", "", true, true);
+            mob.name = new Line("Greeter Droid", "8CONT5CONT", "", true, true);
         }
 
-        mob.nameKeyList = Entity.createNameKeyList(mob.name.label);
+        mob.nameKeyList = Entity.createNameKeyList(mob.prefix + mob.name.label);
 
         return mob;
     }

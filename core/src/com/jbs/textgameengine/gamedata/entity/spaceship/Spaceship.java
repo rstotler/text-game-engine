@@ -9,12 +9,16 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import java.util.HashMap;
 
 public class Spaceship extends Entity {
+    // close hatch door when launch
     public HashMap<String, Area> areaMap;
 
+    public String status; // Status: Landed, Orbit, Traveling
+
+    public int keyNum;
     public String hatchStatus;
-    public int hatchKeyNum;
-    public Room boardingRoom;
     public String boardingRoomExitDirection;
+    public Room boardingRoom;
+    public Room cockpitRoom;
 
     public Spaceship(Location startLocation) {
         super(startLocation);
@@ -22,12 +26,11 @@ public class Spaceship extends Entity {
 
         areaMap = new HashMap<>();
 
+        keyNum = -9999;
         hatchStatus = "Closed";
-        hatchKeyNum = -9999;
 
         boardingRoomExitDirection = "West";
         loadMainCabin(startLocation);
-        boardingRoom = areaMap.get("Main Cabin").roomList.get(0);
     }
 
     public void loadMainCabin(Location startLocation) {
@@ -51,16 +54,30 @@ public class Spaceship extends Entity {
         Room room01 = new Room(room01Line, null, room01Location);
         room01.createExit("South", room00, "Automatic", 1234);
         areaMainCabin.roomList.add(room01);
+
+        boardingRoom = areaMap.get("Main Cabin").roomList.get(0);
+        cockpitRoom = areaMap.get("Main Cabin").roomList.get(1);
     }
 
     public static Spaceship load(int id, Location startLocation) {
         Spaceship spaceship = new Spaceship(startLocation);
 
+        if(startLocation.room != null) {
+            spaceship.status = "Landed";
+        }
+        else if(startLocation.planetoid != null) {
+            spaceship.status = "Orbit";
+        }
+        else {
+            spaceship.status = "Traveling";
+        }
+
         if(id == 1) {
-            spaceship.name = new Line("A Spaceship", "2W9CONT", "", true, true);
+            spaceship.name = new Line("Starship Heart of Gold", "9CONT6SHIAR3CONT4SHIAY", "", true, true);
         }
 
         spaceship.nameKeyList = Entity.createNameKeyList(spaceship.name.label);
+        spaceship.nameKeyList.add("spaceship");
         spaceship.nameKeyList.add("ship");
 
         return spaceship;

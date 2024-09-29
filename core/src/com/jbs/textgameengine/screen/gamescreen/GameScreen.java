@@ -10,9 +10,12 @@ import com.jbs.textgameengine.Settings;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.Move;
 import com.jbs.textgameengine.gamedata.entity.player.Player;
+import com.jbs.textgameengine.gamedata.world.utility.AreaAndRoomData;
 import com.jbs.textgameengine.gamedata.world.Location;
+import com.jbs.textgameengine.gamedata.world.area.Area;
 import com.jbs.textgameengine.gamedata.world.galaxy.Galaxy;
 import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
+import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.Screen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.UserInterface;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
@@ -25,6 +28,7 @@ public class GameScreen extends Screen {
     public static HashMap<String, Galaxy> galaxyList;
     public static Player player;
 
+    public long gameTimer;
     public int frameTimer;
     public boolean fastMode;
 
@@ -38,6 +42,7 @@ public class GameScreen extends Screen {
         player = new Player(startLocation);
         ((Planet) (player.location.planetoid)).updateDayNightTimers();
 
+        gameTimer = 0;
         frameTimer = 0;
         fastMode = false;
 
@@ -122,12 +127,28 @@ public class GameScreen extends Screen {
     public String update() {
         userInterface.inputBar.update();
 
+        // Update Solar System //
         if(frameTimer == 0
         && player.location != null
         && player.location.solarSystem != null) {
             player.location.solarSystem.update();
         }
 
+        // Update Area & Surrounding Rooms //
+        if((frameTimer == 0 || frameTimer == 30)
+        && player.location != null
+        && player.location.area != null
+        && player.location.room != null) {
+            AreaAndRoomData surroundingAreaAndRoomData = AreaAndRoomData.getSurroundingAreaAndRoomData(player.location.room, 5);
+            for(Area area : surroundingAreaAndRoomData.areaList) {
+                area.update();
+            }
+            for(Room room : surroundingAreaAndRoomData.roomList) {
+                room.update();
+            }
+        }
+
+        gameTimer += 1;
         if(!fastMode) {frameTimer += 1;}
         if(fastMode || frameTimer >= 60) {
             frameTimer = 0;

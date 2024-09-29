@@ -4,6 +4,7 @@ import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.Board;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.Look;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.Move;
+import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.Launch;
 
 import java.util.ArrayList;
 
@@ -38,6 +39,7 @@ public class Action {
         actionList.add(new Look());
         actionList.add(new Move());
         actionList.add(new Board());
+        actionList.add(new Launch());
 
         return actionList;
     }

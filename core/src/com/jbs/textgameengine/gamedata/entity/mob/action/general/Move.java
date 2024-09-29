@@ -125,7 +125,8 @@ public class Move extends Action {
                             }
                             parentRoom.doorMap.get(targetDirection).status = "Open";
                         }
-                        else if(parentRoom.doorMap.get(targetDirection).type.equals("Automatic")) {
+                        else if(parentRoom.doorMap.get(targetDirection).type.equals("Automatic")
+                        && !parentRoom.doorMap.get(targetDirection).status.equals("Open")) {
                             automaticCheck = true;
                         }
                     }

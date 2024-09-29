@@ -27,13 +27,13 @@ public class Item extends Entity {
 
         // 1 - A Silver Key //
         if(id == 1) {
-            item.name = new Line("A Silver Key", "2W7SHIAGR3CONT", "", true, true);
+            item.name = new Line("Silver Key", "7SHIAGR3CONT", "", true, true);
             item.keyList = new ArrayList<>();
             item.keyList.add(1234);
             item.keyList.add(12345);
         }
 
-        item.nameKeyList = Entity.createNameKeyList(item.name.label);
+        item.nameKeyList = Entity.createNameKeyList(item.prefix + item.name.label);
 
         return item;
     }

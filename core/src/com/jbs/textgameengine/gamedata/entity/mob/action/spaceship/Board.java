@@ -56,16 +56,16 @@ public class Board extends Action {
             }
         }
 
-        // Message - You see no such ship.
+        // Message - You see no such ship. //
         if(targetSpaceship == null) {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("You see no such ship.", "4CONT4CONT3CONT5CONT4CONT1DY", "", true, true));
             }
         }
 
-        // Message - It is locked.
+        // Message - It is locked. //
         else if(targetSpaceship.hatchStatus.equals("Locked")
-        && !parentEntity.hasKey(targetSpaceship.hatchKeyNum)) {
+        && !parentEntity.hasKey(targetSpaceship.keyNum)) {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("It is locked.", "3CONT3CONT6CONT1DY", "", true, true));
             }

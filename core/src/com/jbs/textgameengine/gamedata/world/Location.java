@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Location {
-    public static ArrayList<String> directionList = new ArrayList<>(Arrays.asList("north", "nort", "nor", "no", "n", "east", "eas", "ea", "e", "south", "sout", "sou", "so", "s", "west", "wes", "we", "w", "northeast", "northeas", "northea", "northe", "ne", "southeast", "southeas", "southea", "southe", "se", "southwest", "southwes", "southwe", "southw", "sw", "northwest", "northwes", "northwe", "northw", "nw"));
+    public static ArrayList<String> directionList = new ArrayList<>(Arrays.asList("north", "nort", "nor", "no", "n", "east", "eas", "ea", "e", "south", "sout", "sou", "so", "s", "west", "wes", "we", "w", "northeast", "northeas", "northea", "northe", "ne", "southeast", "southeas", "southea", "southe", "se", "southwest", "southwes", "southwe", "southw", "sw", "northwest", "northwes", "northwe", "northw", "nw", "up", "u", "down", "dow", "do", "d"));
 
     public Galaxy galaxy;
     public SolarSystem solarSystem;
@@ -89,6 +89,12 @@ public class Location {
         else if(directionSubstring.substring(0, 1).equals("w")) {
             return "West";
         }
+        else if(directionSubstring.substring(0, 1).equals("u")) {
+            return "Up";
+        }
+        else if(directionSubstring.substring(0, 1).equals("d")) {
+            return "Down";
+        }
 
         return "";
     }
@@ -102,6 +108,8 @@ public class Location {
         else if(targetDirection.equals("East")) {return "West";}
         else if(targetDirection.equals("South")) {return "North";}
         else if(targetDirection.equals("West")) {return "East";}
+        else if(targetDirection.equals("Up")) {return "Down";}
+        else if(targetDirection.equals("Down")) {return "Up";}
 
         return "";
     }

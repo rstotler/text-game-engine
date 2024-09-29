@@ -19,4 +19,7 @@ public class Area {
 
         roomList = new ArrayList<>();
     }
+
+    public void update() {
+    }
 }

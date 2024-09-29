@@ -34,7 +34,7 @@ public class Room {
         exitMap = new HashMap<>();
         doorMap = new HashMap<>();
         hiddenExitMap = new HashMap<>();
-        for(String direction : Arrays.asList("North", "East", "South", "West", "Northeast", "Southeast", "Southwest", "Northwest")) {
+        for(String direction : Arrays.asList("North", "East", "South", "West", "Northeast", "Southeast", "Southwest", "Northwest", "Up", "Down")) {
             exitMap.put(direction, null);
             doorMap.put(direction, null);
             hiddenExitMap.put(direction, null);
@@ -43,6 +43,9 @@ public class Room {
         mobList = new ArrayList<>();
         spaceshipList = new ArrayList<>();
         itemList = new ArrayList<>();
+    }
+
+    public void update() {
     }
 
     public void display() {
@@ -154,8 +157,8 @@ public class Room {
                             countColorCode = "2DR" + String.valueOf(mobNameMap.get(mob.name.label)).length() + "W1DR";
                         }
 
-                        String mobNameLabel = mob.name.label + " is here, milling about." + countString;
-                        String mobNameColorCode = mob.name.colorCode + "1W3CONT4CONT2DY8CONT5CONT1DY" + countColorCode;
+                        String mobNameLabel = mob.prefix + mob.name.label + " is here, milling about." + countString;
+                        String mobNameColorCode = String.valueOf(mob.prefix.length()) + "CONT" + mob.name.colorCode + "1W3CONT4CONT2DY8CONT5CONT1DY" + countColorCode;
                         Line mobLine = new Line(mobNameLabel, mobNameColorCode, mob.name.effectCode, isLastLine, true);
                         GameScreen.userInterface.console.writeToConsole(mobLine);
 
@@ -211,8 +214,8 @@ public class Room {
                             countColorCode = "2DR" + String.valueOf(itemNameMap.get(item.name.label)).length() + "W1DR";
                         }
 
-                        String itemNameLabel = item.name.label + " is laying on the ground." + countString;
-                        String itemNameColorCode = item.name.colorCode + "1W3CONT7CONT3CONT4CONT6CONT1DY" + countColorCode;
+                        String itemNameLabel = item.prefix + item.name.label + " is laying on the ground." + countString;
+                        String itemNameColorCode = String.valueOf(item.prefix.length()) + "CONT" + item.name.colorCode + "1W3CONT7CONT3CONT4CONT6CONT1DY" + countColorCode;
                         Line itemLine = new Line(itemNameLabel, itemNameColorCode, item.name.effectCode, isLastLine, true);
                         GameScreen.userInterface.console.writeToConsole(itemLine);
 
