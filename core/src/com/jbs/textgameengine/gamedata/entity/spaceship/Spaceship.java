@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class Spaceship extends Entity {
     public HashMap<String, Area> areaMap;
 
-    public String status; // Status: Landed, Launch, Orbit, Traveling, Land
+    public String status; // Status: Landed, Launch, Orbit, Flight, Land
     public int currentPhase;
     public int phaseTimer;
 
@@ -88,9 +88,11 @@ public class Spaceship extends Entity {
         return spaceship;
     }
 
-    public void update() {
+    public boolean update() {
         if(status.equals("Launch")) {updateLaunch();}
         else if(status.equals("Land")) {updateLand();}
+
+        return status.equals("Landed");
     }
 
     public void updateLaunch() {
@@ -151,7 +153,7 @@ public class Spaceship extends Entity {
                         location.solarSystem.spaceshipList.remove(this);
                     }
 
-                    GameScreen.userInterface.console.writeToConsole(new Line("You feel a soft thud on the ground as you land. ", "4CONT5CONT2W5CONT5CONT3CONT4CONT7CONT3CONT4CONT4CONT1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("You feel a soft *thud* as you land.", "4CONT5CONT2W5CONT1DY4CONT2DY3CONT4CONT4CONT1DY", "", true, true));
                 }
             }
         }
