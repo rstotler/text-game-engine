@@ -36,6 +36,7 @@ public class Mob extends Entity {
         // 1 - Greeter Droid //
         if(id == 1) {
             mob.name = new Line("Greeter Droid", "8CONT5CONT", "", true, true);
+            mob.roomDescription = new Line("is here, greeting visitors.", "3CONT4CONT2DY9CONT8CONT1DY", "", true, true);
         }
 
         mob.nameKeyList = Entity.createNameKeyList(mob.prefix + mob.name.label);
@@ -64,6 +65,11 @@ public class Mob extends Entity {
         gear.put("Ring 2", null);
 
         return gear;
+    }
+
+    public void update() {
+        if(currentAction != null) {
+        }
     }
 
     public boolean interruptAction() {

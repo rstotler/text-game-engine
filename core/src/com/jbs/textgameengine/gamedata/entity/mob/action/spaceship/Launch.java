@@ -28,7 +28,8 @@ public class Launch extends Action {
     public void initiate(Mob parentEntity) {
 
         // Message - You must be in a cockpit to do that. //
-        if(parentEntity.location.spaceship == null
+        if(parentEntity.location == null
+        ||parentEntity.location.spaceship == null
         || parentEntity.location.spaceship.cockpitRoom != parentEntity.location.room) {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("You must be in a cockpit to do that.", "4CONT5CONT3CONT3CONT2W8CONT3CONT3CONT4CONT1DY", "", true, true));
@@ -42,11 +43,11 @@ public class Launch extends Action {
             }
         }
 
-        // Message - You lack the ignition key. //
+        // Message - You lack the proper key. //
         else if(parentEntity.location.spaceship.keyNum != -9999
         && !parentEntity.hasKey(parentEntity.location.spaceship.keyNum)) {
             if(parentEntity.isPlayer) {
-                GameScreen.userInterface.console.writeToConsole(new Line("You lack the ignition key.", "4CONT5CONT4CONT9CONT3CONT1DY", "", true, true));
+                GameScreen.userInterface.console.writeToConsole(new Line("You lack the proper key.", "4CONT5CONT4CONT7CONT3CONT1DY", "", true, true));
             }
         }
 

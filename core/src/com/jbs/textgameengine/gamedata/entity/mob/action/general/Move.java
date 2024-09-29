@@ -26,7 +26,7 @@ public class Move extends Action {
             // Direction # //
             if(inputList.size() == 2 && Utility.isInteger(inputList.get(1))) {
                 moveAction.targetDirection = Location.getDirectionFromSubstring(inputList.get(0));
-                moveAction.directionCount = Integer.valueOf(inputList.get(1));
+                moveAction.targetCount = Integer.valueOf(inputList.get(1));
                 moveAction.actionType = "Direction #";
             }
 
@@ -86,7 +86,7 @@ public class Move extends Action {
             && parentRoom.location.spaceship.boardingRoomExitDirection == targetDirection
             && !parentRoom.location.spaceship.status.equals("Landed")) {
                 if(parentEntity.isPlayer) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("You can't leave while the ship is in use.", "4CONT3CONT1DY2DW6CONT6CONT4CONT5CONT3CONT3CONT3CONT1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("You can't leave while the ship is in flight.", "4CONT3CONT1DY2DW6CONT6CONT4CONT5CONT3CONT3CONT6CONT1DY", "", true, true));
                 }
             }
 

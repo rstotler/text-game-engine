@@ -56,8 +56,16 @@ public class Board extends Action {
             }
         }
 
+        // Message - You are already inside. //
+        if(parentEntity.location != null
+        && parentEntity.location.spaceship != null) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("You are already inside.", "4CONT4CONT8CONT6CONT1DY", "", true, true));
+            }
+        }
+
         // Message - You see no such ship. //
-        if(targetSpaceship == null) {
+        else if(targetSpaceship == null) {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("You see no such ship.", "4CONT4CONT3CONT5CONT4CONT1DY", "", true, true));
             }

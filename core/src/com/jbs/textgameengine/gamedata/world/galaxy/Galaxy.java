@@ -98,13 +98,14 @@ public class Galaxy {
         cotuRoom05.createExit("North", cotuRoom04, "Automatic", 12345);
         areaCOTU.roomList.add(cotuRoom05);
 
-        // Room 06 - Launch Pad //
-        Line cotuRoom06Name = new Line("Launch Pad", "7CONT3CONT", "", true, true);
+        // Room 06 - Landing Pad //
+        Line cotuRoom06Name = new Line("Landing Pad", "8CONT3CONT", "", true, true);
         Location cotuRoom06Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom06 = new Room(cotuRoom06Name, null, cotuRoom06Location);
         cotuRoom06.createExit("North", cotuRoom05);
         cotuRoom06.createEntity("Spaceship", 1);
         areaCOTU.roomList.add(cotuRoom06);
+        planetLapine.landingPadList.add(cotuRoom06);
 
         // Room 07 - A Passage Hidden By Shrubbery //
         Line cotuRoom07Name = new Line("A Passage Hidden By Shrubbery", "2W8CONT7CONT3CONT9CONT", "", true, true);

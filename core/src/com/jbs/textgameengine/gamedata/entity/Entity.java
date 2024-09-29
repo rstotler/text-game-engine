@@ -11,6 +11,7 @@ public class Entity {
     public Location location;
     public String prefix;
     public Line name;
+    public Line roomDescription;
     public ArrayList<String> nameKeyList;
 
     public Entity(Location startLocation) {
@@ -18,6 +19,7 @@ public class Entity {
         this.location = new Location(startLocation.galaxy, startLocation.solarSystem, startLocation.planetoid, startLocation.area, startLocation.room, startLocation.spaceship);
         prefix = "A ";
         name = null;
+        roomDescription = null;
         nameKeyList = null;
     }
 

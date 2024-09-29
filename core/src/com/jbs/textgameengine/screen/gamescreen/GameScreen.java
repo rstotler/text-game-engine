@@ -55,71 +55,71 @@ public class GameScreen extends Screen {
             // Keyboard Input //
             @Override
             public boolean keyDown(int keyCode) {
-                String key = Input.Keys.toString(keyCode);
+            String key = Input.Keys.toString(keyCode);
 
-                // Exit Game //
-                if(key.equals("Escape")) {
-                    dispose();
-                    System.exit(0);
+            // Exit Game //
+            if(key.equals("Escape")) {
+                dispose();
+                System.exit(0);
+            }
+
+            // Toggle Full Screen //
+            else if(key.equals("F5")) {
+                if(Gdx.graphics.isFullscreen()) {
+                    Gdx.graphics.setWindowedMode(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
+                } else {
+                    Graphics.DisplayMode currentMode = Gdx.graphics.getDisplayMode();
+                    Gdx.graphics.setFullscreenMode(currentMode);
                 }
+            }
 
-                // Toggle Full Screen //
-                else if(key.equals("F5")) {
-                    if(Gdx.graphics.isFullscreen()) {
-                        Gdx.graphics.setWindowedMode(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
-                    } else {
-                        Graphics.DisplayMode currentMode = Gdx.graphics.getDisplayMode();
-                        Gdx.graphics.setFullscreenMode(currentMode);
-                    }
+            // Toggle Fast Mode //
+            else if((Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
+            && key.equals("F")) {
+                fastMode = !fastMode;
+            }
+
+            // InputBar Input //
+            else if(InputBar.inputCharString.contains(key)) {
+                userInterface.inputBar.concatinateUserInput(key);
+            }
+
+            // Reset Backspace Timer //
+            else if(key.equals("Delete")) {
+                userInterface.inputBar.backspaceTimer = 0;
+            }
+
+            // Enter User Input //
+            else if(key.equals("Enter")) {
+                if(!userInterface.inputBar.userInput.isEmpty()) {
+                    processUserInput(userInterface.inputBar.userInput);
+                    userInterface.inputBar.enterUserInput();
                 }
+            }
 
-                // Toggle Fast Mode //
-                else if((Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
-                && key.equals("F")) {
-                    fastMode = !fastMode;
-                }
+            // Alt. Movement (Control + Arrow Keys) //
+            else if((Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
+            && (key.equals("Up") || key.equals("Down") || key.equals("Left") || key.equals("Right"))) {
+                String targetDirection = "";
+                if(key.equals("Up")) {targetDirection = "North";}
+                else if(key.equals("Down")) {targetDirection = "South";}
+                else if(key.equals("Left")) {targetDirection = "West";}
+                else if(key.equals("Right")) {targetDirection = "East";}
 
-                // InputBar Input //
-                else if(InputBar.inputCharString.contains(key)) {
-                    userInterface.inputBar.concatinateUserInput(key);
-                }
+                Move moveAction = new Move();
+                player.interruptAction();
 
-                // Reset Backspace Timer //
-                else if(key.equals("Delete")) {
-                    userInterface.inputBar.backspaceTimer = 0;
-                }
+                moveAction.actionType = "Direction";
+                moveAction.targetDirection = targetDirection;
+                moveAction.initiate(player);
+            }
 
-                // Enter User Input //
-                else if(key.equals("Enter")) {
-                    if(!userInterface.inputBar.userInput.isEmpty()) {
-                        processUserInput(userInterface.inputBar.userInput);
-                        userInterface.inputBar.enterUserInput();
-                    }
-                }
+            // Scroll User Input //
+            else if(key.equals("Up") || key.equals("Down")) {
+                userInterface.inputBar.scrollUserInput(key);
+            }
 
-                // Alt. Movement (Control + Arrow Keys) //
-                else if((Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
-                && (key.equals("Up") || key.equals("Down") || key.equals("Left") || key.equals("Right"))) {
-                    String targetDirection = "";
-                    if(key.equals("Up")) {targetDirection = "North";}
-                    else if(key.equals("Down")) {targetDirection = "South";}
-                    else if(key.equals("Left")) {targetDirection = "West";}
-                    else if(key.equals("Right")) {targetDirection = "East";}
-
-                    Move moveAction = new Move();
-                    player.interruptAction();
-
-                    moveAction.actionType = "Direction";
-                    moveAction.targetDirection = targetDirection;
-                    moveAction.initiate(player);
-                }
-
-                // Scroll User Input //
-                else if(key.equals("Up") || key.equals("Down")) {
-                    userInterface.inputBar.scrollUserInput(key);
-                }
-
-                return true;
+            return true;
             }
         });
     }
@@ -134,20 +134,20 @@ public class GameScreen extends Screen {
             player.location.solarSystem.update();
         }
 
+        // Update Player //
+        player.update();
+
         // Update Area & Surrounding Rooms //
         if((frameTimer == 0 || frameTimer == 30)
         && player.location != null
         && player.location.area != null
         && player.location.room != null) {
             AreaAndRoomData surroundingAreaAndRoomData = AreaAndRoomData.getSurroundingAreaAndRoomData(player.location.room, 5);
-            for(Area area : surroundingAreaAndRoomData.areaList) {
-                area.update();
-            }
-            for(Room room : surroundingAreaAndRoomData.roomList) {
-                room.update();
-            }
+            for(Area area : surroundingAreaAndRoomData.areaList) {area.update();}
+            for(Room room : surroundingAreaAndRoomData.roomList) {room.update();}
         }
 
+        // Update Game & Frame Timers //
         gameTimer += 1;
         if(!fastMode) {frameTimer += 1;}
         if(fastMode || frameTimer >= 60) {

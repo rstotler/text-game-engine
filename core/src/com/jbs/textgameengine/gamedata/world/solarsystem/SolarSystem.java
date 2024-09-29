@@ -28,7 +28,8 @@ public class SolarSystem {
             planetoid.update();
         }
 
-        for(Spaceship spaceship : spaceshipList) {
+        for(int i = 0; i < spaceshipList.size(); i++) {
+            Spaceship spaceship = spaceshipList.get(i);
             spaceship.update();
         }
     }

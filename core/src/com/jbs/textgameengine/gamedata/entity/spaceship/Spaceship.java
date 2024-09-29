@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class Spaceship extends Entity {
     public HashMap<String, Area> areaMap;
 
-    public String status; // Status: Landed, Launch, Orbit, Traveling
+    public String status; // Status: Landed, Launch, Orbit, Traveling, Land
     public int currentPhase;
     public int phaseTimer;
 
@@ -89,9 +89,8 @@ public class Spaceship extends Entity {
     }
 
     public void update() {
-        if(status.equals("Launch")) {
-            updateLaunch();
-        }
+        if(status.equals("Launch")) {updateLaunch();}
+        else if(status.equals("Land")) {updateLand();}
     }
 
     public void updateLaunch() {
@@ -103,15 +102,15 @@ public class Spaceship extends Entity {
 
             if(GameScreen.player.location.spaceship == this) {
                 if(currentPhase == 1) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("The ship rumbles as the engines begin to hum.", "4CONT5CONT8CONT3CONT4CONT8CONT6CONT3CONT3CONT1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("A computerized voice says, 'Commencing launch.'", "2W13CONT6CONT4CONT3DY11SHIA6SHIA2DY", "", true, true));
                 }
 
                 else if(currentPhase == 2) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("The engines *ROAR* as you blast off!", "4CONT8CONT1DY4CONT2DY3CONT4CONT6CONT3CONT1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("The ship rumbles as the engines begin to hum.", "4CONT5CONT8CONT3CONT4CONT8CONT6CONT3CONT3CONT1DY", "", true, true));
                 }
 
                 else if(currentPhase == 3) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("The ship rumbles as it makes its fiery ascent.", "4CONT5CONT8CONT3CONT3CONT6CONT4CONT6SHIAR6CONT1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("The engines roar to life as you *BLAST* off!", "4CONT8CONT5CONT3CONT5CONT3CONT4CONT1DY5SHIAC2DY3CONT1DY", "", true, true));
                 }
 
                 else if(currentPhase == 4) {
@@ -119,6 +118,40 @@ public class Spaceship extends Entity {
                     currentPhase = 0;
 
                     GameScreen.userInterface.console.writeToConsole(new Line("You being orbiting " + location.planetoid.name.label + ".", "4CONT6CONT9CONT" + location.planetoid.name.colorCode + "1DY", "", true, true));
+                }
+            }
+        }
+    }
+
+    public void updateLand() {
+        phaseTimer += 1;
+
+        if(phaseTimer >= 4) {
+            phaseTimer = 0;
+            currentPhase += 1;
+
+            if(GameScreen.player.location.spaceship == this) {
+                if(currentPhase == 1) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("A computerized voice says, 'Initiating landing sequence.'", "2W13CONT6CONT4CONT3DY11SHIA8SHIA8SHIA2DY", "", true, true));
+                }
+
+                else if(currentPhase == 2) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("The ship rumbles as it makes its fiery descent.", "4CONT5CONT8CONT3CONT3CONT6CONT4CONT6SHIAR7CONT1DY", "", true, true));
+                }
+
+                else if(currentPhase == 3) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("The engines begin powering down as you near your destination.", "4CONT8CONT6CONT9CONT5CONT3CONT4CONT5CONT5CONT11CONT1DY", "", true, true));
+                }
+
+                else if(currentPhase == 4) {
+                    status = "Landed";
+                    currentPhase = 0;
+
+                    if(location.solarSystem.spaceshipList.contains(this)) {
+                        location.solarSystem.spaceshipList.remove(this);
+                    }
+
+                    GameScreen.userInterface.console.writeToConsole(new Line("You feel a soft thud on the ground as you land. ", "4CONT5CONT2W5CONT5CONT3CONT4CONT7CONT3CONT4CONT4CONT1DY", "", true, true));
                 }
             }
         }

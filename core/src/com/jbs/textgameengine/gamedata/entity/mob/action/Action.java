@@ -1,11 +1,10 @@
 package com.jbs.textgameengine.gamedata.entity.mob.action;
 
-import com.jbs.textgameengine.gamedata.entity.mob.action.other.Emote;
-import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.Board;
-import com.jbs.textgameengine.gamedata.entity.mob.action.general.Look;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
-import com.jbs.textgameengine.gamedata.entity.mob.action.general.Move;
-import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.Launch;
+import com.jbs.textgameengine.gamedata.entity.mob.action.combat.Attack;
+import com.jbs.textgameengine.gamedata.entity.mob.action.other.*;
+import com.jbs.textgameengine.gamedata.entity.mob.action.general.*;
+import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.*;
 
 import java.util.ArrayList;
 
@@ -16,7 +15,7 @@ public class Action {
 
     public String targetEntityString;
     public String targetDirection;
-    public int directionCount;
+    public int targetCount;
     public String targetContainerString;
 
     public Action() {
@@ -24,7 +23,7 @@ public class Action {
 
         targetEntityString = "";
         targetDirection = "";
-        directionCount = -1;
+        targetCount = -1;
         targetContainerString = "";
     }
 
@@ -39,8 +38,15 @@ public class Action {
 
         actionList.add(new Look());
         actionList.add(new Move());
+
         actionList.add(new Board());
         actionList.add(new Launch());
+        actionList.add(new Radar());
+        actionList.add(new Land());
+
+        actionList.add(new Attack());
+
+        actionList.add(new Time());
         actionList.add(new Emote());
 
         return actionList;

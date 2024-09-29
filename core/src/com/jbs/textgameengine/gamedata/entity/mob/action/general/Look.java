@@ -31,14 +31,14 @@ public class Look extends Action {
             // Look Direction # //
             else if(inputList.size() == 3 && Location.directionList.contains(inputList.get(1)) && Utility.isInteger(inputList.get(2))) {
                 lookAction.targetDirection = Location.getDirectionFromSubstring(inputList.get(1));
-                lookAction.directionCount = Integer.valueOf(inputList.get(2));
+                lookAction.targetCount = Integer.valueOf(inputList.get(2));
                 lookAction.actionType = "Look Direction #";
             }
 
             // Look Direction # Entity //
             else if(inputList.size() >= 4 && Location.directionList.contains(inputList.get(1)) && Utility.isInteger(inputList.get(2))) {
                 lookAction.targetDirection = Location.getDirectionFromSubstring(inputList.get(1));
-                lookAction.directionCount = Integer.valueOf(inputList.get(2));
+                lookAction.targetCount = Integer.valueOf(inputList.get(2));
                 List<String> targetEntityStringList = inputList.subList(3, inputList.size());
                 lookAction.targetEntityString = targetEntityStringList.stream().collect(Collectors.joining(" "));
                 lookAction.actionType = "Look Direction # Entity";

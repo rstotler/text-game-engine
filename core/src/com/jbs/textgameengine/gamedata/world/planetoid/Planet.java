@@ -2,9 +2,11 @@ package com.jbs.textgameengine.gamedata.world.planetoid;
 
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.area.Area;
+import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Planet extends Planetoid {
@@ -15,6 +17,7 @@ public class Planet extends Planetoid {
     public static boolean sunsetMessage = true;
 
     public HashMap<String, Area> areaMap;
+    public ArrayList<Room> landingPadList;
 
     public Planet(Line name, Location location, int distanceFromCenter, int orbitDirection, float axialTilt, int minutesInDay, int minutesInYear) {
         super(name, location, distanceFromCenter, orbitDirection, axialTilt, minutesInDay, minutesInYear);
@@ -23,6 +26,7 @@ public class Planet extends Planetoid {
         this.location.planetoid = this;
 
         areaMap = new HashMap<>();
+        landingPadList = new ArrayList<>();
     }
 
     public void update() {

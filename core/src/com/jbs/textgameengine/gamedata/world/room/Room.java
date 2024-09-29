@@ -16,6 +16,7 @@ public class Room {
     public Line name;
     public Line description;
     public Location location;
+    public ArrayList<String> nameKeyList;
 
     public HashMap<String, Room> exitMap;
     public HashMap<String, Door> doorMap;
@@ -30,6 +31,7 @@ public class Room {
         this.description = description;
         this.location = new Location(location.galaxy, location.solarSystem, location.planetoid, location.area, null, location.spaceship);
         this.location.room = this;
+        nameKeyList = Entity.createNameKeyList(name.label.toLowerCase());
 
         exitMap = new HashMap<>();
         doorMap = new HashMap<>();
@@ -46,6 +48,9 @@ public class Room {
     }
 
     public void update() {
+        for(Entity mob : mobList) {
+            ((Mob) mob).update();
+        }
     }
 
     public void display() {
@@ -157,8 +162,14 @@ public class Room {
                             countColorCode = "2DR" + String.valueOf(mobNameMap.get(mob.name.label)).length() + "W1DR";
                         }
 
-                        String mobNameLabel = mob.prefix + mob.name.label + " is here, milling about." + countString;
-                        String mobNameColorCode = String.valueOf(mob.prefix.length()) + "CONT" + mob.name.colorCode + "1W3CONT4CONT2DY8CONT5CONT1DY" + countColorCode;
+                        String mobRoomDescriptionLabel = "is here, milling about.";
+                        String mobRoomDescriptionColorCode = "3CONT4CONT2DY8CONT5CONT1DY";
+                        if(mob.roomDescription != null) {
+                            mobRoomDescriptionLabel = mob.roomDescription.label;
+                            mobRoomDescriptionColorCode = mob.roomDescription.colorCode;
+                        }
+                        String mobNameLabel = mob.prefix + mob.name.label + " " + mobRoomDescriptionLabel + countString;
+                        String mobNameColorCode = String.valueOf(mob.prefix.length()) + "CONT" + mob.name.colorCode + "1W" + mobRoomDescriptionColorCode + countColorCode;
                         Line mobLine = new Line(mobNameLabel, mobNameColorCode, mob.name.effectCode, isLastLine, true);
                         GameScreen.userInterface.console.writeToConsole(mobLine);
 
