@@ -19,7 +19,7 @@ public class Radar extends Action {
     public Action getActionFromInput(String input, Mob parentEntity) {
         ArrayList<String> inputList = new ArrayList<>(Arrays.asList(input.split(" ")));
 
-        if(Arrays.asList("radar", "rada", "rad").contains(inputList.get(0))
+        if(Arrays.asList("radar", "rada", "rad", "ra").contains(inputList.get(0))
         && inputList.size() == 1) {
             return new Radar();
         }

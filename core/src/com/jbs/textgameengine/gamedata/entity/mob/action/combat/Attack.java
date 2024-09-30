@@ -6,6 +6,8 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.jbs.textgameengine.screen.gamescreen.GameScreen.userInterface;
 
@@ -20,9 +22,17 @@ public class Attack extends Action {
         if(Arrays.asList("attack", "attac", "atta", "att", "at", "a", "kill", "kil", "ki", "k").contains(inputList.get(0))) {
             Attack attackAction = new Attack();
 
-            // Attack Mob //
-            if(inputList.size() > 1) {
-                attackAction.actionType = "Attack Mob";
+            // Attack All //
+            if(inputList.size() == 2 && inputList.get(1).equals("all")) {
+                attackAction.allCheck = true;
+                attackAction.actionType = "Attack All";
+            }
+
+            // Attack Target //
+            else if(inputList.size() > 1) {
+                List<String> targetEntityStringList = inputList.subList(1, inputList.size());
+                attackAction.targetEntityString = targetEntityStringList.stream().collect(Collectors.joining(" "));
+                attackAction.actionType = "Attack Target";
             }
 
             // Attack //
@@ -36,7 +46,31 @@ public class Attack extends Action {
         return null;
     }
 
-    public void initiate(Mob parentEntity) {
+    // Attack who?
+    // You can't use that now.
+    // You don't see anyone like that.
+    // You can't reach that far.
+    // You're too close.
+    // You can't use it on yourself.
+    // The door is closed.
+    // There is no one there.
+    // You trip over yourself trying to do too much at once.
 
+    // You prepare to attack..
+
+    public void initiate(Mob parentEntity) {
+        ArrayList<Mob> targetList = new ArrayList<>();
+
+        // Get Attack Target(s) //
+        if(actionType.equals("Attack All")) {
+        }
+
+        else if(actionType.equals("Attack Target")) {
+
+        }
+
+        else if(actionType.equals("Attack")) {
+
+        }
     }
 }

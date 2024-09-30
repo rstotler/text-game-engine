@@ -15,8 +15,9 @@ public class Mob extends Entity {
     public HashMap<String, ArrayList<Item>> inventory;
     public HashMap<String, Item> gear;
 
-    public ArrayList<Mob> targetList;
     public Action currentAction;
+    public ArrayList<Mob> targetList;
+    public ArrayList<Mob> combatList;
 
     public Mob(Location startLocation) {
         super(startLocation);
@@ -26,8 +27,9 @@ public class Mob extends Entity {
         inventory = loadInventory();
         gear = loadGear();
 
-        targetList = new ArrayList<>();
         currentAction = null;
+        targetList = new ArrayList<>();
+        combatList = new ArrayList<>();
     }
 
     public static Mob load(int id, Location startLocation) {
