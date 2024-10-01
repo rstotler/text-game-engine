@@ -2,10 +2,11 @@ package com.jbs.textgameengine.gamedata.entity.mob.action;
 
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.Attack;
+import com.jbs.textgameengine.gamedata.entity.mob.action.combat.CombatAction;
 import com.jbs.textgameengine.gamedata.entity.mob.action.other.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.*;
-import com.jbs.textgameengine.gamedata.entity.mob.combat.combataction.CombatAction;
+import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
 
 import java.util.ArrayList;
 
@@ -13,7 +14,6 @@ public class Action {
     public static ArrayList<Action> actionList = loadActionList();
 
     public String actionType;
-    public ArrayList<String> nameKeyList;
 
     public String targetEntityString;
     public String targetDirection;
@@ -24,11 +24,10 @@ public class Action {
     public boolean groupCheck;
     public boolean selfCheck;
 
-    public int maxRange;
+    public Skill skill;
 
-    public Action() {
+    public Action(Skill skill) {
         actionType = "";
-        nameKeyList = new ArrayList<>();
 
         targetEntityString = "";
         targetDirection = "";
@@ -39,7 +38,11 @@ public class Action {
         groupCheck = false;
         selfCheck = false;
 
-        maxRange = 0;
+        this.skill = skill;
+    }
+
+    public Action() {
+        this(null);
     }
 
     public Action getActionFromInput(String input, Mob parentEntity) {
@@ -47,6 +50,10 @@ public class Action {
     }
 
     public void initiate(Mob parentEntity) {}
+
+    public String toString() {
+        return getClass().toString().substring(getClass().toString().lastIndexOf(".") + 1);
+    }
 
     public static ArrayList<Action> loadActionList() {
         ArrayList<Action> actionList = new ArrayList<>();
@@ -59,7 +66,7 @@ public class Action {
         actionList.add(new Radar());
         actionList.add(new Land());
 
-        actionList.add(new CombatAction());
+        actionList.add(new CombatAction(null));
         actionList.add(new Attack());
 
         actionList.add(new Time());

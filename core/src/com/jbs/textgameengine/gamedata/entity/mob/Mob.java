@@ -3,6 +3,8 @@ package com.jbs.textgameengine.gamedata.entity.mob;
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
+import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
+import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.general.*;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
@@ -15,6 +17,8 @@ public class Mob extends Entity {
     public HashMap<String, ArrayList<Item>> inventory;
     public HashMap<String, Item> gear;
 
+    public HashMap<String, ArrayList<Skill>> skillMap;
+
     public Action currentAction;
     public ArrayList<Mob> targetList;
     public ArrayList<Mob> combatList;
@@ -26,6 +30,8 @@ public class Mob extends Entity {
 
         inventory = loadInventory();
         gear = loadGear();
+
+        skillMap = loadSkillMap();
 
         currentAction = null;
         targetList = new ArrayList<>();
@@ -67,6 +73,20 @@ public class Mob extends Entity {
         gear.put("Ring 2", null);
 
         return gear;
+    }
+
+    public static HashMap<String, ArrayList<Skill>> loadSkillMap() {
+        HashMap<String, ArrayList<Skill>> newSkillMap = new HashMap<>();
+
+        ArrayList<Skill> combatSkillList = new ArrayList<>();
+        combatSkillList.add(new Punch());
+        combatSkillList.add(new Fireball());
+        combatSkillList.add(new Firestorm());
+        combatSkillList.add(new Heal());
+        combatSkillList.add(new SpinPunch());
+        newSkillMap.put("Combat", combatSkillList);
+
+        return newSkillMap;
     }
 
     public void update() {

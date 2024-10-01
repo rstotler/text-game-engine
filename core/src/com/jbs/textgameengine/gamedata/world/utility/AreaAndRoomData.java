@@ -42,7 +42,7 @@ public class AreaAndRoomData {
                     viewLocation = new Point(firstLocation);
                 }
                 if(targetRoom.exitMap.containsKey(direction)) {
-                    TargetRoomData targetRoomData = getTargetRoomFromStartRoom(targetRoom, new ArrayList<>(Arrays.asList(direction)), true, true);
+                    TargetRoomData targetRoomData = TargetRoomData.getTargetRoomFromStartRoom(targetRoom, new ArrayList<>(Arrays.asList(direction)), true, true);
                     if(Arrays.asList("East", "West").contains(direction)) {
                         viewLocation.x += 1;
                     }
@@ -64,71 +64,5 @@ public class AreaAndRoomData {
         }
 
         return new AreaAndRoomData(examinedAreaList, examinedRoomList);
-    }
-
-    public static TargetRoomData getTargetRoomFromStartRoom(Room targetRoom, ArrayList<String> directionList, boolean ignoreDoors, boolean ignoreHiddenExits) {
-        TargetRoomData targetRoomData = new TargetRoomData();
-
-        int distance = 0;
-        for(String direction : directionList) {
-
-            // Exit Doesn't Exist //
-            if(!targetRoom.exitMap.containsKey(direction)
-            || targetRoom.exitMap.get(direction) == null) {
-                targetRoomData.message = "No Exit";
-                break;
-            }
-
-            // Door Is Closed //
-            else if(targetRoom.doorMap.containsKey(direction)
-            && targetRoom.doorMap.get(direction) != null
-            && !targetRoom.doorMap.get(direction).status.equals("Open")) {
-                targetRoomData.message = "Door Is Closed";
-                if(!ignoreDoors) {
-                    break;
-                }
-            }
-
-            // Hidden Exit Is Closed //
-            else if(targetRoom.hiddenExitMap.containsKey(direction)
-            && targetRoom.hiddenExitMap.get(direction) != null
-            && !targetRoom.hiddenExitMap.get(direction).isOpen) {
-                targetRoomData.message = "Hidden Exit Is Closed";
-                if(!ignoreDoors) {
-                    break;
-                }
-            }
-
-            // Spaceship Exit Door //
-            else if(targetRoom.location.spaceship != null
-            && targetRoom.location.spaceship.boardingRoom == targetRoom
-            && !targetRoom.location.spaceship.hatchStatus.equals("Open")) {
-                targetRoomData.message = "Door Is Closed";
-                if(!ignoreDoors) {
-                    break;
-                }
-            }
-
-            // Spaceship Exit //
-            if(targetRoom.location.spaceship != null
-            && targetRoom.location.spaceship.boardingRoom == targetRoom
-            && targetRoom.location.spaceship.location.room != null
-            && targetRoom.location.spaceship.status.equals("Landed")) {
-                targetRoom = targetRoom.location.spaceship.location.room;
-            }
-
-            // Normal Room Exit //
-            else if(targetRoom.exitMap.containsKey(direction)
-            && targetRoom.exitMap.get(direction) != null) {
-                targetRoom = targetRoom.exitMap.get(direction);
-            }
-
-            distance += 1;
-        }
-
-        targetRoomData.targetRoom = targetRoom;
-        targetRoomData.distance = distance;
-
-        return targetRoomData;
     }
 }

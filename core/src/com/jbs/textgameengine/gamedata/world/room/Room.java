@@ -7,6 +7,7 @@ import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.entity.spaceship.Spaceship;
 import com.jbs.textgameengine.gamedata.world.room.door.Door;
 import com.jbs.textgameengine.gamedata.world.room.hiddenexit.HiddenExit;
+import com.jbs.textgameengine.gamedata.world.utility.TargetRoomData;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
@@ -370,6 +371,10 @@ public class Room {
         else if(entityType.equals("Spaceship")) {
             spaceshipList.add(Spaceship.load(id, this.location));
         }
+    }
+
+    public TargetRoomData getDistanceToTarget(Entity targetEntity, int maxDistance) {
+        return null;
     }
 
     public Entity getEntityFromNameKey(String key, String entityType) {
