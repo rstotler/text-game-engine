@@ -10,15 +10,19 @@ import java.util.Arrays;
 import static com.jbs.textgameengine.screen.gamescreen.GameScreen.userInterface;
 
 public class Target extends Action {
+    public Target(Mob parentEntity) {
+        super(parentEntity);
+    }
+
     public Target() {
-        super();
+        this(null);
     }
 
     public Action getActionFromInput(String input, Mob parentEntity) {
         ArrayList<String> inputList = new ArrayList<>(Arrays.asList(input.split(" ")));
 
         if(Arrays.asList("target", "targe", "targ", "tar", "ta", "t").contains(inputList.get(0))) {
-            Target targetAction = new Target();
+            Target targetAction = new Target(parentEntity);
 
             if(false) {
 
@@ -35,7 +39,7 @@ public class Target extends Action {
         return null;
     }
 
-    public void initiate(Mob parentEntity) {
+    public void initiate() {
 //        if(actionType.equals("")) {
 //        }
 //

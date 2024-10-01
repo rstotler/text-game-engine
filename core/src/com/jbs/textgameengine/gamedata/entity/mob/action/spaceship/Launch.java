@@ -9,15 +9,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Launch extends Action {
+    public Launch(Mob targetEntity) {
+        super(targetEntity);
+    }
+
     public Launch() {
-        super();
+        this(null);
     }
 
     public Action getActionFromInput(String input, Mob parentEntity) {
         ArrayList<String> inputList = new ArrayList<>(Arrays.asList(input.split(" ")));
 
         if(Arrays.asList("launch", "launc", "laun", "lau").contains(inputList.get(0))) {
-            Launch launchAction = new Launch();
+            Launch launchAction = new Launch(parentEntity);
 
             return launchAction;
         }
@@ -25,7 +29,7 @@ public class Launch extends Action {
         return null;
     }
 
-    public void initiate(Mob parentEntity) {
+    public void initiate() {
 
         // Message - You must be in a cockpit to do that. //
         if(parentEntity.location == null

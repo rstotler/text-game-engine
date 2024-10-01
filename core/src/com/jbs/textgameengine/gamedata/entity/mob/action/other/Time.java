@@ -9,8 +9,12 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import java.util.*;
 
 public class Time extends Action {
+    public Time(Mob parentEntity) {
+        super(parentEntity);
+    }
+
     public Time() {
-        super();
+        this(null);
     }
 
     public Action getActionFromInput(String input, Mob parentEntity) {
@@ -18,13 +22,13 @@ public class Time extends Action {
 
         if(Arrays.asList("time", "tim", "ti").contains(inputList.get(0))
         && inputList.size() == 1) {
-            return new Time();
+            return new Time(parentEntity);
         }
 
         return null;
     }
 
-    public void initiate(Mob parentEntity) {
+    public void initiate() {
 
         // Message - You must be on a planet to do that.
         if(parentEntity.location == null

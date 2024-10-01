@@ -106,12 +106,12 @@ public class GameScreen extends Screen {
                 else if(key.equals("Left")) {targetDirection = "West";}
                 else if(key.equals("Right")) {targetDirection = "East";}
 
-                Move moveAction = new Move();
+                Move moveAction = new Move(player);
                 player.interruptAction();
 
                 moveAction.actionType = "Direction";
                 moveAction.targetDirection = targetDirection;
-                moveAction.initiate(player);
+                moveAction.initiate();
             }
 
             // Scroll User Input //
@@ -173,8 +173,9 @@ public class GameScreen extends Screen {
         boolean actionCheck = false;
         for(Action actionType : Action.actionList) {
             Action targetAction = actionType.getActionFromInput(input.toLowerCase(), player);
-            if(targetAction != null) {
-                targetAction.initiate(player);
+            if(targetAction != null
+            && targetAction.parentEntity != null) {
+                targetAction.initiate();
                 actionCheck = true;
                 break;
             }

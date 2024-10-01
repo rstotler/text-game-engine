@@ -11,15 +11,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Board extends Action {
+    public Board(Mob parentEntity) {
+        super(parentEntity);
+    }
+
     public Board() {
-        super();
+        this(null);
     }
 
     public Action getActionFromInput(String input, Mob parentEntity) {
         ArrayList<String> inputList = new ArrayList<>(Arrays.asList(input.split(" ")));
 
         if(Arrays.asList("board", "boar", "boa", "bo", "enter", "ente", "ent", "en").contains(inputList.get(0))) {
-            Board boardAction = new Board();
+            Board boardAction = new Board(parentEntity);
 
             // Board Target //
             if(inputList.size() > 1) {
@@ -39,7 +43,7 @@ public class Board extends Action {
         return null;
     }
 
-    public void initiate(Mob parentEntity) {
+    public void initiate() {
         Spaceship targetSpaceship = null;
 
         if(actionType.equals("Board Target")) {

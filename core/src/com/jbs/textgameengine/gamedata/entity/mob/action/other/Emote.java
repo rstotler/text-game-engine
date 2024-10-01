@@ -8,14 +8,14 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import java.util.*;
 
 public class Emote extends Action {
-    public Emote(String actionType) {
-        super();
+    public Emote(Mob parentEntity, String actionType) {
+        super(parentEntity);
 
         this.actionType = actionType;
     }
 
     public Emote() {
-        super();
+        this(null, null);
     }
 
     public Action getActionFromInput(String input, Mob parentEntity) {
@@ -23,23 +23,23 @@ public class Emote extends Action {
 
         if(Arrays.asList("hmm", "hm").contains(inputList.get(0))
         && inputList.size() == 1) {
-            return new Emote("Hmm");
+            return new Emote(parentEntity, "Hmm");
         }
 
         else if(Arrays.asList("nod").contains(inputList.get(0))
         && inputList.size() == 1) {
-            return new Emote("Nod");
+            return new Emote(parentEntity, "Nod");
         }
 
         else if(Arrays.asList("nodnod").contains(inputList.get(0))
         && inputList.size() == 1) {
-            return new Emote("Nodnod");
+            return new Emote(parentEntity, "Nodnod");
         }
 
         return null;
     }
 
-    public void initiate(Mob parentEntity) {
+    public void initiate() {
         if(actionType.equals("Hmm")) {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("You scratch your chin and go, 'Hmm..'", "4CONT8CONT5CONT5CONT4CONT2CONT3DY5CONT1DY", "", true, true));

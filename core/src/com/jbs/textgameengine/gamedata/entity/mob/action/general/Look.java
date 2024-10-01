@@ -12,15 +12,19 @@ import java.util.stream.Collectors;
 import static com.jbs.textgameengine.screen.gamescreen.GameScreen.userInterface;
 
 public class Look extends Action {
+    public Look(Mob parentEntity) {
+        super(parentEntity);
+    }
+
     public Look() {
-        super();
+        this(null);
     }
 
     public Action getActionFromInput(String input, Mob parentEntity) {
         ArrayList<String> inputList = new ArrayList<>(Arrays.asList(input.split(" ")));
 
         if(Arrays.asList("look", "loo", "lo", "l", "examine", "examin", "exami", "exam", "exa", "ex").contains(inputList.get(0))) {
-            Look lookAction = new Look();
+            Look lookAction = new Look(parentEntity);
 
             // Look Direction //
             if(inputList.size() == 2 && Location.directionList.contains(inputList.get(1))) {
@@ -90,7 +94,7 @@ public class Look extends Action {
         return null;
     }
 
-    public void initiate(Mob parentEntity) {
+    public void initiate() {
         if(actionType.equals("Look Direction")) {
         }
 
@@ -110,10 +114,11 @@ public class Look extends Action {
         }
 
         else if(actionType.equals("Look")) {
-            if(parentEntity.isPlayer
-            && parentEntity.location != null
+            if(parentEntity.location != null
             && parentEntity.location.room != null) {
-                parentEntity.location.room.display();
+                if(parentEntity.isPlayer) {
+                    parentEntity.location.room.display();
+                }
             }
         }
 

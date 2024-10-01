@@ -12,8 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Radar extends Action {
+    public Radar(Mob parentEntity) {
+        super(parentEntity);
+    }
+
     public Radar() {
-        super();
+        this(null);
     }
 
     public Action getActionFromInput(String input, Mob parentEntity) {
@@ -21,13 +25,13 @@ public class Radar extends Action {
 
         if(Arrays.asList("radar", "rada", "rad", "ra").contains(inputList.get(0))
         && inputList.size() == 1) {
-            return new Radar();
+            return new Radar(parentEntity);
         }
 
         return null;
     }
 
-    public void initiate(Mob parentEntity) {
+    public void initiate() {
 
         // Message - You must be in a cockpit to do that. //
         if(parentEntity.location.spaceship == null

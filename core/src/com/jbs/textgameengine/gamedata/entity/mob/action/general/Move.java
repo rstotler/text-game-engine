@@ -13,15 +13,19 @@ import java.util.*;
 import static com.jbs.textgameengine.screen.gamescreen.GameScreen.userInterface;
 
 public class Move extends Action {
+    public Move(Mob parentEntity) {
+        super(parentEntity);
+    }
+
     public Move() {
-        super();
+        this(null);
     }
 
     public Action getActionFromInput(String input, Mob parentEntity) {
         ArrayList<String> inputList = new ArrayList<>(Arrays.asList(input.split(" ")));
 
         if(Location.directionList.contains(inputList.get(0))) {
-            Move moveAction = new Move();
+            Move moveAction = new Move(parentEntity);
 
             // Direction # //
             if(inputList.size() == 2 && Utility.isInteger(inputList.get(1))) {
@@ -47,7 +51,7 @@ public class Move extends Action {
         return null;
     }
 
-    public void initiate(Mob parentEntity) {
+    public void initiate() {
         if(actionType.equals("Direction #")) {
         }
 

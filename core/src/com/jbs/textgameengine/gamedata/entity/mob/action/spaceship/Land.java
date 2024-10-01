@@ -12,15 +12,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Land extends Action {
+    public Land(Mob parentEntity) {
+        super(parentEntity);
+    }
+
     public Land() {
-        super();
+        this(null);
     }
 
     public Action getActionFromInput(String input, Mob parentEntity) {
         ArrayList<String> inputList = new ArrayList<>(Arrays.asList(input.split(" ")));
 
         if(Arrays.asList("land", "lan", "la").contains(inputList.get(0))) {
-            Land landAction = new Land();
+            Land landAction = new Land(parentEntity);
 
             // Land # //
             if(inputList.size() == 2
@@ -47,7 +51,7 @@ public class Land extends Action {
         return null;
     }
 
-    public void initiate(Mob parentEntity) {
+    public void initiate() {
 
         // Message - You must be in a cockpit to do that. //
         if(parentEntity.location == null

@@ -24,9 +24,10 @@ public class Action {
     public boolean groupCheck;
     public boolean selfCheck;
 
+    public Mob parentEntity;
     public Skill skill;
 
-    public Action(Skill skill) {
+    public Action(Mob parentEntity, Skill skill) {
         actionType = "";
 
         targetEntityString = "";
@@ -38,18 +39,25 @@ public class Action {
         groupCheck = false;
         selfCheck = false;
 
+        this.parentEntity = parentEntity;
         this.skill = skill;
     }
 
+    public Action(Mob parentEntity) {
+        this(parentEntity, null);
+    }
+
     public Action() {
-        this(null);
+        this(null, null);
     }
 
     public Action getActionFromInput(String input, Mob parentEntity) {
         return null;
     }
 
-    public void initiate(Mob parentEntity) {}
+    public void initiate() {}
+
+    public void performAction() {}
 
     public String toString() {
         return getClass().toString().substring(getClass().toString().lastIndexOf(".") + 1);
@@ -60,13 +68,14 @@ public class Action {
 
         actionList.add(new Look());
         actionList.add(new Move());
+        actionList.add(new Target());
 
         actionList.add(new Board());
         actionList.add(new Launch());
         actionList.add(new Radar());
         actionList.add(new Land());
 
-        actionList.add(new CombatAction(null));
+        actionList.add(new CombatAction());
         actionList.add(new Attack());
 
         actionList.add(new Time());

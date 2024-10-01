@@ -15,8 +15,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CombatAction extends Action {
-    public CombatAction(Skill combatSkill) {
-        super(combatSkill);
+    public CombatAction(Mob parentEntity, Skill combatSkill) {
+        super(parentEntity, combatSkill);
+    }
+
+    public CombatAction() {
+        this(null, null);
     }
 
     public CombatAction getActionFromInput(String input, Mob parentEntity) {
@@ -32,12 +36,12 @@ public class CombatAction extends Action {
         CombatAction targetCombatAction = null;
         for(Skill skill : parentEntity.skillMap.get("Combat")) {
             if(!twoWordKey.isEmpty() && skill.nameKeyList.contains(twoWordKey)) {
-                targetCombatAction = new CombatAction(skill);
+                targetCombatAction = new CombatAction(parentEntity, skill);
                 inputList = new ArrayList<>(inputList.subList(2, inputList.size()));
                 break;
             }
             else if(skill.nameKeyList.contains(inputList.get(0))) {
-                targetCombatAction = new CombatAction(skill);
+                targetCombatAction = new CombatAction(parentEntity, skill);
                 inputList = new ArrayList<>(inputList.subList(1, inputList.size()));
                 break;
             }
@@ -147,7 +151,7 @@ public class CombatAction extends Action {
         return null;
     }
 
-    public void initiate(Mob parentEntity) {
+    public void initiate() {
 
         // Message - You lose balance and trip over yourself. //
         if(parentEntity.currentAction != null
@@ -294,7 +298,7 @@ public class CombatAction extends Action {
                 else {
                     parentEntity.interruptAction();
 
-                    parentEntity.currentAction = this;
+                    // parentEntity.currentAction = this;
 
                     if(parentEntity.isPlayer) {
                         GameScreen.userInterface.console.writeToConsole(new Line("You prepare to " + skill.toString().toLowerCase() + "..", "4CONT8CONT3CONT" + String.valueOf(skill.toString().length()) + "CONT2DY", "", true, true));
