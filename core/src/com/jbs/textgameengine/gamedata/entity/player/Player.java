@@ -9,7 +9,6 @@ public class Player extends Mob {
 
     public Player(Location startLocation) {
         super(startLocation);
-
         isPlayer = true;
 
         updateActionTimer = 0;

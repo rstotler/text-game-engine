@@ -14,6 +14,11 @@ public class Entity {
     public Line roomDescription;
     public ArrayList<String> nameKeyList;
 
+    public boolean isPlayer;
+    public boolean isMob;
+    public boolean isItem;
+    public boolean isSpaceship;
+
     public Entity(Location startLocation) {
         id = -1;
         this.location = new Location(startLocation.galaxy, startLocation.solarSystem, startLocation.planetoid, startLocation.area, startLocation.room, startLocation.spaceship);
@@ -21,6 +26,11 @@ public class Entity {
         name = null;
         roomDescription = null;
         nameKeyList = null;
+
+        isPlayer = false;
+        isMob = false;
+        isItem = false;
+        isSpaceship = false;
     }
 
     public static ArrayList<String> createNameKeyList(String targetString) {

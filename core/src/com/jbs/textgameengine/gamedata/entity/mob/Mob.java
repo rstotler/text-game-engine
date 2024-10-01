@@ -12,8 +12,6 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import java.util.*;
 
 public class Mob extends Entity {
-    public boolean isPlayer;
-
     public HashMap<String, ArrayList<Item>> inventory;
     public HashMap<String, Item> gear;
 
@@ -25,8 +23,7 @@ public class Mob extends Entity {
 
     public Mob(Location startLocation) {
         super(startLocation);
-
-        isPlayer = false;
+        isMob = true;
 
         inventory = loadInventory();
         gear = loadGear();

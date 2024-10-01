@@ -15,6 +15,7 @@ public class Item extends Entity {
 
     public Item(Location startLocation) {
         super(startLocation);
+        isItem = true;
 
         pocket = "General";
 

@@ -25,6 +25,7 @@ public class Spaceship extends Entity {
     public Spaceship(Location startLocation) {
         super(startLocation);
         location.spaceship = this;
+        isSpaceship = true;
 
         areaMap = new HashMap<>();
 

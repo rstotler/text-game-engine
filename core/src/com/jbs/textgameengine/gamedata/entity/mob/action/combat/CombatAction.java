@@ -220,7 +220,7 @@ public class CombatAction extends Action {
 
             // Get Data //
             if(targetCount == -1 && !parentEntity.targetList.isEmpty()) {
-                TargetRoomData targetRoomData = parentEntity.location.room.getDistanceToTarget(parentEntity.targetList.get(0), skill.getMaxDistance(parentEntity));
+                TargetRoomData targetRoomData = TargetRoomData.getTargetEntityRoomFromStartRoom(parentEntity.location.room, parentEntity.targetList.get(0), skill.getMaxDistance(parentEntity));
                 if(targetRoomData != null) {
                     targetCount = targetRoomData.distance;
                     targetDirection = targetRoomData.targetDirection;

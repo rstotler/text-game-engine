@@ -373,10 +373,6 @@ public class Room {
         }
     }
 
-    public TargetRoomData getDistanceToTarget(Entity targetEntity, int maxDistance) {
-        return null;
-    }
-
     public Entity getEntityFromNameKey(String key, String entityType) {
         ArrayList<String> listsToSearch = new ArrayList<>();
         listsToSearch.add(entityType);
