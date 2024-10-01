@@ -101,10 +101,33 @@ public class Planet extends Planetoid {
     }
 
     public Line getTime() {
-        String timeLineLabel = "";
-        String timeLineColorCode = "";
+        int currentHours = minuteCountDay / 60;
+        int currentMinutes = (minuteCountDay % 60);
 
+        String amPMString = "";
+        String amPMColorCode = "";
+        if(minutesInDay == 1440) {
+            amPMString = " AM";
+            amPMColorCode = "3DW";
+            if(currentHours >= 12) {
+                amPMString = " PM";
+                if(currentHours > 12) {
+                    currentHours -= 12;
+                }
+            }
+            else if(currentHours == 0) {
+                currentHours = 12;
+            }
+        }
 
+        String currentHoursString = String.valueOf(currentHours);
+        String currentMinutesString = String.valueOf(currentMinutes);
+        if(currentMinutesString.length() == 1) {
+            currentMinutesString = "0" + currentMinutesString;
+        }
+
+        String timeLineLabel = "It is currently " + currentHoursString + ":" + currentMinutesString + amPMString + " on " + name.label + ".";
+        String timeLineColorCode = "3CONT3CONT10CONT" + String.valueOf(currentHoursString.length()) + "W1DY" + String.valueOf(currentMinutesString.length()) + "W" + amPMColorCode + "1W3CONT" + name.colorCode + "1DY";
 
         return new Line(timeLineLabel, timeLineColorCode, "", true, true);
     }

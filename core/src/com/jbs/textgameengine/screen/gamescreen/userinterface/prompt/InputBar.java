@@ -56,6 +56,7 @@ public class InputBar extends UserInterfaceElement {
         }};
 
         font = new BitmapFont(Gdx.files.internal("fonts/Consolas_28.fnt"), Gdx.files.internal("fonts/Consolas_28.png"), false);
+        font.setFixedWidthGlyphs("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-=_+[]{};':\",<.>/? ");
         glyphLayout = new GlyphLayout(font, " ");
 
         userInput = "";

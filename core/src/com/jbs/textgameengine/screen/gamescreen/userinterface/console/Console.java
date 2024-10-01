@@ -22,6 +22,7 @@ public class Console extends UserInterfaceElement {
 
     public Console() {
         font = new BitmapFont(Gdx.files.internal("fonts/Consolas_28.fnt"), Gdx.files.internal("fonts/Consolas_28.png"), false);
+        font.setFixedWidthGlyphs("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-=_+[]{};':\",<.>/? ");
         glyphLayout = new GlyphLayout(font, " ");
 
         lineList = new ArrayList<>();
