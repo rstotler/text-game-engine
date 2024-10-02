@@ -60,6 +60,7 @@ public class Galaxy {
         Line cotuRoom00Name = new Line("Center Of The Universe", "7CONT3CONT4CONT8CONT", "", true, true);
         Location cotuRoom00Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom00 = new Room(cotuRoom00Name, null, cotuRoom00Location);
+        cotuRoom00.createEntity("Mob", 1);
         areaCOTU.roomList.add(cotuRoom00);
 
         // Room 01 - Standing On A Crystal Bridge //

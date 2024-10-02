@@ -1,5 +1,6 @@
 package com.jbs.textgameengine.gamedata.entity.mob.properties.skill;
 
+import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.CombatAction;
 import com.jbs.textgameengine.gamedata.world.room.Room;
@@ -43,11 +44,64 @@ public class Skill {
         return true;
     }
 
-    public ArrayList<Mob> getTargetList(Room targetRoom, CombatAction combatAction) {
-        ArrayList<Mob> targetList = new ArrayList<>();
+    public ArrayList<Entity> getTargetList(Room targetRoom, CombatAction combatAction) {
+        ArrayList<Entity> targetList = new ArrayList<>();
 
+        // Self Check //
+        if(isHealing
+        && (combatAction.selfCheck
+        || (combatAction.groupCheck && combatAction.parentEntity.location.room == targetRoom)
+        || (combatAction.allCheck && combatAction.parentEntity.location.room == targetRoom)
+        || (!combatAction.selfCheck && !combatAction.groupCheck && !combatAction.allCheck && combatAction.targetEntityString.isEmpty()))) {
+            targetList.add(combatAction.parentEntity);
 
+            if(singleOnly
+            || (!allOnly && combatAction.selfCheck)
+            || (!allOnly && combatAction.targetEntityString.isEmpty())) {
+                return targetList;
+            }
+        }
+
+        // Room Entities (Checks Group Mobs First For Healing Spells) //
+        ArrayList<Entity> combinedList = new ArrayList<>();
+        ArrayList<Entity> checkedList = new ArrayList<>();
+        combinedList.addAll(combatAction.parentEntity.groupList);
+        combinedList.addAll(targetRoom.mobList);
+        for(Entity mob : combinedList) {
+            if(mob.location.room == targetRoom
+            && !checkedList.contains(mob)) {
+                checkedList.add(mob);
+
+                if((!isHealing && !combatAction.parentEntity.groupList.contains(mob)
+                && (allOnly
+                || (singleOnly && (combatAction.allCheck || mob.nameKeyList.contains(combatAction.targetEntityString) || (combatAction.targetEntityString.isEmpty() && combatAction.parentEntity.targetList.contains(mob))))
+                || (!singleOnly && !allOnly && (combatAction.allCheck || mob.nameKeyList.contains(combatAction.targetEntityString) || (combatAction.targetEntityString.isEmpty() && combatAction.parentEntity.targetList.contains(mob))))))
+
+                || (isHealing
+                && (allOnly && combatAction.allCheck)
+                || (allOnly && combatAction.groupCheck && combatAction.parentEntity.groupList.contains(mob))
+                || (allOnly && combatAction.selfCheck && combatAction.parentEntity.groupList.contains(mob))
+                || (allOnly && !combatAction.allCheck && !combatAction.groupCheck && !combatAction.selfCheck)
+                || (singleOnly && combatAction.allCheck)
+                || (singleOnly && combatAction.groupCheck && combatAction.parentEntity.groupList.contains(mob))
+                || (singleOnly && mob.nameKeyList.contains(combatAction.targetEntityString))
+                || (!allOnly && !singleOnly && combatAction.allCheck)
+                || (!allOnly && !singleOnly && combatAction.groupCheck && combatAction.parentEntity.groupList.contains(mob))
+                || (!allOnly && !singleOnly && mob.nameKeyList.contains(combatAction.targetEntityString)))) {
+                    targetList.add(mob);
+
+                    if(singleOnly
+                    || (!allOnly && !combatAction.allCheck && !combatAction.groupCheck && !combatAction.selfCheck)) {
+                        break;
+                    }
+                }
+            }
+        }
 
         return targetList;
+    }
+
+    public String toString() {
+        return getClass().toString().substring(getClass().toString().lastIndexOf(".") + 1);
     }
 }

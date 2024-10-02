@@ -3,6 +3,7 @@ package com.jbs.textgameengine.gamedata.entity.mob;
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
+import com.jbs.textgameengine.gamedata.entity.mob.action.combat.CombatAction;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.general.*;
 import com.jbs.textgameengine.gamedata.world.Location;
@@ -19,6 +20,7 @@ public class Mob extends Entity {
 
     public Action currentAction;
     public ArrayList<Mob> targetList;
+    public ArrayList<Mob> groupList;
     public ArrayList<Mob> combatList;
 
     public Mob(Location startLocation) {
@@ -32,6 +34,7 @@ public class Mob extends Entity {
 
         currentAction = null;
         targetList = new ArrayList<>();
+        groupList = new ArrayList<>();
         combatList = new ArrayList<>();
     }
 

@@ -1,11 +1,11 @@
 package com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.general;
 
-import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.CombatSkill;
+import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Punch extends CombatSkill {
+public class Punch extends Skill {
     public Punch() {
         super();
 

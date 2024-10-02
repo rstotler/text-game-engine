@@ -1,7 +1,9 @@
 package com.jbs.textgameengine.gamedata.entity.mob.action.combat;
 
+import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
+import com.jbs.textgameengine.gamedata.entity.mob.action.combat.combateffect.Fumble;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.combateffect.Stumble;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
 import com.jbs.textgameengine.gamedata.world.Location;
@@ -153,23 +155,23 @@ public class CombatAction extends Action {
 
     public void initiate() {
 
-        // Message - You lose balance and trip over yourself. //
+        // Message - You lose balance and trip over yourself./You fumble with your equipment. //
         if(parentEntity.currentAction != null
-        && parentEntity.currentAction.toString().equals("Dodge")) {
-            parentEntity.currentAction = new Stumble();
+        && parentEntity.currentAction.skill != null) {
+            if(parentEntity.currentAction.skill.toString().equals("Dodge")) {
+                parentEntity.currentAction = new Stumble();
 
-            if(parentEntity.isPlayer) {
-                GameScreen.userInterface.console.writeToConsole(new Line("You lose balance and trip over yourself.", "4CONT5CONT8CONT4CONT5CONT5CONT8CONT1DY", "", true, true));
+                if(parentEntity.isPlayer) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("You lose balance and trip over yourself.", "4CONT5CONT8CONT4CONT5CONT5CONT8CONT1DY", "", true, true));
+                }
             }
-        }
 
-        // Message - You're already blocking. //
-        else if(skill != null
-        && skill.toString().equals("Block")
-        && parentEntity.currentAction != null
-        && parentEntity.currentAction.toString().equals("Block")) {
-            if(parentEntity.isPlayer) {
-                GameScreen.userInterface.console.writeToConsole(new Line("You're already blocking.", "3CONT1DY1DW2DDW8CONT8CONT1DY", "", true, true));
+            else if(parentEntity.currentAction.skill.toString().equals("Block")) {
+                parentEntity.currentAction = new Fumble();
+
+                if(parentEntity.isPlayer) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("You fumble with your equipment.", "4CONT7CONT5CONT5CONT9CONT1DW", "", true, true));
+                }
             }
         }
 
@@ -197,10 +199,11 @@ public class CombatAction extends Action {
         }
 
         // Message - You aren't targeting anyone. //
-        else if(targetCount == -1
-        && parentEntity.targetList.isEmpty()
+        else if(parentEntity.targetList.isEmpty()
+        && targetEntityString.isEmpty()
         && skill != null
         && !skill.allOnly
+        && !allCheck
         && !skill.isHealing) {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("You aren't targeting anyone.", "4CONT4CONT1DY2DW10CONT6CONT1DY", "", true, true));
@@ -235,10 +238,19 @@ public class CombatAction extends Action {
                 targetRoom = targetRoomData.targetRoom;
             }
 
-            // Message - You're too far away. //
-            if(targetCount == -1 || targetCount > skill.getMaxDistance(parentEntity)) {
+            // Message - There is nothing in that direction. //
+            if(targetCount > 0
+            && targetRoomData != null
+            && targetRoomData.message.equals("No Exit")) {
                 if(parentEntity.isPlayer) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("You're too far away.", "3CONT1DY1DW2DDW4CONT4CONT4CONT1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("There is nothing in that direction.", "6CONT3CONT8CONT3CONT5CONT9CONT1DY", "", true, true));
+                }
+            }
+
+            // Message - That's too far away. //
+            else if(targetCount == -1 || targetCount > skill.getMaxDistance(parentEntity)) {
+                if(parentEntity.isPlayer) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("That's too far away.", "4CONT1DY2DW4CONT4CONT4CONT1DY", "", true, true));
                 }
             }
 
@@ -246,14 +258,6 @@ public class CombatAction extends Action {
             else if(targetCount < skill.getMinDistance(parentEntity)) {
                 if(parentEntity.isPlayer) {
                     GameScreen.userInterface.console.writeToConsole(new Line("You're too close.", "3CONT1DY1DW2DDW4CONT5CONT1DY", "", true, true));
-                }
-            }
-
-            // Message - There is nothing in that direction. //
-            else if(targetRoomData != null
-            && targetRoomData.message.equals("No Exit")) {
-                if(parentEntity.isPlayer) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("There is nothing in that direction.", "6CONT3CONT8CONT3CONT5CONT9CONT1DY", "", true, true));
                 }
             }
 
@@ -269,7 +273,7 @@ public class CombatAction extends Action {
             else {
 
                 // Get Data //
-                ArrayList<Mob> targetList = skill.getTargetList(targetRoom, this);
+                ArrayList<Entity> targetList = skill.getTargetList(targetRoom, this);
 
                 // Message - You don't see them. //
                 if(targetList.isEmpty()
@@ -306,5 +310,8 @@ public class CombatAction extends Action {
                 }
             }
         }
+    }
+
+    public void performAction() {
     }
 }

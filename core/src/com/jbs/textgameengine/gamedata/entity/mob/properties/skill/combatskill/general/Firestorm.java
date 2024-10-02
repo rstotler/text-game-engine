@@ -1,14 +1,18 @@
 package com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.general;
 
-import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.CombatSkill;
+import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Firestorm extends CombatSkill {
+public class Firestorm extends Skill {
     public Firestorm() {
         super();
 
         nameKeyList = new ArrayList<>(Arrays.asList("firestorm", "firestor", "firesto", "firest", "fires", "fire", "fir"));
+
+        maxDistance = 1;
+        singleOnly = false;
+        allOnly = true;
     }
 }
