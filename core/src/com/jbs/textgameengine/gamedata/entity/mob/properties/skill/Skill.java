@@ -47,17 +47,30 @@ public class Skill {
     public ArrayList<Entity> getTargetList(Room targetRoom, CombatAction combatAction) {
         ArrayList<Entity> targetList = new ArrayList<>();
 
+        // Target Entity In Group Check //
+        boolean targetEntityInGroup = false;
+        for(Entity mob : combatAction.parentEntity.groupList) {
+            if((mob.nameKeyList.contains(combatAction.targetEntityString) || combatAction.groupCheck)
+            && targetRoom.mobList.contains(mob)) {
+                targetEntityInGroup = true;
+                break;
+            }
+        }
+
         // Self Check //
-        if(isHealing
-        && (combatAction.selfCheck
-        || (combatAction.groupCheck && combatAction.parentEntity.location.room == targetRoom)
-        || (combatAction.allCheck && combatAction.parentEntity.location.room == targetRoom)
+        if(isHealing && combatAction.parentEntity.location.room == targetRoom
+        && (allOnly
+        || combatAction.selfCheck
+        || (combatAction.groupCheck && !(singleOnly && !combatAction.parentEntity.groupList.isEmpty() && targetRoom.mobList.contains(combatAction.parentEntity.groupList.get(0))))
+        || (combatAction.allCheck)
         || (!combatAction.selfCheck && !combatAction.groupCheck && !combatAction.allCheck && combatAction.targetEntityString.isEmpty()))) {
             targetList.add(combatAction.parentEntity);
 
             if(singleOnly
             || (!allOnly && combatAction.selfCheck)
-            || (!allOnly && combatAction.targetEntityString.isEmpty())) {
+            || ((!allOnly && combatAction.targetEntityString.isEmpty()) && !(isHealing && (combatAction.groupCheck || combatAction.allCheck)))) {
+                System.out.println("---------=======-------------");
+                System.out.println("Only Player");
                 return targetList;
             }
         }
@@ -68,6 +81,7 @@ public class Skill {
         ArrayList<Entity> checkedList = new ArrayList<>();
         combinedMobList.addAll(combatAction.parentEntity.groupList);
         combinedMobList.addAll(targetRoom.mobList);
+
         for(Entity mob : combinedMobList) {
             if(mob.location.room == targetRoom
             && !checkedList.contains(mob)) {
@@ -82,7 +96,9 @@ public class Skill {
                 && ((allOnly && combatAction.allCheck)
                 || (allOnly && combatAction.groupCheck && combatAction.parentEntity.groupList.contains(mob))
                 || (allOnly && combatAction.selfCheck && combatAction.parentEntity.groupList.contains(mob))
-                || (allOnly && !combatAction.allCheck && !combatAction.groupCheck && !combatAction.selfCheck)
+                || (allOnly && !combatAction.allCheck && !combatAction.groupCheck && !combatAction.selfCheck && combatAction.parentEntity.groupList.contains(mob))
+                || (allOnly && !combatAction.targetEntityString.isEmpty() && !targetEntityInGroup)
+                || (allOnly && !combatAction.allCheck && !combatAction.groupCheck && !combatAction.selfCheck && combatAction.targetEntityString.isEmpty() && !combatAction.targetDirection.isEmpty() && !targetEntityInGroup)
                 || (singleOnly && combatAction.allCheck)
                 || (singleOnly && combatAction.groupCheck && combatAction.parentEntity.groupList.contains(mob))
                 || (singleOnly && mob.nameKeyList.contains(combatAction.targetEntityString))
@@ -92,7 +108,8 @@ public class Skill {
                     targetList.add(mob);
 
                     if(singleOnly
-                    || (!singleOnly && !allOnly && combatAction.selfCheck)) {
+                    || (!singleOnly && !allOnly && combatAction.selfCheck)
+                    || (!singleOnly && !allOnly && !combatAction.targetEntityString.isEmpty())) {
                         break;
                     }
                 }
@@ -100,7 +117,11 @@ public class Skill {
         }
 
         for(Entity e : targetList) {
-            System.out.println(e.name.label+", "+combatAction.parentEntity.groupList.contains(e));
+            if(e.isPlayer) {
+                System.out.println("Player");
+            } else {
+                System.out.println(e.name.label+", "+combatAction.parentEntity.groupList.contains(e));
+            }
         }
         return targetList;
     }

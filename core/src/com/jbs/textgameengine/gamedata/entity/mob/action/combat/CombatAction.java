@@ -147,6 +147,11 @@ public class CombatAction extends Action {
                 targetCombatAction.actionType = "CombatAction";
             }
 
+            if(!targetCombatAction.targetDirection.isEmpty()
+            && targetCombatAction.targetCount == 0) {
+                targetCombatAction.targetCount = 1;
+            }
+
             return targetCombatAction;
         }
 
@@ -198,15 +203,27 @@ public class CombatAction extends Action {
             }
         }
 
+        // Message - You need a target. //
+        else if(targetEntityString.isEmpty()
+        && !targetDirection.isEmpty()
+        && skill.maxDistance > 0
+        && !skill.allOnly
+        && !allCheck
+        && !(skill.isHealing && groupCheck)) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("You need a target.", "4CONT5CONT2W6CONT1DY", "", true, true));
+            }
+        }
+
         // Message - You aren't targeting anyone. //
         else if(parentEntity.targetList.isEmpty()
         && targetEntityString.isEmpty()
-        && skill != null
+        && targetDirection.isEmpty()
         && !skill.allOnly
         && !allCheck
         && !skill.isHealing) {
             if(parentEntity.isPlayer) {
-                GameScreen.userInterface.console.writeToConsole(new Line("You aren't targeting anyone.", "4CONT4CONT1DY2DW10CONT6CONT1DY", "", true, true));
+                GameScreen.userInterface.console.writeToConsole(new Line("You aren't targeting anyone.", "4CONT4CONT1DY2DDW10CONT6CONT1DY", "", true, true));
             }
         }
 
@@ -241,19 +258,37 @@ public class CombatAction extends Action {
                 targetRoom = targetRoomData.targetRoom;
             }
 
-            // Message - There is nothing there. //
-            if(targetCount > 0
-            && targetRoomData != null
-            && targetRoomData.message.equals("No Exit")) {
-                if(parentEntity.isPlayer) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("There is nothing there.", "6CONT3CONT8CONT5CONT1DY", "", true, true));
+            // Group Entity In Target Room Check //
+            boolean groupEntityInTargetRoom = false;
+            for(Entity mob : parentEntity.groupList) {
+                if(targetRoom.mobList.contains(mob)) {
+                    groupEntityInTargetRoom = true;
+                    break;
                 }
             }
 
             // Message - That's too far away. //
-            else if((targetCount != -1 && targetCount > skill.getMaxDistance(parentEntity)) || targetOutOfRange) {
+            if((targetCount != -1 && targetCount > skill.getMaxDistance(parentEntity)) || targetOutOfRange) {
                 if(parentEntity.isPlayer) {
                     GameScreen.userInterface.console.writeToConsole(new Line("That's too far away.", "4CONT1DY2DW4CONT4CONT4CONT1DY", "", true, true));
+                }
+            }
+
+            // Message - Your group isn't there. //
+            else if(!targetDirection.isEmpty()
+            && groupCheck
+            && !groupEntityInTargetRoom) {
+                if(parentEntity.isPlayer) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("Your group isn't there.", "5CONT6CONT3CONT1DY2DDW5CONT1DY", "", true, true));
+                }
+            }
+
+            // Message - There is nothing there. //
+            else if(targetCount > 0
+            && targetRoomData != null
+            && targetRoomData.message.equals("No Exit")) {
+                if(parentEntity.isPlayer) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("There is nothing there.", "6CONT3CONT8CONT5CONT1DY", "", true, true));
                 }
             }
 

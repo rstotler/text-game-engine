@@ -89,16 +89,6 @@ public class Mob extends Entity {
     public static HashMap<String, ArrayList<Skill>> loadSkillMap() {
         HashMap<String, ArrayList<Skill>> newSkillMap = new HashMap<>();
 
-// CombatAction //
-// CombatAction Entity/Self //
-// CombatAction Direction //
-// CombatAction All/Group //
-// CombatAction Direction # //
-// CombatAction Entity Direction //
-// CombatAction All/Group Direction //
-// CombatAction Entity Direction # //
-// CombatAction All/Group Direction # //
-
         ArrayList<Skill> combatSkillList = new ArrayList<>();
         combatSkillList.add(new Block());
         combatSkillList.add(new Dodge());

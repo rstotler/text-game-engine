@@ -48,15 +48,13 @@ public class Entity {
                 nameKeyList.add(substring);
             }
 
-            if(targetStringList.get(i).length() > 1) {
-                for(int ii = 0; ii < targetStringList.get(i).length(); ii++) {
-                    String substringPart = targetStringList.get(i).substring(0, ii + 2);
-                    if(!nameKeyList.contains(substringPart)) {
-                        nameKeyList.add(substringPart);
-                    }
-                    if(ii + 2 >= 5 || ii + 2 >= targetStringList.get(i).length()) {
-                        break;
-                    }
+            for(int ii = 0; ii < targetStringList.get(i).length(); ii++) {
+                String substringPart = targetStringList.get(i).substring(0, ii + 1);
+                if(!nameKeyList.contains(substringPart)) {
+                    nameKeyList.add(substringPart);
+                }
+                if(ii + 1 >= 5 || ii + 1 >= targetStringList.get(i).length()) {
+                    break;
                 }
             }
 
