@@ -11,7 +11,7 @@ public class Ice extends Skill {
 
         nameKeyList = new ArrayList<>(Arrays.asList("ice"));
 
-        singleOnly = false;
         maxDistance = 2;
+        singleOnly = false;
     }
 }

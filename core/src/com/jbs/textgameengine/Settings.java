@@ -3,8 +3,8 @@ package com.jbs.textgameengine;
 public class Settings {
     public static int FPS = 60;
     public static String TITLE = "TextGame Engine";
-    public static int WINDOW_WIDTH = 1920;
-    public static int WINDOW_HEIGHT = 1080;
+    public static int WINDOW_WIDTH = 1500; //1920
+    public static int WINDOW_HEIGHT = 900; //1080
 
     public static int INPUT_BAR_WIDTH = (int) (WINDOW_WIDTH * .725);
     public static int INPUT_BAR_HEIGHT = 40;

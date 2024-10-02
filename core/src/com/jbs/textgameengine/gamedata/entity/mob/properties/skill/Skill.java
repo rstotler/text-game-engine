@@ -63,11 +63,12 @@ public class Skill {
         }
 
         // Room Entities (Checks Group Mobs First For Healing Spells) //
-        ArrayList<Entity> combinedList = new ArrayList<>();
+        System.out.println("\n------==========------");
+        ArrayList<Entity> combinedMobList = new ArrayList<>();
         ArrayList<Entity> checkedList = new ArrayList<>();
-        combinedList.addAll(combatAction.parentEntity.groupList);
-        combinedList.addAll(targetRoom.mobList);
-        for(Entity mob : combinedList) {
+        combinedMobList.addAll(combatAction.parentEntity.groupList);
+        combinedMobList.addAll(targetRoom.mobList);
+        for(Entity mob : combinedMobList) {
             if(mob.location.room == targetRoom
             && !checkedList.contains(mob)) {
                 checkedList.add(mob);
@@ -78,7 +79,7 @@ public class Skill {
                 || (!singleOnly && !allOnly && (combatAction.allCheck || mob.nameKeyList.contains(combatAction.targetEntityString) || (combatAction.targetEntityString.isEmpty() && combatAction.parentEntity.targetList.contains(mob))))))
 
                 || (isHealing
-                && (allOnly && combatAction.allCheck)
+                && ((allOnly && combatAction.allCheck)
                 || (allOnly && combatAction.groupCheck && combatAction.parentEntity.groupList.contains(mob))
                 || (allOnly && combatAction.selfCheck && combatAction.parentEntity.groupList.contains(mob))
                 || (allOnly && !combatAction.allCheck && !combatAction.groupCheck && !combatAction.selfCheck)
@@ -87,17 +88,20 @@ public class Skill {
                 || (singleOnly && mob.nameKeyList.contains(combatAction.targetEntityString))
                 || (!allOnly && !singleOnly && combatAction.allCheck)
                 || (!allOnly && !singleOnly && combatAction.groupCheck && combatAction.parentEntity.groupList.contains(mob))
-                || (!allOnly && !singleOnly && mob.nameKeyList.contains(combatAction.targetEntityString)))) {
+                || (!allOnly && !singleOnly && mob.nameKeyList.contains(combatAction.targetEntityString))))) {
                     targetList.add(mob);
 
                     if(singleOnly
-                    || (!allOnly && !combatAction.allCheck && !combatAction.groupCheck && !combatAction.selfCheck)) {
+                    || (!singleOnly && !allOnly && combatAction.selfCheck)) {
                         break;
                     }
                 }
             }
         }
 
+        for(Entity e : targetList) {
+            System.out.println(e.name.label+", "+combatAction.parentEntity.groupList.contains(e));
+        }
         return targetList;
     }
 

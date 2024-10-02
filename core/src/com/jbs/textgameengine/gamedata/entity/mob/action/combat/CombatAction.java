@@ -222,11 +222,14 @@ public class CombatAction extends Action {
         else {
 
             // Get Data //
-            if(targetCount == -1 && !parentEntity.targetList.isEmpty()) {
+            boolean targetOutOfRange = false;
+            if(targetCount == -1 && !parentEntity.targetList.isEmpty() && targetEntityString.isEmpty() && targetDirection.isEmpty()) {
                 TargetRoomData targetRoomData = TargetRoomData.getTargetEntityRoomFromStartRoom(parentEntity.location.room, parentEntity.targetList.get(0), skill.getMaxDistance(parentEntity));
                 if(targetRoomData != null) {
                     targetCount = targetRoomData.distance;
                     targetDirection = targetRoomData.targetDirection;
+                } else {
+                    targetOutOfRange = true;
                 }
             }
             Room targetRoom = parentEntity.location.room;
@@ -238,24 +241,24 @@ public class CombatAction extends Action {
                 targetRoom = targetRoomData.targetRoom;
             }
 
-            // Message - There is nothing in that direction. //
+            // Message - There is nothing there. //
             if(targetCount > 0
             && targetRoomData != null
             && targetRoomData.message.equals("No Exit")) {
                 if(parentEntity.isPlayer) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("There is nothing in that direction.", "6CONT3CONT8CONT3CONT5CONT9CONT1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("There is nothing there.", "6CONT3CONT8CONT5CONT1DY", "", true, true));
                 }
             }
 
             // Message - That's too far away. //
-            else if(targetCount == -1 || targetCount > skill.getMaxDistance(parentEntity)) {
+            else if((targetCount != -1 && targetCount > skill.getMaxDistance(parentEntity)) || targetOutOfRange) {
                 if(parentEntity.isPlayer) {
                     GameScreen.userInterface.console.writeToConsole(new Line("That's too far away.", "4CONT1DY2DW4CONT4CONT4CONT1DY", "", true, true));
                 }
             }
 
             // Message - You're too close. //
-            else if(targetCount < skill.getMinDistance(parentEntity)) {
+            else if(skill.getMinDistance(parentEntity) > 0 && targetCount < skill.getMinDistance(parentEntity)) {
                 if(parentEntity.isPlayer) {
                     GameScreen.userInterface.console.writeToConsole(new Line("You're too close.", "3CONT1DY1DW2DDW4CONT5CONT1DY", "", true, true));
                 }

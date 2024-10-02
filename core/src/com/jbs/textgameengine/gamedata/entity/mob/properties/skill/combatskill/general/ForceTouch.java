@@ -5,15 +5,13 @@ import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class WhiteWind extends Skill {
-    public WhiteWind() {
+public class ForceTouch extends Skill {
+    public ForceTouch() {
         super();
 
-        nameKeyList = new ArrayList<>(Arrays.asList("white wind", "white win", "white wi", "white w", "white", "whit", "whi", "whitewind", "whitewin", "whitewi", "whitew"));
+        nameKeyList = new ArrayList<>(Arrays.asList("force touch", "force touc", "force tou", "force to", "force t", "force", "forc", "for", "forcetouch", "forcetouc", "forcetou", "forceto", "forcet"));
 
         maxDistance = 1;
-        singleOnly = false;
-        allOnly = true;
         isHealing = true;
     }
 }

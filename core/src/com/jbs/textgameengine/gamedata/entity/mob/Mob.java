@@ -3,7 +3,6 @@ package com.jbs.textgameengine.gamedata.entity.mob;
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
-import com.jbs.textgameengine.gamedata.entity.mob.action.combat.CombatAction;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.general.*;
 import com.jbs.textgameengine.gamedata.world.Location;
@@ -47,6 +46,18 @@ public class Mob extends Entity {
             mob.roomDescription = new Line("is here, greeting visitors.", "3CONT4CONT2DY9CONT8CONT1DY", "", true, true);
         }
 
+        // 1 - Sasquatch //
+        else if(id == 2) {
+            mob.name = new Line("Sasquatch", "9CONT", "", true, true);
+            mob.roomDescription = new Line("is here, greeting visitors.", "3CONT4CONT2DY9CONT8CONT1DY", "", true, true);
+        }
+
+        // 3 - Skinny Alien Dude //
+        else if(id == 3) {
+            mob.name = new Line("Skinny Alien Dude", "7CONT6CONT4CONT", "", true, true);
+            mob.roomDescription = new Line("is here, greeting visitors.", "3CONT4CONT2DY9CONT8CONT1DY", "", true, true);
+        }
+
         mob.nameKeyList = Entity.createNameKeyList(mob.prefix + mob.name.label);
 
         return mob;
@@ -78,12 +89,31 @@ public class Mob extends Entity {
     public static HashMap<String, ArrayList<Skill>> loadSkillMap() {
         HashMap<String, ArrayList<Skill>> newSkillMap = new HashMap<>();
 
+// CombatAction //
+// CombatAction Entity/Self //
+// CombatAction Direction //
+// CombatAction All/Group //
+// CombatAction Direction # //
+// CombatAction Entity Direction //
+// CombatAction All/Group Direction //
+// CombatAction Entity Direction # //
+// CombatAction All/Group Direction # //
+
         ArrayList<Skill> combatSkillList = new ArrayList<>();
+        combatSkillList.add(new Block());
+        combatSkillList.add(new Dodge());
         combatSkillList.add(new Punch());
+        combatSkillList.add(new SpinPunch());
+        combatSkillList.add(new WindSlash());
         combatSkillList.add(new Fireball());
         combatSkillList.add(new Firestorm());
+        combatSkillList.add(new Ice());
+        combatSkillList.add(new Touch());
+        combatSkillList.add(new Smooches());
         combatSkillList.add(new Heal());
-        combatSkillList.add(new SpinPunch());
+        combatSkillList.add(new ForceTouch());
+        combatSkillList.add(new WhiteWind());
+        combatSkillList.add(new FullLife());
         newSkillMap.put("Combat", combatSkillList);
 
         return newSkillMap;

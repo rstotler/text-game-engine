@@ -5,12 +5,13 @@ import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Heal extends Skill {
-    public Heal() {
+public class FullLife extends Skill {
+    public FullLife() {
         super();
 
-        nameKeyList = new ArrayList<>(Arrays.asList("heal", "hea", "he"));
+        nameKeyList = new ArrayList<>(Arrays.asList("full life", "full lif", "full li", "full l", "full", "ful", "fulllife", "fulllif", "fullli", "fulll"));
 
+        maxDistance = 1;
         singleOnly = false;
         isHealing = true;
     }
