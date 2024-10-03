@@ -18,6 +18,7 @@ public class Action {
     public String targetEntityString;
     public String targetDirection;
     public int targetCount;
+    public int targetDirectionCount;
     public String targetContainerString;
 
     public boolean allCheck;
@@ -33,6 +34,7 @@ public class Action {
         targetEntityString = "";
         targetDirection = "";
         targetCount = -1;
+        targetDirectionCount = -1;
         targetContainerString = "";
 
         allCheck = false;

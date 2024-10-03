@@ -32,15 +32,14 @@ public class Planet extends Planetoid {
     public void update() {
         super.update();
 
+        float dayPercent = 0.0f;
+        if(minutesInDay > 0) {dayPercent = (minuteCountDay + 0.0f) / minutesInDay;}
+
+        // Time Of Day Messages //
         if(GameScreen.player.location != null
         && GameScreen.player.location.planetoid == this) {
             if(GameScreen.player.location.room != null
             && !(GameScreen.player.location.spaceship != null && !GameScreen.player.location.spaceship.status.equals("Landed"))) {
-                float dayPercent = 0.0f;
-                if(minutesInDay > 0) {
-                    dayPercent = (minuteCountDay + 0.0f) / minutesInDay;
-                }
-
                 if(!dawnMessage && dayPercent >= dawnPercent) {
                     dawnMessage = true;
                     Line dawnLine = new Line("The sky begins to lighten.", "4CONT4SHIAC7CONT3CONT7CONT1DY", "", true, true);
@@ -67,10 +66,10 @@ public class Planet extends Planetoid {
                     GameScreen.userInterface.console.writeToConsole(sunsetLine);
                 }
             }
+        }
 
-            if(minuteCountDay == 0) {
-                updateDayNightTimers();
-            }
+        if(minuteCountDay == 0) {
+            updateDayNightTimers();
         }
     }
 

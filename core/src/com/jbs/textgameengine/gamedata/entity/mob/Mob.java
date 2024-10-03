@@ -110,7 +110,16 @@ public class Mob extends Entity {
     }
 
     public void update() {
-        if(currentAction != null) {
+
+        // Darkness Check //
+        if(!location.room.isLit() && !targetList.isEmpty()) {
+            if(isPlayer) {
+                String targetString = "target";
+                if(targetList.size() > 1) {targetString = "targets";}
+                GameScreen.userInterface.console.writeToConsole(new Line("You lose sight of your " + targetString + ".", "4CONT5CONT6CONT3CONT5CONT" + String.valueOf(targetString.length()) + "CONT1DY", "", true, true));
+            }
+
+            targetList.clear();
         }
     }
 

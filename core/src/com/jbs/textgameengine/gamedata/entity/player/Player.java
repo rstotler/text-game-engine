@@ -5,13 +5,13 @@ import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.world.Location;
 
 public class Player extends Mob {
-    public int updateActionTimer;
+    public int updateTimer;
 
     public Player(Location startLocation) {
         super(startLocation);
         isPlayer = true;
 
-        updateActionTimer = 0;
+        updateTimer = 0;
 
         loadDebugPlayer();
     }
@@ -21,12 +21,10 @@ public class Player extends Mob {
     }
 
     public void update() {
-        if(currentAction != null) {
-            updateActionTimer += 1;
-            if(updateActionTimer >= 30) {
-                updateActionTimer = 0;
-                super.update();
-            }
+        updateTimer += 1;
+        if(updateTimer >= 30) {
+            updateTimer = 0;
+            super.update();
         }
     }
 }

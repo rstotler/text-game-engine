@@ -138,19 +138,37 @@ public class Room {
                 for(Entity entity : mobList) {
                     Mob mob = (Mob) entity;
 
-                    if(mobNameMap.containsKey(mob.name.label)) {
-                        int currentCount = mobNameMap.get(mob.name.label);
-                        mobNameMap.put(mob.name.label, currentCount + 1);
+                    // Get Group/Target Display Mods //
+                    String targetLabel = mob.prefix + mob.name.label;
+                    if(GameScreen.player.groupList.contains(mob)) {
+                        targetLabel = "[+]" + targetLabel;
+                    }
+                    else if(GameScreen.player.targetList.contains(mob)) {
+                        targetLabel = "[-]" + targetLabel;
+                    }
+
+                    if(mobNameMap.containsKey(targetLabel)) {
+                        int currentCount = mobNameMap.get(targetLabel);
+                        mobNameMap.put(targetLabel, currentCount + 1);
                     }
                     else {
-                        mobNameMap.put(mob.name.label, 1);
+                        mobNameMap.put(targetLabel, 1);
                     }
                 }
 
                 for(int i = 0; i < mobList.size(); i++) {
                     Mob mob = (Mob) mobList.get(i);
 
-                    if(mobNameMap.containsKey(mob.name.label)) {
+                    // Get Group/Target Display Mods //
+                    String targetLabel = mob.prefix + mob.name.label;
+                    if(GameScreen.player.groupList.contains(mob)) {
+                        targetLabel = "[+]" + targetLabel;
+                    }
+                    else if(GameScreen.player.targetList.contains(mob)) {
+                        targetLabel = "[-]" + targetLabel;
+                    }
+
+                    if(mobNameMap.containsKey(targetLabel)) {
                         if(mobNameMap.size() == 1
                         && spaceshipList.isEmpty() && itemList.isEmpty()) {
                             isLastLine = true;
@@ -158,9 +176,9 @@ public class Room {
 
                         String countString = "";
                         String countColorCode = "";
-                        if(mobNameMap.get(mob.name.label) > 1) {
-                            countString = " (" + String.valueOf(mobNameMap.get(mob.name.label)) + ")";
-                            countColorCode = "2DR" + String.valueOf(mobNameMap.get(mob.name.label)).length() + "W1DR";
+                        if(mobNameMap.get(targetLabel) > 1) {
+                            countString = " (" + String.valueOf(mobNameMap.get(targetLabel)) + ")";
+                            countColorCode = "2DR" + String.valueOf(mobNameMap.get(targetLabel)).length() + "W1DR";
                         }
 
                         String mobRoomDescriptionLabel = "is here, milling about.";
@@ -169,12 +187,29 @@ public class Room {
                             mobRoomDescriptionLabel = mob.roomDescription.label;
                             mobRoomDescriptionColorCode = mob.roomDescription.colorCode;
                         }
-                        String mobNameLabel = mob.prefix + mob.name.label + " " + mobRoomDescriptionLabel + countString;
-                        String mobNameColorCode = String.valueOf(mob.prefix.length()) + "CONT" + mob.name.colorCode + "1W" + mobRoomDescriptionColorCode + countColorCode;
-                        Line mobLine = new Line(mobNameLabel, mobNameColorCode, mob.name.effectCode, isLastLine, true);
+
+                        String groupTargetString = "";
+                        String groupTargetColorCode = "";
+                        String groupTargetEffectCode = "";
+                        if(GameScreen.player.groupList.contains(mob)) {
+                            groupTargetString = "[+]";
+                            groupTargetColorCode = "3G";
+                            groupTargetEffectCode = "3X";
+                        }
+                        else if(GameScreen.player.targetList.contains(mob)) {
+                            groupTargetString = "[-]";
+                            groupTargetColorCode = "3V";
+                            groupTargetEffectCode = "3X";
+                        }
+
+                        String mobNameLabel = groupTargetString + mob.prefix + mob.name.label + " " + mobRoomDescriptionLabel + countString;
+                        String mobNameColorCode = groupTargetColorCode + String.valueOf(mob.prefix.length()) + "W" + mob.name.colorCode + "1W" + mobRoomDescriptionColorCode + countColorCode;
+                        String mobNameEffectCode = groupTargetEffectCode + String.valueOf(mob.prefix.length()) + "X" + mob.name.effectCode;
+
+                        Line mobLine = new Line(mobNameLabel, mobNameColorCode, mobNameEffectCode, isLastLine, true);
                         GameScreen.userInterface.console.writeToConsole(mobLine);
 
-                        mobNameMap.remove(mob.name.label);
+                        mobNameMap.remove(targetLabel);
                     }
                 }
             }

@@ -43,11 +43,16 @@ public class GameScreen extends Screen {
         player = new Player(startLocation);
 
         // Debug Data //
-        // player.groupList.add((Mob) player.location.room.mobList.get(0));//
-        // player.groupList.add((Mob) player.location.room.exitMap.get("North").mobList.get(1));//
-        // player.targetList.add((Mob) player.location.room.exitMap.get("North").mobList.get(0));//
-        // player.targetList.add((Mob) player.location.room.exitMap.get("North").mobList.get(3));//
-        // player.targetList.add((Mob) player.location.room.exitMap.get("North").exitMap.get("North").mobList.get(0));//
+        if(true) {
+            player.location.planetoid.minuteCountDay = player.location.planetoid.minutesInDay / 2;
+            player.location.planetoid.minuteCountYear = player.location.planetoid.minuteCountDay;
+
+            player.groupList.add((Mob) player.location.room.mobList.get(0));//
+            player.groupList.add((Mob) player.location.room.exitMap.get("North").mobList.get(1));//
+            player.targetList.add((Mob) player.location.room.exitMap.get("North").mobList.get(0));//
+            // player.targetList.add((Mob) player.location.room.exitMap.get("North").mobList.get(3));//
+            // player.targetList.add((Mob) player.location.room.exitMap.get("North").exitMap.get("North").mobList.get(0));//
+        }
 
         ((Planet) (player.location.planetoid)).updateDayNightTimers();
 
@@ -182,9 +187,11 @@ public class GameScreen extends Screen {
         boolean actionCheck = false;
         for(Action actionType : Action.actionList) {
             Action targetAction = actionType.getActionFromInput(input.toLowerCase(), player);
-            if(targetAction != null
-            && targetAction.parentEntity != null) {
-                targetAction.initiate();
+            if(targetAction != null) {
+                if(targetAction.parentEntity != null) {
+                    targetAction.initiate();
+                }
+
                 actionCheck = true;
                 break;
             }
