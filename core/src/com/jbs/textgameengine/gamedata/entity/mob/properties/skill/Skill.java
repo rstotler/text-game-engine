@@ -47,8 +47,9 @@ public class Skill {
     public ArrayList<Entity> getTargetList(Room targetRoom, CombatAction combatAction) {
         ArrayList<Entity> targetList = new ArrayList<>();
 
-        // Target Entity In Group Check //
+        // Target Entity In Group & Target Combat Entity In Room Checks //
         boolean targetEntityInGroup = false;
+        boolean targetCombatEntityInRoom = false;
         for(Entity mob : combatAction.parentEntity.groupList) {
             if((mob.nameKeyList.contains(combatAction.targetEntityString) || combatAction.groupCheck)
             && targetRoom.mobList.contains(mob)) {
@@ -56,27 +57,34 @@ public class Skill {
                 break;
             }
         }
+        for(Entity mob : combatAction.parentEntity.targetList) {
+            if(targetRoom.mobList.contains(mob)) {
+                targetCombatEntityInRoom = true;
+                break;
+            }
+        }
 
         // Self Check //
         if(isHealing && combatAction.parentEntity.location.room == targetRoom
+        && !(singleOnly && !combatAction.parentEntity.targetList.isEmpty() && targetRoom.mobList.contains(combatAction.parentEntity.targetList.get(0)))
         && (allOnly
         || combatAction.selfCheck
         || (combatAction.groupCheck && !(singleOnly && !combatAction.parentEntity.groupList.isEmpty() && targetRoom.mobList.contains(combatAction.parentEntity.groupList.get(0))))
         || (combatAction.allCheck)
-        || (!combatAction.selfCheck && !combatAction.groupCheck && !combatAction.allCheck && combatAction.targetEntityString.isEmpty()))) {
+        || (!combatAction.selfCheck && !combatAction.groupCheck && !combatAction.allCheck && combatAction.targetEntityString.isEmpty() && !targetCombatEntityInRoom)
+        || (!combatAction.selfCheck && !combatAction.groupCheck && !combatAction.allCheck && combatAction.targetEntityString.isEmpty() && targetCombatEntityInRoom && !singleOnly))) {
             targetList.add(combatAction.parentEntity);
 
             if(singleOnly
             || (!allOnly && combatAction.selfCheck)
-            || ((!allOnly && combatAction.targetEntityString.isEmpty()) && !(isHealing && (combatAction.groupCheck || combatAction.allCheck)))) {
-                System.out.println("---------=======-------------");
-                System.out.println("Only Player");
+            || ((!allOnly && combatAction.targetEntityString.isEmpty()) && !(isHealing && (combatAction.groupCheck || combatAction.allCheck || (targetCombatEntityInRoom && !singleOnly))))) {
+                // System.out.println("\n---------===[ Only Player ]===---------");
                 return targetList;
             }
         }
 
         // Room Entities (Checks Group Mobs First For Healing Spells) //
-        System.out.println("\n------==========------");
+        // System.out.println("\n---------===[ Room: " + targetRoom.name.label + " ]===---------");
         ArrayList<Entity> combinedMobList = new ArrayList<>();
         ArrayList<Entity> checkedList = new ArrayList<>();
         combinedMobList.addAll(combatAction.parentEntity.groupList);
@@ -99,12 +107,16 @@ public class Skill {
                 || (allOnly && !combatAction.allCheck && !combatAction.groupCheck && !combatAction.selfCheck && combatAction.parentEntity.groupList.contains(mob))
                 || (allOnly && !combatAction.targetEntityString.isEmpty() && !targetEntityInGroup)
                 || (allOnly && !combatAction.allCheck && !combatAction.groupCheck && !combatAction.selfCheck && combatAction.targetEntityString.isEmpty() && !combatAction.targetDirection.isEmpty() && !targetEntityInGroup)
+                || (allOnly && !combatAction.allCheck && !combatAction.groupCheck && !combatAction.selfCheck && combatAction.targetEntityString.isEmpty() && combatAction.targetDirection.isEmpty() && ((combatAction.parentEntity.targetList.isEmpty() && targetEntityInGroup) || targetCombatEntityInRoom))
                 || (singleOnly && combatAction.allCheck)
                 || (singleOnly && combatAction.groupCheck && combatAction.parentEntity.groupList.contains(mob))
                 || (singleOnly && mob.nameKeyList.contains(combatAction.targetEntityString))
+                || (singleOnly && combatAction.parentEntity.targetList.contains(mob))
+                || (singleOnly && combatAction.targetEntityString.isEmpty() && combatAction.targetDirection.isEmpty() && combatAction.parentEntity.targetList.contains(mob))
                 || (!allOnly && !singleOnly && combatAction.allCheck)
                 || (!allOnly && !singleOnly && combatAction.groupCheck && combatAction.parentEntity.groupList.contains(mob))
-                || (!allOnly && !singleOnly && mob.nameKeyList.contains(combatAction.targetEntityString))))) {
+                || (!allOnly && !singleOnly && mob.nameKeyList.contains(combatAction.targetEntityString))
+                || (!allOnly && !singleOnly && targetCombatEntityInRoom && !combatAction.groupCheck)))) {
                     targetList.add(mob);
 
                     if(singleOnly
@@ -116,13 +128,12 @@ public class Skill {
             }
         }
 
-        for(Entity e : targetList) {
-            if(e.isPlayer) {
-                System.out.println("Player");
-            } else {
-                System.out.println(e.name.label+", "+combatAction.parentEntity.groupList.contains(e));
-            }
-        }
+        // Debug Output //
+        // for(Entity mob : targetList) {
+        //     if(mob.isPlayer) {System.out.println("Player");}
+        //     else {System.out.println(mob.name.label);}
+        // }
+
         return targetList;
     }
 

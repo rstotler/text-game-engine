@@ -73,6 +73,7 @@ public class Galaxy {
         cotuRoom01.createEntity("Mob", 1);
         cotuRoom01.createEntity("Mob", 1);
         cotuRoom01.createEntity("Mob", 2);
+        cotuRoom01.createEntity("Mob", 3);
         areaCOTU.roomList.add(cotuRoom01);
 
         // Room 02 - A Peaceful Garden //
@@ -80,7 +81,7 @@ public class Galaxy {
         Location cotuRoom02Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom02 = new Room(cotuRoom02Name, null, cotuRoom02Location);
         cotuRoom02.createExit("South", cotuRoom01);
-        cotuRoom01.createEntity("Mob", 1);
+        cotuRoom02.createEntity("Mob", 2);
         areaCOTU.roomList.add(cotuRoom02);
 
         // Room 03 - In A Wooden Cabin //

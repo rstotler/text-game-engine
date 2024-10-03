@@ -41,7 +41,14 @@ public class GameScreen extends Screen {
 
         Location startLocation = Galaxy.getRoom("Cotton Tail Nebula", "Lago Morpha", 1, "Center Of The Universe", 0).location;
         player = new Player(startLocation);
-        player.groupList.add((Mob) player.location.room.mobList.get(0));//
+
+        // Debug Data //
+        // player.groupList.add((Mob) player.location.room.mobList.get(0));//
+        // player.groupList.add((Mob) player.location.room.exitMap.get("North").mobList.get(1));//
+        // player.targetList.add((Mob) player.location.room.exitMap.get("North").mobList.get(0));//
+        // player.targetList.add((Mob) player.location.room.exitMap.get("North").mobList.get(3));//
+        // player.targetList.add((Mob) player.location.room.exitMap.get("North").exitMap.get("North").mobList.get(0));//
+
         ((Planet) (player.location.planetoid)).updateDayNightTimers();
 
         gameTimer = 0;

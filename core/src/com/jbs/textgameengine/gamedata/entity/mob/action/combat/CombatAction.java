@@ -242,7 +242,7 @@ public class CombatAction extends Action {
             boolean targetOutOfRange = false;
             if(targetCount == -1 && !parentEntity.targetList.isEmpty() && targetEntityString.isEmpty() && targetDirection.isEmpty()) {
                 TargetRoomData targetRoomData = TargetRoomData.getTargetEntityRoomFromStartRoom(parentEntity.location.room, parentEntity.targetList.get(0), skill.getMaxDistance(parentEntity));
-                if(targetRoomData != null) {
+                if(targetRoomData.distance != -1) {
                     targetCount = targetRoomData.distance;
                     targetDirection = targetRoomData.targetDirection;
                 } else {
@@ -267,10 +267,14 @@ public class CombatAction extends Action {
                 }
             }
 
-            // Message - That's too far away. //
+            // Message - That's too far away./Your target is too far. //
             if((targetCount != -1 && targetCount > skill.getMaxDistance(parentEntity)) || targetOutOfRange) {
                 if(parentEntity.isPlayer) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("That's too far away.", "4CONT1DY2DW4CONT4CONT4CONT1DY", "", true, true));
+                    if(targetEntityString.isEmpty() && targetDirection.isEmpty()) {
+                        GameScreen.userInterface.console.writeToConsole(new Line("Your target is too far.", "5CONT7CONT3CONT4CONT3CONT1DY", "", true, true));
+                    } else {
+                        GameScreen.userInterface.console.writeToConsole(new Line("That's too far away.", "4CONT1DY2DW4CONT4CONT4CONT1DY", "", true, true));
+                    }
                 }
             }
 

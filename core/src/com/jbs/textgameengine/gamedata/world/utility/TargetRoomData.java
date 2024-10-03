@@ -4,9 +4,7 @@ import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.world.area.Area;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 
 public class TargetRoomData {
     public static HashMap<String, ArrayList<String>> sideDirectionMap = loadSideDirectionMap();
@@ -115,7 +113,6 @@ public class TargetRoomData {
 
             String masterMessage = "";
             Room currentRoom = startRoom;
-            Area currentArea = currentRoom.location.area;
 
             for(int i = 0; i < maxDistance; i++) {
                 message = masterMessage;
@@ -125,6 +122,7 @@ public class TargetRoomData {
                 }
 
                 TargetRoomData targetRoomData = getTargetRoomFromStartRoom(currentRoom, new ArrayList<String>(Arrays.asList(direction)), true, true);
+                currentRoom = targetRoomData.targetRoom;
                 if(targetRoomData.message.equals("Door Is Closed")) {
                     masterMessage = targetRoomData.message;
                 }
@@ -142,7 +140,6 @@ public class TargetRoomData {
                 for(String sideDirection : sideDirectionMap.get(direction)) {
                     message = masterMessage;
                     Room sideRoom = currentRoom;
-                    Area sideArea = currentArea;
 
                     for(int sideIndex = 0; sideIndex < maxDistance - (i + 1); sideIndex++) {
                         if(!sideRoom.exitMap.containsKey(sideDirection)
@@ -151,14 +148,16 @@ public class TargetRoomData {
                         }
 
                         TargetRoomData targetSideRoomData = getTargetRoomFromStartRoom(sideRoom, new ArrayList<String>(Arrays.asList(sideDirection)), true, true);
+                        sideRoom = targetSideRoomData.targetRoom;
+
                         if(targetSideRoomData.message.equals("Door Is Closed")) {
                             message = targetSideRoomData.message;
                         }
 
-                        if((targetEntity.isPlayer && targetEntity.location.room == currentRoom)
-                        || (targetEntity.isMob && currentRoom.mobList.contains(targetEntity))
-                        || (targetEntity.isItem && currentRoom.itemList.contains(targetEntity))
-                        || (targetEntity.isSpaceship && currentRoom.spaceshipList.contains(targetEntity))) {
+                        if((targetEntity.isPlayer && targetEntity.location.room == sideRoom)
+                        || (targetEntity.isMob && sideRoom.mobList.contains(targetEntity))
+                        || (targetEntity.isItem && sideRoom.itemList.contains(targetEntity))
+                        || (targetEntity.isSpaceship && sideRoom.spaceshipList.contains(targetEntity))) {
                             targetFound = true;
                             targetRange = (i + 1) + (sideIndex + 1);
                             break;
