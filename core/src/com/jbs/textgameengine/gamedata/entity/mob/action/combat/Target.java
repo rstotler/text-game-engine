@@ -1,4 +1,4 @@
-package com.jbs.textgameengine.gamedata.entity.mob.action.general;
+package com.jbs.textgameengine.gamedata.entity.mob.action.combat;
 
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
@@ -141,9 +141,8 @@ public class Target extends Action {
             }
 
             else {
-                String stringPrefix = "T";
-                if(targetAction.actionType.equals("Untarget")) {stringPrefix = "Unt";}
-                userInterface.console.writeToConsole(new Line(stringPrefix + "arget who?", String.valueOf(stringPrefix.length()) + "CONT1DDW1DDW1DDW1DDW1DDW1DDW3CONT1DY", "", true, true));
+                userInterface.console.writeToConsole(new Line(targetAction.actionType + " who?", String.valueOf(targetAction.actionType.length() + 1) + "CONT3CONT1DY", "", true, true));
+                targetAction.parentEntity = null;
             }
 
             return targetAction;

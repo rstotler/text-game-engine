@@ -1,0 +1,54 @@
+
+             --._.-.__.--==[ Input Option List ]==--.__.-._.--
+
+Input Option List:
+CombatAction
+CombatAction Entity/Self
+CombatAction Direction
+CombatAction All/Group
+CombatAction Direction #
+CombatAction Entity Direction
+CombatAction All/Group Direction
+CombatAction Entity Direction #
+CombatAction All/Group Direction #
+
+
+           --._.-.__.--==[ CombatAction/Skill Data ]==--.__.-._.--
+
+CombatAction Data:
+Target Entity: Attempts to target a specific enemy.
+    All Check: Attempts to target all entities.
+  Group Check: Attempts to target all group entities.
+   Self Check: Attempts to target only self.
+
+Skill Target Type:
+Single Only: Only target one entity
+   All Only: Only target all entities.
+    Neither: Can target single OR all entities.
+
+Skill Type:
+    Healing: Heals entities.
+Non-healing: Can not target self. Removes entities from group if in group.
+
+
+                --._.-.__.--==[ Debug Skills ]==--.__.-._.--
+
+-Close Range Attack-
+Single: Punch
+   All: Spin Punch
+  Both: Wind Slash
+
+-Ranged Attack-
+Single: Fireball
+   All: Firestorm
+  Both: Ice
+
+-Close Range Healing-
+Single: Touch
+   All: Smooches
+  Both: Heal
+
+-Ranged Healing-
+Single: Force Touch
+   All: White Wind
+  Both: Full Life

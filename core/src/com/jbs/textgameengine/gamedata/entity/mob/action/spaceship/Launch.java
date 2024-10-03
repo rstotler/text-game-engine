@@ -20,7 +20,8 @@ public class Launch extends Action {
     public Action getActionFromInput(String input, Mob parentEntity) {
         ArrayList<String> inputList = new ArrayList<>(Arrays.asList(input.split(" ")));
 
-        if(Arrays.asList("launch", "launc", "laun", "lau").contains(inputList.get(0))) {
+        if(Arrays.asList("launch", "launc", "laun", "lau").contains(inputList.get(0))
+        && inputList.size() == 1) {
             Launch launchAction = new Launch(parentEntity);
 
             return launchAction;

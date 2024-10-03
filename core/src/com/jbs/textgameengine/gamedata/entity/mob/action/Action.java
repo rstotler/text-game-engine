@@ -3,6 +3,7 @@ package com.jbs.textgameengine.gamedata.entity.mob.action;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.Attack;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.CombatAction;
+import com.jbs.textgameengine.gamedata.entity.mob.action.combat.Target;
 import com.jbs.textgameengine.gamedata.entity.mob.action.other.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.*;
@@ -70,13 +71,14 @@ public class Action {
 
         actionList.add(new Look());
         actionList.add(new Move());
-        actionList.add(new Target());
+        actionList.add(new OCLU());
 
         actionList.add(new Board());
         actionList.add(new Launch());
         actionList.add(new Radar());
         actionList.add(new Land());
 
+        actionList.add(new Target());
         actionList.add(new CombatAction());
         actionList.add(new Attack());
 

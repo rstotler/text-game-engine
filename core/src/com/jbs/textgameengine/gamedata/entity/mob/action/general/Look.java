@@ -85,7 +85,7 @@ public class Look extends Action {
 
             else {
                 userInterface.console.writeToConsole(new Line("Examine what?", "8CONT4CONT1DY", "", true, true));
-                return null;
+                lookAction.parentEntity = null;
             }
 
             return lookAction;

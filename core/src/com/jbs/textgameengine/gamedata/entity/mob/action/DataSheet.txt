@@ -1,0 +1,130 @@
+
+    # Get All Item From All (Loot Item From All) #
+    # Get All Item From Container (Loot Item From Container) #
+    # Get All From All (Loot All) #
+    # Get All From Container (Loot Container) #
+    # Get '#' Item From All #
+    # Get '#' Item From Container #
+    # Get Item From All #
+    # Get Item From Container #
+    # Get All #
+    # Get All Item #
+    # Get '#' Item #
+    # Get Item #
+
+    # Put All Item In Container #
+    # Put All In Container #
+    # Put '#' Item In Container #
+    # Put Item In Container #
+
+    # Loot Item From All #
+    # Loot Item From Container #
+    # Loot All #
+    # Loot Container #
+
+    # Drop All #
+    # Drop All Pocket #
+    # Drop All Item #
+    # Drop '#' Item #
+    # Drop Item #
+    # Empty Container/Drink #
+
+    # Wear All #
+    # Wear All Item #
+    # Wear Item 'GearSlot' #
+    # Wear '#' Item #
+    # Wear Item #
+    # Wield All #
+    # Wield Item 'Slot' #
+    # Wield All Item #
+    # Wield '#' Item #
+    # Wield Item #
+
+    # Remove All #
+    # Remove All Gear/Weapon #
+    # Remove Gear/Weapon 'GearSlot' #
+    # Remove '#' Gear/Weapon #
+    # Remove Gear/Weapon #
+
+    # Attack Mob #
+    # Attack #
+    # Cast Spell All/Self Direction/Num #
+    # Cast Spell Direction/Num #
+    # Cast Spell Mob Direction/Num #
+    # Cast Spell All/Self #
+    # Cast Spell #
+    # Cast Spell Mob #
+    # Cast #
+
+    # Dodge #
+    # Parry #
+    # Switch #
+
+    # Reload Left/Right Ammo #
+    # Reload All Ammo #
+    # Reload Weapon Ammo #
+    # Reload All #
+    # Reload Left/Right #
+    # Reload Weapon/Ammo #
+    # Reload #
+    # Unload All Ammo #
+    # Unload All #
+    # Unload Left/Right #
+    # Unload Weapon #
+    # Unload #
+
+    # Recruit/Tame/Group [Needs Testing] #
+    # Recruit All Mob #
+    # Recruit '#' Mob #
+    # Recruit List #
+    # Recruit All #
+    # Recruit Mob #
+    # Recruit #
+
+    # Disband All Mob #
+    # Disband '#' Mob #
+    # Disband All #
+    # Disband Mob #
+    # Disband #
+    # Stop #
+
+    # Inventory #
+    # Gear #
+    # Skills #
+    # Character/Status #
+    # Weather #
+    # Astro(?) #
+
+    # Search #
+    # Push/Press #
+    # Eat/Drink #
+    # Fill #
+    # List #
+    # Buy(?) #
+    # Sell(?) #
+
+    # Course X Y #
+    # Course Target #
+    # Throttle/Speed #
+    # Scan #
+    # Calculate #
+    # System #
+
+    # Inspect #
+    # Prospect #
+    # Plant All #
+    # Plant All Item #
+    # Plant '#' Item #
+    # Plant Item #
+    # Forage/Harvest #
+    # Craft/Create #
+
+    # Auto Loot #
+    # Auto Reload #
+    # Auto Combat #
+    # Team Damage #
+    # Heal Enemies #
+
+    # Manifest Mob #
+    # Manifest Mob Num Count #
+    # Manifest Mob Num #

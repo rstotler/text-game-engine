@@ -42,7 +42,7 @@ public class Move extends Action {
 
             else {
                 userInterface.console.writeToConsole(new Line("Move where?", "5CONT5CONT1DY", "", true, true));
-                return null;
+                moveAction.parentEntity = null;
             }
 
             return moveAction;
@@ -151,8 +151,6 @@ public class Move extends Action {
                         }
                     }
                 }
-
-
             }
         }
     }

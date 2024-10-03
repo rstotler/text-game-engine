@@ -5,6 +5,7 @@ import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.general.*;
+import com.jbs.textgameengine.gamedata.entity.mob.properties.statuseffect.StatusEffect;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
@@ -16,6 +17,7 @@ public class Mob extends Entity {
     public HashMap<String, Item> gear;
 
     public HashMap<String, ArrayList<Skill>> skillMap;
+    public HashMap<String, StatusEffect> statusEffectMap;
 
     public Action currentAction;
     public ArrayList<Mob> targetList;
@@ -30,6 +32,7 @@ public class Mob extends Entity {
         gear = loadGear();
 
         skillMap = loadSkillMap();
+        statusEffectMap = new HashMap<>();
 
         currentAction = null;
         targetList = new ArrayList<>();
