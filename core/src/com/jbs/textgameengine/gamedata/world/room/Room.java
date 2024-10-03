@@ -7,7 +7,6 @@ import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.entity.spaceship.Spaceship;
 import com.jbs.textgameengine.gamedata.world.room.door.Door;
 import com.jbs.textgameengine.gamedata.world.room.hiddenexit.HiddenExit;
-import com.jbs.textgameengine.gamedata.world.utility.TargetRoomData;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
@@ -19,6 +18,7 @@ public class Room {
     public Location location;
     public ArrayList<String> nameKeyList;
 
+    public boolean inside;
     public HashMap<String, Room> exitMap;
     public HashMap<String, Door> doorMap;
     public HashMap<String, HiddenExit> hiddenExitMap;
@@ -34,6 +34,7 @@ public class Room {
         this.location.room = this;
         nameKeyList = Entity.createNameKeyList(name.label.toLowerCase());
 
+        inside = false;
         exitMap = new HashMap<>();
         doorMap = new HashMap<>();
         hiddenExitMap = new HashMap<>();
@@ -65,7 +66,16 @@ public class Room {
         else {
 
             // Name & Underline //
-            Line nameLine = new Line(name.label, name.colorCode, name.effectCode, false, true);
+            String insideString = "";
+            String insideColorCode = "";
+            String insideEffectCode = "";
+            if(inside) {
+                insideString = "(Inside) ";
+                insideColorCode = "1DR6CONT2DR";
+                insideEffectCode = String.valueOf(insideString.length()) + "X";
+            }
+
+            Line nameLine = new Line(insideString + name.label, insideColorCode + name.colorCode, insideEffectCode + name.effectCode, false, true);
             GameScreen.userInterface.console.writeToConsole(nameLine);
             Line underlineLine = new Line(Line.getUnderlineString(name.label), String.valueOf(name.label.length()) + "ALTADY", "", false, true);
             GameScreen.userInterface.console.writeToConsole(underlineLine);
@@ -276,7 +286,7 @@ public class Room {
     public void displayDark() {
 
         // Name & Underline //
-        Line nameLine = new Line("Darkness..", "1DW1DW1DDW1DDW1DDDW1DDDW1DDDGR1DDDGR1DDDGR1DDDGR", "", false, true);
+        Line nameLine = new Line("Darkness..", "1DW1DW1DDW1DDW1DDDW1DDDW1DDDGR1DDDGR1DDDGR1DDDGR", "10FADA", false, true);
         GameScreen.userInterface.console.writeToConsole(nameLine);
         Line underlineLine = new Line(Line.getUnderlineString("Darkness.."), "10ALTADY", "", false, true);
         GameScreen.userInterface.console.writeToConsole(underlineLine);

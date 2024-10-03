@@ -6,6 +6,7 @@ import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Emote extends Action {
     public Emote(Mob parentEntity, String actionType) {
@@ -36,6 +37,38 @@ public class Emote extends Action {
             return new Emote(parentEntity, "Nodnod");
         }
 
+        else if(Arrays.asList("tap").contains(inputList.get(0))
+        && inputList.size() == 1) {
+            return new Emote(parentEntity, "Tap");
+        }
+
+        else if(Arrays.asList("boggle").contains(inputList.get(0))
+        && inputList.size() == 1) {
+            return new Emote(parentEntity, "Boggle");
+        }
+
+        else if(Arrays.asList("jump").contains(inputList.get(0))
+        && inputList.size() == 1) {
+            return new Emote(parentEntity, "Jump");
+        }
+
+        else if(Arrays.asList("ahah").contains(inputList.get(0))
+        && inputList.size() == 1) {
+            return new Emote(parentEntity, "Ahah");
+        }
+
+        else if(Arrays.asList("say").contains(inputList.get(0))) {
+            if(inputList.size() == 1) {
+                GameScreen.userInterface.console.writeToConsole(new Line("Say what?", "4CONT4CONT1DY", "", true, true));
+                return new Emote(parentEntity, "");
+            } else {
+                Emote emoteAction = new Emote(parentEntity, "Say");
+                List<String> targetEntityStringList = inputList.subList(1, inputList.size());
+                emoteAction.targetEntityString = targetEntityStringList.stream().collect(Collectors.joining(" "));
+                return emoteAction;
+            }
+        }
+
         return null;
     }
 
@@ -56,6 +89,60 @@ public class Emote extends Action {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("You nodnod.", "4CONT6CONT1DY", "", true, true));
             }
+        }
+
+        else if(actionType.equals("Tap")) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("You tap your foot impatiently..", "4CONT4CONT5CONT5CONT11CONT2DY", "", true, true));
+            }
+        }
+
+        else if(actionType.equals("Boggle")) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("You boggle in complete incomprehension.", "4CONT7CONT3CONT9CONT15CONT1DY", "", true, true));
+            }
+        }
+
+        else if(actionType.equals("Jump")) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("You jump up and down.", "4CONT5CONT3CONT4CONT4CONT1DY", "", true, true));
+            }
+        }
+
+        else if(actionType.equals("Ahah")) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("Comprehension dawns upon you.", "14CONT6CONT5CONT3CONT1DY", "", true, true));
+            }
+        }
+
+        else if(actionType.equals("Say")) {
+            String sayAskString = "say";
+            String punctuation = ".";
+
+            // Capitalize First Letter //
+            if(targetEntityString.length() > 1) {
+                targetEntityString = targetEntityString.substring(0, 1).toUpperCase() + targetEntityString.substring(1);
+            }
+
+            if(targetEntityString.charAt(targetEntityString.length() - 1) == '?') {
+                punctuation = "?";
+                targetEntityString = targetEntityString.replace("?", "");
+                sayAskString = "ask";
+            }
+            else if(targetEntityString.charAt(targetEntityString.length() - 1) == '.' && !(targetEntityString.length() >= 2 && targetEntityString.charAt(targetEntityString.length() - 2) == '.')) {
+                punctuation = ".";
+                targetEntityString = targetEntityString.substring(0, targetEntityString.length() - 1);
+            }
+            else if(targetEntityString.charAt(targetEntityString.length() - 1) == '!') {
+                punctuation = "!";
+                targetEntityString = targetEntityString.replace("!", "");
+                sayAskString = "exclaim";
+            }
+
+            String lineString = "You " + sayAskString + ", '" + targetEntityString + "'" + punctuation;
+            String lineColorCode = "4CONT" + String.valueOf(sayAskString.length()) + "CONT3DY" + String.valueOf(targetEntityString.length()) + "SHIA" + "2DY";
+
+            GameScreen.userInterface.console.writeToConsole(new Line(lineString, lineColorCode, "", true, true));
         }
     }
 }

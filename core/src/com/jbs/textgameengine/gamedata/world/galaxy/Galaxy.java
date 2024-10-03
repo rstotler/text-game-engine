@@ -85,9 +85,10 @@ public class Galaxy {
         areaCOTU.roomList.add(cotuRoom02);
 
         // Room 03 - In A Wooden Cabin //
-        Line cotuRoom03Name = new Line("In A Wooden Cabin", "3CONT2CONT7SHIADO5CONT", "", true, true);
+        Line cotuRoom03Name = new Line("In A Wooden Cabin", "3CONT2CONT7SHIAO5CONT", "", true, true);
         Location cotuRoom03Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom03 = new Room(cotuRoom03Name, null, cotuRoom03Location);
+        cotuRoom03.inside = true;
         cotuRoom03.createExit("East", cotuRoom02, "Manual", 1234);
         areaCOTU.roomList.add(cotuRoom03);
 
@@ -95,6 +96,7 @@ public class Galaxy {
         Line cotuRoom04Name = new Line("Spaceport Entrance", "10CONT8CONT", "", true, true);
         Location cotuRoom04Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom04 = new Room(cotuRoom04Name, null, cotuRoom04Location);
+        cotuRoom04.inside = true;
         cotuRoom04.createExit("North", cotuRoom00, "Automatic");
         cotuRoom04.createEntity("Mob", 1);
         areaCOTU.roomList.add(cotuRoom04);
@@ -103,7 +105,8 @@ public class Galaxy {
         Line cotuRoom05Name = new Line("Bridge To The Spaceport", "7CONT3CONT4CONT9CONT", "", true, true);
         Location cotuRoom05Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom05 = new Room(cotuRoom05Name, null, cotuRoom05Location);
-        cotuRoom05.createExit("North", cotuRoom04, "Automatic", 12345);
+        cotuRoom05.inside = true;
+        cotuRoom05.createExit("North", cotuRoom04, "Automatic");
         areaCOTU.roomList.add(cotuRoom05);
 
         // Room 06 - Landing Pad //
@@ -112,6 +115,7 @@ public class Galaxy {
         Room cotuRoom06 = new Room(cotuRoom06Name, null, cotuRoom06Location);
         cotuRoom06.createExit("North", cotuRoom05);
         cotuRoom06.createEntity("Spaceship", 1);
+        cotuRoom06.createExit("North", cotuRoom05, "Automatic");
         areaCOTU.roomList.add(cotuRoom06);
         planetLapine.landingPadList.add(cotuRoom06);
 

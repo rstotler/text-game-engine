@@ -2,15 +2,11 @@ package com.jbs.textgameengine.gamedata.entity.mob.action.general;
 
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
-import com.jbs.textgameengine.gamedata.entity.mob.action.combat.CombatAction;
-import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import com.jbs.textgameengine.screen.utility.Utility;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.jbs.textgameengine.screen.gamescreen.GameScreen.userInterface;
@@ -157,5 +153,14 @@ public class Target extends Action {
     }
 
     public void initiate() {
+
+        // Message - It's too far. //
+
+        // Message - There is nothing there. //
+
+        // Message - Your view to the Direction is obstructed by a door. //
+
+        // Message - You don't see them. //
+
     }
 }

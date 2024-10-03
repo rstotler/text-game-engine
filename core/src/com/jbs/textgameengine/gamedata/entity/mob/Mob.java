@@ -49,13 +49,11 @@ public class Mob extends Entity {
         // 1 - Sasquatch //
         else if(id == 2) {
             mob.name = new Line("Sasquatch", "9CONT", "", true, true);
-            mob.roomDescription = new Line("is here, greeting visitors.", "3CONT4CONT2DY9CONT8CONT1DY", "", true, true);
         }
 
         // 3 - Skinny Alien Dude //
         else if(id == 3) {
             mob.name = new Line("Skinny Alien Dude", "7CONT6CONT4CONT", "", true, true);
-            mob.roomDescription = new Line("is here, greeting visitors.", "3CONT4CONT2DY9CONT8CONT1DY", "", true, true);
         }
 
         mob.nameKeyList = Entity.createNameKeyList(mob.prefix + mob.name.label);
