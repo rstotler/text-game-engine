@@ -181,55 +181,30 @@ public class CombatAction extends Action {
         }
 
         // Message - You aren't holding the proper weapon type. //
-        else if(skill != null
-        && !skill.weaponCheck(parentEntity)) {
+        else if(skill != null && !skill.weaponCheck(parentEntity)) {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("You aren't holding the proper weapon type.", "4CONT4CONT1DY2DW8CONT4CONT7CONT7CONT4CONT1DY", "", true, true));
             }
         }
 
-        // Message - You can't use that on yourself/your group. //
-        else if(skill != null
-        && !skill.isHealing
-        && (selfCheck || groupCheck)) {
+        // Message - You can't use that on yourself. //
+        else if(!skill.isHealing
+        && selfCheck) {
             if(parentEntity.isPlayer) {
-                String targetString = "yourself";
-                String targetColorCode = "8CONT";
-                if(groupCheck) {
-                    targetString = "your group";
-                    targetColorCode = "5CONT5CONT";
-                }
-                GameScreen.userInterface.console.writeToConsole(new Line("You can't use that on " + targetString + ".", "4CONT3CONT1DY2DW4CONT5CONT3CONT" + targetColorCode + "1DY", "", true, true));
+                GameScreen.userInterface.console.writeToConsole(new Line("You can't use that on yourself.", "4CONT3CONT1DY2DDW4CONT5CONT3CONT8CONT1DY", "", true, true));
             }
         }
 
-        // Message - You need a target. //
-        else if(targetEntityString.isEmpty()
-        && !targetDirection.isEmpty()
-        && skill.maxDistance > 0
-        && !skill.allOnly
-        && !allCheck
-        && !(skill.isHealing && groupCheck)) {
+        // Message - You can't use that on your group. //
+        else if(!skill.isHealing
+        && groupCheck) {
             if(parentEntity.isPlayer) {
-                GameScreen.userInterface.console.writeToConsole(new Line("You need a target.", "4CONT5CONT2W6CONT1DY", "", true, true));
-            }
-        }
-
-        // Message - You aren't targeting anyone. //
-        else if(parentEntity.targetList.isEmpty()
-        && targetEntityString.isEmpty()
-        && targetDirection.isEmpty()
-        && !skill.allOnly
-        && !allCheck
-        && !skill.isHealing) {
-            if(parentEntity.isPlayer) {
-                GameScreen.userInterface.console.writeToConsole(new Line("You aren't targeting anyone.", "4CONT4CONT1DY2DDW10CONT6CONT1DY", "", true, true));
+                GameScreen.userInterface.console.writeToConsole(new Line("You can't use that on your group.", "4CONT3CONT1DY2DDW4CONT5CONT3CONT5CONT5CONT1DY", "", true, true));
             }
         }
 
         // Message - You're out of ammo. //
-        else if(skill != null
-        && !skill.ammoCheck(parentEntity)) {
+        else if(skill != null && !skill.ammoCheck(parentEntity)) {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("You're out of ammo.", "3CONT1DY3DW4CONT3CONT4CONT1DY", "", true, true));
             }
@@ -237,51 +212,82 @@ public class CombatAction extends Action {
 
         // Get Target Room //
         else {
+            Room targetRoom = parentEntity.location.room;
 
-            // Get Data //
-            boolean targetOutOfRange = false;
-            if(targetCount == -1 && !parentEntity.targetList.isEmpty() && targetEntityString.isEmpty() && targetDirection.isEmpty()) {
-                TargetRoomData targetRoomData = TargetRoomData.getTargetEntityRoomFromStartRoom(parentEntity.location.room, parentEntity.targetList.get(0), skill.getMaxDistance(parentEntity));
-                if(targetRoomData.distance != -1) {
-                    targetCount = targetRoomData.distance;
-                    targetDirection = targetRoomData.targetDirection;
-                } else {
-                    targetOutOfRange = true;
+            // Get Target Room Data (If No Target Entity & No Target Direction) //
+            boolean noInputTargetOutOfRange = false;
+            TargetRoomData targetRoomData = null;
+            if(actionType.equals("CombatAction") && !parentEntity.targetList.isEmpty()) {
+                TargetRoomData noInputTargetRoomData = TargetRoomData.getTargetEntityRoomFromStartRoom(parentEntity.location.room, parentEntity.targetList.get(0), skill.getMaxDistance(parentEntity));
+                if(noInputTargetRoomData.distance != -1) {
+                    targetRoom = noInputTargetRoomData.targetRoom;
+                    targetCount = noInputTargetRoomData.distance;
+                    targetDirection = noInputTargetRoomData.targetDirection;
+                }
+                else {
+                    // (If Target Is Out Of Range And Skill Is Healing, Target Room Is Parent Entity's Room, Use Skill On Group) //
+                    if(skill.isHealing) {groupCheck = true;}
+                    else {noInputTargetOutOfRange = true;}
                 }
             }
-            Room targetRoom = parentEntity.location.room;
-            TargetRoomData targetRoomData = null;
-            if(targetCount > 0 && !targetDirection.isEmpty()) {
+
+            // OR Get Target Room Data (If Target Direction) //
+            else if(targetCount > 0 && !targetDirection.isEmpty()) {
                 ArrayList<String> directionList = new ArrayList<>();
                 for(int i = 0; i < targetCount; i++) {directionList.add(targetDirection);}
                 targetRoomData = TargetRoomData.getTargetRoomFromStartRoom(parentEntity.location.room, directionList, false, false);
                 targetRoom = targetRoomData.targetRoom;
+                targetCount = targetRoomData.distance;
             }
 
-            // Group Entity In Target Room Check //
+            // Group Entity In Target Room & Combat Target In Target Room Checks //
             boolean groupEntityInTargetRoom = false;
+            boolean combatTargetInRoom = false;
             for(Entity mob : parentEntity.groupList) {
                 if(targetRoom.mobList.contains(mob)) {
                     groupEntityInTargetRoom = true;
                     break;
                 }
             }
+            for(Entity mob : parentEntity.combatList) {
+                if(targetRoom.mobList.contains(mob)) {
+                    combatTargetInRoom = true;
+                    break;
+                }
+            }
 
-            // Message - That's too far away./Your target is too far. //
-            if((targetCount != -1 && targetCount > skill.getMaxDistance(parentEntity)) || targetOutOfRange) {
+            // Message - Your target is out of range. //
+            if(noInputTargetOutOfRange) {
                 if(parentEntity.isPlayer) {
-                    if(targetEntityString.isEmpty() && targetDirection.isEmpty()) {
-                        GameScreen.userInterface.console.writeToConsole(new Line("Your target is too far.", "5CONT7CONT3CONT4CONT3CONT1DY", "", true, true));
-                    } else {
-                        GameScreen.userInterface.console.writeToConsole(new Line("That's too far away.", "4CONT1DY2DW4CONT4CONT4CONT1DY", "", true, true));
-                    }
+                    GameScreen.userInterface.console.writeToConsole(new Line("Your target is out of range.", "5CONT7CONT3CONT4CONT3CONT5CONT1DY", "", true, true));
+                }
+            }
+
+            // Message - That's too far away. //
+            else if(targetCount != -1 && targetCount > skill.getMaxDistance(parentEntity)) {
+                if(parentEntity.isPlayer) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("That's too far away.", "4CONT1DY2DW4CONT4CONT4CONT1DY", "", true, true));
+                }
+            }
+
+            // Message - You need a target. //
+            else if((parentEntity.targetList.isEmpty()
+            && !skill.isHealing
+            && !skill.allOnly)
+
+            || ((actionType.equals("CombatAction Direction") || actionType.equals("CombatAction Direction #"))
+            && skill.singleOnly
+            && skill.maxDistance > 0
+            && !combatTargetInRoom)) {
+                if(parentEntity.isPlayer) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("You need a target.", "4CONT5CONT2W6CONT1DY", "", true, true));
                 }
             }
 
             // Message - Your group isn't there. //
-            else if(!targetDirection.isEmpty()
-            && groupCheck
-            && !groupEntityInTargetRoom) {
+            else if(groupCheck
+            && !groupEntityInTargetRoom
+            && !targetDirection.isEmpty()) {
                 if(parentEntity.isPlayer) {
                     GameScreen.userInterface.console.writeToConsole(new Line("Your group isn't there.", "5CONT6CONT3CONT1DY2DDW5CONT1DY", "", true, true));
                 }
@@ -297,7 +303,8 @@ public class CombatAction extends Action {
             }
 
             // Message - You're too close. //
-            else if(skill.getMinDistance(parentEntity) > 0 && targetCount < skill.getMinDistance(parentEntity)) {
+            else if(skill.getMinDistance(parentEntity) > 0
+            && targetCount < skill.getMinDistance(parentEntity)) {
                 if(parentEntity.isPlayer) {
                     GameScreen.userInterface.console.writeToConsole(new Line("You're too close.", "3CONT1DY1DW2DDW4CONT5CONT1DY", "", true, true));
                 }
@@ -327,7 +334,7 @@ public class CombatAction extends Action {
                     }
                 }
 
-                // Message - You don't see anyone/anyone there. //
+                // Message - You don't see anyone there./You don't see anyone. //
                 else if(targetList.isEmpty()
                 && allCheck
                 && !skill.allOnly) {
