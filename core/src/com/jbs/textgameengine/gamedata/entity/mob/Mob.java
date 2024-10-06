@@ -59,6 +59,11 @@ public class Mob extends Entity {
             mob.name = new Line("Skinny Alien Dude", "7CONT6CONT4CONT", "", true, true);
         }
 
+        // Default Mob //
+        else {
+            mob.name = new Line("Default Mob", "8CONT3CONT", "", true, true);
+        }
+
         mob.nameKeyList = Entity.createNameKeyList(mob.prefix + mob.name.label);
 
         return mob;

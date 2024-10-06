@@ -4,6 +4,7 @@ import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.Attack;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.CombatAction;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.Target;
+import com.jbs.textgameengine.gamedata.entity.mob.action.god.Manifest;
 import com.jbs.textgameengine.gamedata.entity.mob.action.other.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.*;
@@ -21,6 +22,7 @@ public class Action {
     public int targetCount;
     public int targetDirectionCount;
     public String targetContainerString;
+    public int targetNum;
 
     public boolean allCheck;
     public boolean groupCheck;
@@ -35,6 +37,7 @@ public class Action {
         targetEntityString = "";
         targetDirection = "";
         targetCount = -1;
+        targetNum = -1;
         targetDirectionCount = -1;
         targetContainerString = "";
 
@@ -84,6 +87,7 @@ public class Action {
 
         actionList.add(new Time());
         actionList.add(new Emote());
+        actionList.add(new Manifest());
 
         return actionList;
     }

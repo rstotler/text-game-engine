@@ -34,6 +34,11 @@ public class Item extends Entity {
             item.keyList.add(12345);
         }
 
+        // Default Item //
+        else {
+            item.name = new Line("Default Item", "8CONT4CONT", "", true, true);
+        }
+
         item.nameKeyList = Entity.createNameKeyList(item.prefix + item.name.label);
 
         return item;

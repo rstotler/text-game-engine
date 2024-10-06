@@ -115,7 +115,3 @@
     # Auto Combat #
     # Team Damage #
     # Heal Enemies #
-
-    # Manifest Mob #
-    # Manifest Mob Num Count #
-    # Manifest Mob Num #
