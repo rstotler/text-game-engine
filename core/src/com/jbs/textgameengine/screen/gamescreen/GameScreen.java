@@ -140,6 +140,7 @@ public class GameScreen extends Screen {
 
     public String update() {
         userInterface.inputBar.update();
+        userInterface.console.update();
 
         // Update Solar System //
         if(frameTimer == 0
@@ -156,7 +157,7 @@ public class GameScreen extends Screen {
         && player.location != null
         && player.location.area != null
         && player.location.room != null) {
-            AreaAndRoomData surroundingAreaAndRoomData = AreaAndRoomData.getSurroundingAreaAndRoomData(player.location.room, 5);
+            AreaAndRoomData surroundingAreaAndRoomData = AreaAndRoomData.getSurroundingAreaAndRoomData(player.location.room, player.getMaxViewDistance());
             for(Area area : surroundingAreaAndRoomData.areaList) {area.update();}
             for(Room room : surroundingAreaAndRoomData.roomList) {room.update();}
         }

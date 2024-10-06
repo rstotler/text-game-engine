@@ -19,6 +19,8 @@ public class Console extends UserInterfaceElement {
     public GlyphLayout glyphLayout;
 
     public ArrayList<Line> lineList;
+    public ArrayList<Line> lineBufferList;
+    public int updateTimer;
 
     public Console() {
         font = new BitmapFont(Gdx.files.internal("fonts/Consolas_28.fnt"), Gdx.files.internal("fonts/Consolas_28.png"), false);
@@ -26,6 +28,8 @@ public class Console extends UserInterfaceElement {
         glyphLayout = new GlyphLayout(font, " ");
 
         lineList = new ArrayList<>();
+        lineBufferList = new ArrayList<>();
+        updateTimer = 0;
 
         int consoleX = 0;
         int consoleY = Settings.INPUT_BAR_HEIGHT;
@@ -34,6 +38,17 @@ public class Console extends UserInterfaceElement {
         rect = new Rect(consoleX, consoleY, consoleWidth, consoleHeight);
 
         rect.fillColor = new Color(0/255f, 0/255f, 10/255f, 1);
+    }
+
+    public void update() {
+        if(!lineBufferList.isEmpty()) {
+            updateTimer += 1;
+            if(updateTimer >= 1) {
+                updateTimer = 0;
+                lineList.add(0, lineBufferList.get(0));
+                lineBufferList.remove(0);
+            }
+        }
     }
 
     public void render() {
@@ -66,10 +81,10 @@ public class Console extends UserInterfaceElement {
 
             for(int i = 0; i < wrappedLineList.size(); i++) {
                 Line wrappedLine = wrappedLineList.get(i);
-                lineList.add(0, wrappedLine);
+                lineBufferList.add(wrappedLine);
             }
         } else {
-            lineList.add(0, line);
+            lineBufferList.add(line);
         }
     }
 }

@@ -53,8 +53,13 @@ public class Emote extends Action {
         }
 
         else if(Arrays.asList("ahah").contains(inputList.get(0))
-        && inputList.size() == 1) {
+                && inputList.size() == 1) {
             return new Emote(parentEntity, "Ahah");
+        }
+
+        else if(Arrays.asList("gaze").contains(inputList.get(0))
+        && inputList.size() == 1) {
+            return new Emote(parentEntity, "Gaze");
         }
 
         else if(Arrays.asList("say").contains(inputList.get(0))) {
@@ -112,6 +117,16 @@ public class Emote extends Action {
         else if(actionType.equals("Ahah")) {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("Comprehension dawns upon you.", "14CONT6CONT5CONT3CONT1DY", "", true, true));
+            }
+        }
+
+        else if(actionType.equals("Gaze")) {
+            if(parentEntity.isPlayer) {
+                if(!parentEntity.location.room.inside) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("You gaze into the sky, transfixed in thought.", "4CONT5CONT5CONT4CONT3CONT2DY11CONT3CONT7CONT1DY", "", true, true));
+                } else {
+                    GameScreen.userInterface.console.writeToConsole(new Line("You stare off into space, deep in thought.", "4CONT6CONT4CONT5CONT5CONT2DY5CONT3CONT7CONT1DY", "", true, true));
+                }
             }
         }
 

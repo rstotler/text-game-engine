@@ -134,6 +134,10 @@ public class Mob extends Entity {
         return false;
     }
 
+    public int getMaxViewDistance() {
+        return 5;
+    }
+
     public void addItemToInventory(Item targetItem) {
         inventory.get(targetItem.pocket).add(targetItem);
     }

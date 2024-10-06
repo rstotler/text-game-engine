@@ -29,6 +29,10 @@ public class Skill {
     }
 
     public int getMaxDistance(Mob parentEntity) {
+        if(maxDistance > parentEntity.getMaxViewDistance()) {
+            return parentEntity.getMaxViewDistance();
+        }
+
         return maxDistance;
     }
 

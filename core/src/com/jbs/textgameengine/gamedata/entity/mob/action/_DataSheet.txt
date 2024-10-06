@@ -48,14 +48,6 @@
 
     # Attack Mob #
     # Attack #
-    # Cast Spell All/Self Direction/Num #
-    # Cast Spell Direction/Num #
-    # Cast Spell Mob Direction/Num #
-    # Cast Spell All/Self #
-    # Cast Spell #
-    # Cast Spell Mob #
-    # Cast #
-
     # Dodge #
     # Parry #
     # Switch #
@@ -108,7 +100,6 @@
     # Throttle/Speed #
     # Scan #
     # Calculate #
-    # System #
 
     # Inspect #
     # Prospect #
