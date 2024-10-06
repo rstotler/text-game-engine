@@ -20,6 +20,8 @@ public class Player extends Mob {
 
     public void loadDebugPlayer() {
         addItemToInventory(Item.load(1, location));
+        addItemToInventory(Item.load(1, location));
+        addItemToInventory(Item.load(2, location));
     }
 
     public void update() {

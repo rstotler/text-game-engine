@@ -58,7 +58,7 @@ public class Spaceship extends Entity {
         Line room01Line = new Line("Sitting In A Cockpit", "8CONT3CONT2W7CONT", "", true, true);
         Location room01Location = new Location(startLocation.galaxy, startLocation.solarSystem, startLocation.planetoid, areaMainCabin, null, this);
         Room room01 = new Room(room01Line, null, room01Location);
-        room01.createExit("South", room00, "Automatic", 1234);
+        room01.createExit("South", room00, "Automatic");
         areaMainCabin.roomList.add(room01);
 
         boardingRoom = areaMap.get("Main Cabin").roomList.get(0);
@@ -80,6 +80,7 @@ public class Spaceship extends Entity {
 
         if(id == 1) {
             spaceship.name = new Line("Starship Heart of Gold", "9CONT6SHIAR3CONT4SHIAY", "", true, true);
+            spaceship.keyNum = 7777;
         }
 
         spaceship.nameKeyList = Entity.createNameKeyList(spaceship.name.label);

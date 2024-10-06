@@ -188,7 +188,7 @@ public class Room {
                         String countColorCode = "";
                         if(mobNameMap.get(targetLabel) > 1) {
                             countString = " (" + String.valueOf(mobNameMap.get(targetLabel)) + ")";
-                            countColorCode = "2DR" + String.valueOf(mobNameMap.get(targetLabel)).length() + "W1DR";
+                            countColorCode = "2DR" + String.valueOf(mobNameMap.get(targetLabel)).length() + "DW1DR";
                         }
 
                         String mobRoomDescriptionLabel = "is here, milling about.";

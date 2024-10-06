@@ -5,6 +5,7 @@ import com.jbs.textgameengine.gamedata.entity.mob.action.combat.Attack;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.CombatAction;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.Target;
 import com.jbs.textgameengine.gamedata.entity.mob.action.god.Manifest;
+import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Inventory;
 import com.jbs.textgameengine.gamedata.entity.mob.action.other.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.*;
@@ -75,6 +76,7 @@ public class Action {
         actionList.add(new Look());
         actionList.add(new Move());
         actionList.add(new OCLU());
+        actionList.add(new Inventory());
 
         actionList.add(new Board());
         actionList.add(new Launch());

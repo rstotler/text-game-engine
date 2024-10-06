@@ -65,7 +65,7 @@
     # Unload Weapon #
     # Unload #
 
-    # Recruit/Tame/Group [Needs Testing] #
+    # Recruit/Tame/Group #
     # Recruit All Mob #
     # Recruit '#' Mob #
     # Recruit List #
@@ -80,7 +80,6 @@
     # Disband #
     # Stop #
 
-    # Inventory #
     # Gear #
     # Skills #
     # Character/Status #

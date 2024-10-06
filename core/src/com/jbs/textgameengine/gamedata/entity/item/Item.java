@@ -31,7 +31,13 @@ public class Item extends Entity {
             item.name = new Line("Silver Key", "7SHIAGR3CONT", "", true, true);
             item.keyList = new ArrayList<>();
             item.keyList.add(1234);
-            item.keyList.add(12345);
+        }
+
+        // 2 - A Key To Starship Heart of Gold //
+        else if(id == 2) {
+            item.name = new Line("Key to Starship Heart of Gold", "4CONT3CONT9CONT6SHIAR3CONT4SHIAY", "", true, true);
+            item.keyList = new ArrayList<>();
+            item.keyList.add(7777);
         }
 
         // Default Item //
