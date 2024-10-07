@@ -1,17 +1,3 @@
-
-    # Get All Item From All (Loot Item From All) #
-    # Get All Item From Container (Loot Item From Container) #
-    # Get All From All (Loot All) #
-    # Get All From Container (Loot Container) #
-    # Get '#' Item From All #
-    # Get '#' Item From Container #
-    # Get Item From All #
-    # Get Item From Container #
-    # Get All #
-    # Get All Item #
-    # Get '#' Item #
-    # Get Item #
-
     # Put All Item In Container #
     # Put All In Container #
     # Put '#' Item In Container #
@@ -22,11 +8,6 @@
     # Loot All #
     # Loot Container #
 
-    # Drop All #
-    # Drop All Pocket #
-    # Drop All Item #
-    # Drop '#' Item #
-    # Drop Item #
     # Empty Container/Drink #
 
     # Wear All #

@@ -28,6 +28,7 @@ public class Action {
     public boolean allCheck;
     public boolean groupCheck;
     public boolean selfCheck;
+    public boolean containerAllCheck;
 
     public Mob parentEntity;
     public Skill skill;
@@ -45,6 +46,7 @@ public class Action {
         allCheck = false;
         groupCheck = false;
         selfCheck = false;
+        containerAllCheck = false;
 
         this.parentEntity = parentEntity;
         this.skill = skill;
@@ -76,6 +78,9 @@ public class Action {
         actionList.add(new Look());
         actionList.add(new Move());
         actionList.add(new OCLU());
+        actionList.add(new Get());
+        actionList.add(new Drop());
+
         actionList.add(new Inventory());
 
         actionList.add(new Board());

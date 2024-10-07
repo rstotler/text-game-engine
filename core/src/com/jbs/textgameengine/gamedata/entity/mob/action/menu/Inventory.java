@@ -9,6 +9,15 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import java.util.*;
 
 public class Inventory extends Action {
+    public static HashMap<String, ArrayList<String>> inventoryNameKeyMap = loadInventoryNameKeyMap();
+
+    public static HashMap<String, ArrayList<String>> loadInventoryNameKeyMap() {
+        HashMap<String, ArrayList<String>> inventoryNameKeyMap = new HashMap<>();
+        inventoryNameKeyMap.put("General", new ArrayList<>(Arrays.asList("inventory", "inventor", "invento", "invent", "inven", "inve", "inv", "in", "i", "general", "genera", "gener", "gene", "gen", "ge", "g")));
+
+        return inventoryNameKeyMap;
+    }
+
     public Inventory(Mob parentEntity) {
         super(parentEntity);
     }
@@ -19,9 +28,6 @@ public class Inventory extends Action {
 
     public Action getActionFromInput(String input, Mob parentEntity) {
         ArrayList<String> inputList = new ArrayList<>(Arrays.asList(input.split(" ")));
-        HashMap<String, ArrayList<String>> inventoryNameKeyMap = new HashMap<>();
-        inventoryNameKeyMap.put("General", new ArrayList<>(Arrays.asList("inventory", "inventor", "invento", "invent", "inven", "inve", "inv", "in", "i", "general", "genera", "gener", "gene", "gen", "ge", "g")));
-
         Inventory actionInventory = new Inventory(parentEntity);
 
         String targetInventoryPocket = "";
