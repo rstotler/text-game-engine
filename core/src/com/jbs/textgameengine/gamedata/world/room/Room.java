@@ -410,12 +410,12 @@ public class Room {
         targetRoom.hiddenExitMap.put(oppositeDirection, hiddenExit);
     }
 
-    public void createEntity(String entityType, int id) {
+    public void createEntity(String entityType, String entitySubType, int id) {
         if(entityType.equals("Mob")) {
             mobList.add(Mob.load(id, this.location));
         }
         else if(entityType.equals("Item")) {
-            addItemToRoom(Item.load(id, this.location));
+            addItemToRoom(Item.load(entitySubType, id, this.location));
         }
         else if(entityType.equals("Spaceship")) {
             spaceshipList.add(Spaceship.load(id, this.location));

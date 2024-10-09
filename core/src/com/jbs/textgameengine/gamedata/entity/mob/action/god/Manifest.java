@@ -21,7 +21,7 @@ public class Manifest extends Action {
 
     public Action getActionFromInput(String input, Mob parentEntity) {
         ArrayList<String> inputList = new ArrayList<>(Arrays.asList(input.split(" ")));
-        ArrayList<String> entityTypeList = new ArrayList<>(Arrays.asList("mob", "item"));
+        ArrayList<String> entityTypeList = new ArrayList<>(Arrays.asList("mob", "item", "general", "gear"));
 
         if(Arrays.asList("manifest", "manifes", "manife", "manif", "mani", "man").contains(inputList.get(0))) {
             Manifest lookAction = new Manifest(parentEntity);
@@ -54,6 +54,12 @@ public class Manifest extends Action {
                 }
             }
 
+            // Entity Type Check (Action Type) //
+            if(lookAction.actionType.length() > 1) {
+                lookAction.actionType = String.valueOf(lookAction.actionType.charAt(0)).toUpperCase() + lookAction.actionType.substring(1);
+                if(lookAction.actionType.equals("Item")) {lookAction.actionType = "General";}
+            }
+
             return lookAction;
         }
 
@@ -62,7 +68,9 @@ public class Manifest extends Action {
 
     public void initiate() {
         Entity targetEntity = null;
-        if(actionType.equals("mob")) {
+
+        // Manifest Mob //
+        if(actionType.equals("Mob")) {
             for(int i = 0; i < targetCount; i++) {
                 Entity mob = Mob.load(targetNum, parentEntity.location);
                 if(!mob.name.label.equals("Default Mob")) {
@@ -71,10 +79,12 @@ public class Manifest extends Action {
                 }
             }
         }
-        else if(actionType.equals("item")) {
+
+        // Manifest Item //
+        else {
             for(int i = 0; i < targetCount; i++) {
-                Entity item = Item.load(targetNum, parentEntity.location);
-                if(!item.name.label.equals("Default Item")) {
+                Entity item = Item.load(actionType, targetNum, parentEntity.location);
+                if(!(item.name.label.length() >= 7 && item.name.label.substring(0, 7).equals("Default"))) {
                     if(targetEntity == null) {targetEntity = item;}
                     parentEntity.location.room.addItemToRoom(item);
                 }

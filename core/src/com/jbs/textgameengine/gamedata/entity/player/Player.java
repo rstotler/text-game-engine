@@ -19,9 +19,11 @@ public class Player extends Mob {
     }
 
     public void loadDebugPlayer() {
-        addItemToInventory(Item.load(1, location));
-        addItemToInventory(Item.load(1, location));
-        addItemToInventory(Item.load(2, location));
+        addItemToInventory(Item.load("General", 1, location));
+        addItemToInventory(Item.load("General", 1, location));
+        addItemToInventory(Item.load("General", 2, location));
+
+        gear.put("Head", Item.load("Gear", 1, location));
     }
 
     public void update() {

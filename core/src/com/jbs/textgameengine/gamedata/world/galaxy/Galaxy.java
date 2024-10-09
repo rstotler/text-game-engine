@@ -60,9 +60,9 @@ public class Galaxy {
         Line cotuRoom00Name = new Line("Center Of The Universe", "7CONT3CONT4CONT8CONT", "", true, true);
         Location cotuRoom00Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom00 = new Room(cotuRoom00Name, null, cotuRoom00Location);
-        cotuRoom00.createEntity("Mob", 1);
-        cotuRoom00.createEntity("Mob", 1);
-        cotuRoom00.createEntity("Mob", 2);
+        cotuRoom00.createEntity("Mob", "", 1);
+        cotuRoom00.createEntity("Mob", "", 1);
+        cotuRoom00.createEntity("Mob", "", 2);
         areaCOTU.roomList.add(cotuRoom00);
 
         // Room 01 - Standing On A Crystal Bridge //
@@ -70,10 +70,10 @@ public class Galaxy {
         Location cotuRoom01Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom01 = new Room(cotuRoom01Name, null, cotuRoom01Location);
         cotuRoom01.createExit("South", cotuRoom00);
-        cotuRoom01.createEntity("Mob", 1);
-        cotuRoom01.createEntity("Mob", 1);
-        cotuRoom01.createEntity("Mob", 2);
-        cotuRoom01.createEntity("Mob", 3);
+        cotuRoom01.createEntity("Mob", "", 1);
+        cotuRoom01.createEntity("Mob", "", 1);
+        cotuRoom01.createEntity("Mob", "", 2);
+        cotuRoom01.createEntity("Mob", "", 3);
         areaCOTU.roomList.add(cotuRoom01);
 
         // Room 02 - A Peaceful Garden //
@@ -81,7 +81,7 @@ public class Galaxy {
         Location cotuRoom02Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom02 = new Room(cotuRoom02Name, null, cotuRoom02Location);
         cotuRoom02.createExit("South", cotuRoom01);
-        cotuRoom02.createEntity("Mob", 2);
+        cotuRoom02.createEntity("Mob", "", 2);
         areaCOTU.roomList.add(cotuRoom02);
 
         // Room 03 - In A Wooden Cabin //
@@ -98,7 +98,7 @@ public class Galaxy {
         Room cotuRoom04 = new Room(cotuRoom04Name, null, cotuRoom04Location);
         cotuRoom04.inside = true;
         cotuRoom04.createExit("North", cotuRoom00, "Automatic");
-        cotuRoom04.createEntity("Mob", 1);
+        cotuRoom04.createEntity("Mob", "", 1);
         areaCOTU.roomList.add(cotuRoom04);
 
         // Room 05 - Bridge To The Spaceport //
@@ -114,7 +114,7 @@ public class Galaxy {
         Location cotuRoom06Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom06 = new Room(cotuRoom06Name, null, cotuRoom06Location);
         cotuRoom06.createExit("North", cotuRoom05);
-        cotuRoom06.createEntity("Spaceship", 1);
+        cotuRoom06.createEntity("Spaceship", "", 1);
         cotuRoom06.createExit("North", cotuRoom05, "Automatic");
         areaCOTU.roomList.add(cotuRoom06);
         planetLapine.landingPadList.add(cotuRoom06);

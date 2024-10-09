@@ -5,6 +5,7 @@ import com.jbs.textgameengine.gamedata.entity.mob.action.combat.Attack;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.CombatAction;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.Target;
 import com.jbs.textgameengine.gamedata.entity.mob.action.god.Manifest;
+import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Equipment;
 import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Group;
 import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Inventory;
 import com.jbs.textgameengine.gamedata.entity.mob.action.other.*;
@@ -84,6 +85,7 @@ public class Action {
         actionList.add(new Disband());
 
         actionList.add(new Inventory());
+        actionList.add(new Equipment());
         actionList.add(new Group());
 
         actionList.add(new Board());

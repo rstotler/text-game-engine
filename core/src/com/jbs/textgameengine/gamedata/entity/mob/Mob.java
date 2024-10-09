@@ -13,6 +13,8 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import java.util.*;
 
 public class Mob extends Entity {
+    public static ArrayList<String> gearSlotList = new ArrayList<>(Arrays.asList("Head", "Face", "Body", "About", "Hands", "Legs", "Boots", "Neck 1", "Neck 2", "Ring 1", "Ring 2"));
+
     public HashMap<String, ArrayList<Item>> inventory;
     public HashMap<String, Item> gear;
 
@@ -43,23 +45,23 @@ public class Mob extends Entity {
     public static Mob load(int id, Location startLocation) {
         Mob mob = new Mob(startLocation);
 
-        // 1 - Greeter Droid //
+        // 001 - A Greeter Droid //
         if(id == 1) {
             mob.name = new Line("Greeter Droid", "8CONT5CONT", "", true, true);
             mob.roomDescription = new Line("is here, greeting visitors.", "3CONT4CONT2DY9CONT8CONT1DY", "", true, true);
         }
 
-        // 1 - Sasquatch //
+        // 002 - A Sasquatch //
         else if(id == 2) {
             mob.name = new Line("Sasquatch", "9CONT", "", true, true);
         }
 
-        // 3 - Skinny Alien Dude //
+        // 003 - A Skinny Alien Dude //
         else if(id == 3) {
             mob.name = new Line("Skinny Alien Dude", "7CONT6CONT4CONT", "", true, true);
         }
 
-        // Default Mob //
+        // A Default Mob //
         else {
             mob.name = new Line("Default Mob", "8CONT3CONT", "", true, true);
         }
@@ -72,22 +74,17 @@ public class Mob extends Entity {
     public static HashMap<String, ArrayList<Item>> loadInventory() {
         HashMap<String, ArrayList<Item>> inventory = new HashMap<String, ArrayList<Item>>();
         inventory.put("General", new ArrayList<Item>());
+        inventory.put("Gear", new ArrayList<Item>());
 
         return inventory;
     }
 
     public static HashMap<String, Item> loadGear() {
         HashMap<String, Item> gear = new HashMap<>();
-        gear.put("Head", null);
-        gear.put("Body", null);
-        gear.put("Arms", null);
-        gear.put("Hands", null);
-        gear.put("Legs", null);
-        gear.put("Boots", null);
-        gear.put("Neck 1", null);
-        gear.put("Neck 2", null);
-        gear.put("Ring 1", null);
-        gear.put("Ring 2", null);
+
+        for(String gearSlot : gearSlotList) {
+            gear.put(gearSlot, null);
+        }
 
         return gear;
     }

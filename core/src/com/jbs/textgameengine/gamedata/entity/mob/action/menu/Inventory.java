@@ -14,6 +14,7 @@ public class Inventory extends Action {
     public static HashMap<String, ArrayList<String>> loadInventoryNameKeyMap() {
         HashMap<String, ArrayList<String>> inventoryNameKeyMap = new HashMap<>();
         inventoryNameKeyMap.put("General", new ArrayList<>(Arrays.asList("inventory", "inventor", "invento", "invent", "inven", "inve", "inv", "in", "i", "general", "genera", "gener", "gene", "gen", "ge", "g")));
+        inventoryNameKeyMap.put("Gear", new ArrayList<>(Arrays.asList("gear", "gea")));
 
         return inventoryNameKeyMap;
     }
@@ -39,7 +40,7 @@ public class Inventory extends Action {
             }
         }
 
-        if(!targetInventoryPocket.isEmpty()) {
+        if(inputList.size() == 1 && !targetInventoryPocket.isEmpty()) {
             actionInventory.actionType = targetInventoryPocket;
         }
 

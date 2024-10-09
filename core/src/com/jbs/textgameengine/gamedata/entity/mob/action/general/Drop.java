@@ -130,7 +130,7 @@ public class Drop extends Action {
                                 quantityRemainder = (itemQuantity + dropCount) - targetCount;
                                 itemQuantity -= quantityRemainder;
                             }
-                            Entity quantityItem = Item.load(item.id, item.location, itemQuantity);
+                            Entity quantityItem = Item.load(((Item) item).type, item.id, item.location, itemQuantity);
                             parentEntity.location.room.addItemToRoom(quantityItem);
 
                             if(quantityRemainder == 0) {deleteIndexMap.get(pocket).add(0, i);}
