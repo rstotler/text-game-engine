@@ -1,5 +1,7 @@
 package com.jbs.textgameengine.gamedata.entity.mob.action.general;
 
+import com.jbs.textgameengine.gamedata.entity.Entity;
+import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Inventory;
@@ -37,26 +39,40 @@ public class Drop extends Action {
             // Drop All //
             if(inputList.size() == 2
             && inputList.get(1).equals("all")) {
+                dropAction.allCheck = true;
             }
 
             // Drop All Pocket //
             else if(inputList.size() >= 3
             && inputList.get(1).equals("all")
             && Inventory.inventoryNameKeyMap.containsKey(targetPocketString)) {
+                dropAction.allCheck = true;
+                dropAction.actionType = "Drop All Pocket";
+                List<String> targetEntityStringList = inputList.subList(2, inputList.size());
+                dropAction.targetEntityString = targetEntityStringList.stream().collect(Collectors.joining(" "));
             }
 
             // Drop All Item //
             else if(inputList.size() >= 3
             && inputList.get(1).equals("all")) {
+                dropAction.allCheck = true;
+                List<String> targetEntityStringList = inputList.subList(2, inputList.size());
+                dropAction.targetEntityString = targetEntityStringList.stream().collect(Collectors.joining(" "));
             }
 
             // Drop # Item //
             else if(inputList.size() >= 3
             && Utility.isInteger(inputList.get(1))) {
+                dropAction.targetCount = Integer.valueOf(inputList.get(1));
+                List<String> targetEntityStringList = inputList.subList(2, inputList.size());
+                dropAction.targetEntityString = targetEntityStringList.stream().collect(Collectors.joining(" "));
             }
 
             // Drop Item //
             else if(inputList.size() >= 2) {
+                dropAction.targetCount = 1;
+                List<String> targetEntityStringList = inputList.subList(1, inputList.size());
+                dropAction.targetEntityString = targetEntityStringList.stream().collect(Collectors.joining(" "));
             }
 
             else {
@@ -71,5 +87,116 @@ public class Drop extends Action {
     }
 
     public void initiate() {
+        int dropCount = 0;
+        int inventoryItemCount = 0;
+        Entity targetItem = null;
+        boolean multipleItemTypes = false;
+        boolean breakCheck = false;
+        HashMap<String, ArrayList<Integer>> deleteIndexMap = new HashMap<>();
+
+        // Get Inventory Item Count //
+        for(String pocket : parentEntity.inventory.keySet()) {
+            for(int i = 0; i < parentEntity.inventory.get(pocket).size(); i++) {
+                Entity item = parentEntity.inventory.get(pocket).get(i);
+                if(((Item) item).isQuantity) {inventoryItemCount += ((Item) item).quantity;}
+                else {inventoryItemCount += 1;}
+            }
+        }
+
+        // Drop Item(s) //
+        for(String pocket : parentEntity.inventory.keySet()) {
+            deleteIndexMap.put(pocket, new ArrayList<Integer>());
+
+            if(actionType.isEmpty()
+            || (actionType.equals("Drop All Pocket") && pocket.equals(targetEntityString))) {
+                for(int i = 0; i < parentEntity.inventory.get(pocket).size(); i++) {
+                    Entity item = parentEntity.inventory.get(pocket).get(i);
+
+                    if((allCheck && targetEntityString.isEmpty())
+                    || (!targetEntityString.isEmpty() && item.nameKeyList.contains(targetEntityString))) {
+
+                        // Non-Quantity Item //
+                        if(!((Item) item).isQuantity) {
+                            parentEntity.location.room.addItemToRoom(item);
+                            deleteIndexMap.get(pocket).add(0, i);
+                            dropCount += 1;
+                        }
+
+                        // Quantity Item //
+                        else {
+                            int itemQuantity = ((Item) item).quantity;
+                            int quantityRemainder = 0;
+                            if(targetCount != -1 && itemQuantity + dropCount > targetCount) {
+                                quantityRemainder = (itemQuantity + dropCount) - targetCount;
+                                itemQuantity -= quantityRemainder;
+                            }
+                            Entity quantityItem = Item.load(item.id, item.location, itemQuantity);
+                            parentEntity.location.room.addItemToRoom(quantityItem);
+
+                            if(quantityRemainder == 0) {deleteIndexMap.get(pocket).add(0, i);}
+                            else {((Item) item).quantity = quantityRemainder;}
+                            dropCount += itemQuantity;
+                        }
+
+                        if(targetItem == null) {targetItem = item;}
+                        else if(targetItem.id != item.id) {multipleItemTypes = true;}
+
+                        if(targetCount != -1 && dropCount >= targetCount) {
+                            breakCheck = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if(breakCheck) {break;}
+        }
+
+        // Delete Items From Inventory //
+        for(String pocket : deleteIndexMap.keySet()) {
+            for(int deleteIndex : deleteIndexMap.get(pocket)) {
+                parentEntity.inventory.get(pocket).remove(deleteIndex);
+            }
+        }
+
+        // Message - You aren't carrying anything. //
+        if(inventoryItemCount == 0) {
+            if(parentEntity.isPlayer) {
+                userInterface.console.writeToConsole(new Line("You aren't carrying anything.", "4CONT4CONT1DY2DDW9CONT8CONT1DY", "", true, true));
+            }
+        }
+
+        // Message - You can't find it. //
+        else if(dropCount == 0) {
+            if(parentEntity.isPlayer) {
+                userInterface.console.writeToConsole(new Line("You can't find it.", "4CONT3CONT1DY2DDW5CONT2CONT1DY", "", true, true));
+            }
+        }
+
+        // Message - You drop everything on the ground. //
+        else if(dropCount == inventoryItemCount) {
+            if(parentEntity.isPlayer) {
+                userInterface.console.writeToConsole(new Line("You drop everything on the ground.", "4CONT5CONT11CONT3CONT4CONT6CONT1DY", "", true, true));
+            }
+        }
+
+        // Message - You drop some things on the ground. //
+        else if(targetItem != null && multipleItemTypes) {
+            if(parentEntity.isPlayer) {
+                userInterface.console.writeToConsole(new Line("You drop some things on the ground.", "4CONT5CONT5CONT7CONT3CONT4CONT6CONT1DY", "", true, true));
+            }
+        }
+
+        // Message - You drop Entity on the ground. //
+        else if(targetItem != null) {
+            if(parentEntity.isPlayer) {
+                String itemCountString = "";
+                String itemCountColorCode = "";
+                if(dropCount > 1) {
+                    itemCountString = " (" + String.valueOf(dropCount) + ")";
+                    itemCountColorCode = "2DR" + String.valueOf(dropCount).length() + "CONT1DR";
+                }
+                userInterface.console.writeToConsole(new Line("You drop " + targetItem.prefix + targetItem.name.label + itemCountString + " on the ground.", "4CONT5CONT" + String.valueOf(targetItem.prefix.length()) + "CONT" + targetItem.name.colorCode + itemCountColorCode + "1W3CONT4CONT6CONT1DY", "", true, true));
+            }
+        }
     }
 }

@@ -144,7 +144,23 @@ public class Mob extends Entity {
     }
 
     public void addItemToInventory(Item targetItem) {
-        inventory.get(targetItem.pocket).add(targetItem);
+
+        // Quantity Item Already In Inventory Check //
+        boolean quantityItemInInventory = false;
+        if(targetItem.isQuantity) {
+            for(Entity item : inventory.get(targetItem.pocket)) {
+                if(targetItem.id == item.id) {
+                    ((Item) item).quantity += targetItem.quantity;
+                    quantityItemInInventory = true;
+                    break;
+                }
+            }
+        }
+
+        // Default Add Item To Inventory //
+        if(!quantityItemInInventory) {
+            inventory.get(targetItem.pocket).add(targetItem);
+        }
     }
 
     public boolean hasKey(int keyNum) {

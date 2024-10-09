@@ -76,7 +76,7 @@ public class Manifest extends Action {
                 Entity item = Item.load(targetNum, parentEntity.location);
                 if(!item.name.label.equals("Default Item")) {
                     if(targetEntity == null) {targetEntity = item;}
-                    parentEntity.location.room.itemList.add(item);
+                    parentEntity.location.room.addItemToRoom(item);
                 }
             }
         }

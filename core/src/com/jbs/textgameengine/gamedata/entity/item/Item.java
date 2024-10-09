@@ -9,6 +9,8 @@ import java.util.ArrayList;
 public class Item extends Entity {
     public int id;
     public String pocket;
+    public int quantity;
+    public boolean isQuantity;
 
     public ArrayList<Integer> keyList;
     public ArrayList<Item> containerItemList;
@@ -18,6 +20,8 @@ public class Item extends Entity {
         isItem = true;
 
         pocket = "General";
+        quantity = -1;
+        isQuantity = false;
 
         keyList = null;
         containerItemList = null;
@@ -48,5 +52,14 @@ public class Item extends Entity {
         item.nameKeyList = Entity.createNameKeyList(item.prefix + item.name.label);
 
         return item;
+    }
+
+    public static Item load(int id, Location startLocation, int quantity) {
+        Item quantityItem = load(id, startLocation);
+        if(quantityItem.isQuantity) {
+            quantityItem.quantity = quantity;
+        }
+
+        return quantityItem;
     }
 }

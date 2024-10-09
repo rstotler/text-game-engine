@@ -188,7 +188,11 @@ public class GameScreen extends Screen {
         boolean actionCheck = false;
         for(Action actionType : Action.actionList) {
             Action targetAction = actionType.getActionFromInput(input.toLowerCase(), player);
+
             if(targetAction != null) {
+                if(!targetAction.toString().equals("CombatAction")
+                && targetAction.targetCount == 0) {targetAction.targetCount = 1;}
+
                 if(targetAction.parentEntity != null) {
                     targetAction.initiate();
                 }

@@ -82,9 +82,12 @@ public class Inventory extends Action {
 
             GameScreen.userInterface.console.writeToConsole(new Line( actionType+ " Item Bag:", String.valueOf(actionType.length()) + "CONT1W5CONT3CONT1DY", "", false, true));
 
+            int inventoryItemCount = 0;
             boolean isLastLine = false;
             ArrayList<String> displayedLines = new ArrayList<>();
             for(Entity item : parentEntity.inventory.get(actionType)) {
+                inventoryItemCount += 1;
+
                 if(!displayedLines.contains(item.name.label)) {
                     displayedLines.add(item.name.label);
 
@@ -103,6 +106,10 @@ public class Inventory extends Action {
                     String itemColorCode = String.valueOf(item.prefix).length() + "CONT" + item.name.colorCode + countColorCode;
                     GameScreen.userInterface.console.writeToConsole(new Line(itemString, itemColorCode, "", isLastLine, true));
                 }
+            }
+
+            if(inventoryItemCount == 0) {
+                GameScreen.userInterface.console.writeToConsole(new Line( "-Empty", "1DY5CONT", "", true, true));
             }
         }
     }

@@ -270,6 +270,10 @@ public class Room {
                             countString = " (" + String.valueOf(itemNameMap.get(item.name.label)) + ")";
                             countColorCode = "2DR" + String.valueOf(itemNameMap.get(item.name.label)).length() + "W1DR";
                         }
+                        else if(item.isQuantity) {
+                            countString = " (" + String.valueOf(item.quantity) + ")";
+                            countColorCode = "2DR" + String.valueOf(item.quantity).length() + "W1DR";
+                        }
 
                         String itemNameLabel = item.prefix + item.name.label + " is laying on the ground." + countString;
                         String itemNameColorCode = String.valueOf(item.prefix.length()) + "CONT" + item.name.colorCode + "1W3CONT7CONT3CONT4CONT6CONT1DY" + countColorCode;
@@ -411,10 +415,30 @@ public class Room {
             mobList.add(Mob.load(id, this.location));
         }
         else if(entityType.equals("Item")) {
-            itemList.add(Item.load(id, this.location));
+            addItemToRoom(Item.load(id, this.location));
         }
         else if(entityType.equals("Spaceship")) {
             spaceshipList.add(Spaceship.load(id, this.location));
+        }
+    }
+
+    public void addItemToRoom(Entity targetItem) {
+
+        // Quantity Item Already In Room Check //
+        boolean quantityItemInRoom = false;
+        if(((Item) targetItem).isQuantity) {
+            for(Entity item : itemList) {
+                if(targetItem.id == item.id) {
+                    ((Item) item).quantity += ((Item) targetItem).quantity;
+                    quantityItemInRoom = true;
+                    break;
+                }
+            }
+        }
+
+        // Default Add Item To Room //
+        if(!quantityItemInRoom) {
+            itemList.add(targetItem);
         }
     }
 
