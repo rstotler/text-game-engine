@@ -11,8 +11,14 @@ import java.util.stream.Collectors;
 import static com.jbs.textgameengine.screen.gamescreen.GameScreen.userInterface;
 
 public class Get extends Action {
+    public String targetContainerString;
+    public boolean containerAllCheck;
+
     public Get(Mob parentEntity) {
         super(parentEntity);
+
+        targetContainerString = "";
+        containerAllCheck = false;
     }
 
     public Get() {

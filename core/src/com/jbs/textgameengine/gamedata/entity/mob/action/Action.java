@@ -24,13 +24,10 @@ public class Action {
     public String targetDirection;
     public int targetCount;
     public int targetDirectionCount;
-    public String targetContainerString;
-    public int targetNum;
 
     public boolean allCheck;
     public boolean groupCheck;
     public boolean selfCheck;
-    public boolean containerAllCheck;
 
     public Mob parentEntity;
     public Skill skill;
@@ -41,14 +38,11 @@ public class Action {
         targetEntityString = "";
         targetDirection = "";
         targetCount = -1;
-        targetNum = -1;
         targetDirectionCount = -1;
-        targetContainerString = "";
 
         allCheck = false;
         groupCheck = false;
         selfCheck = false;
-        containerAllCheck = false;
 
         this.parentEntity = parentEntity;
         this.skill = skill;
@@ -82,6 +76,7 @@ public class Action {
         actionList.add(new OCLU());
         actionList.add(new Get());
         actionList.add(new Drop());
+        actionList.add(new Remove());
         actionList.add(new Disband());
 
         actionList.add(new Inventory());

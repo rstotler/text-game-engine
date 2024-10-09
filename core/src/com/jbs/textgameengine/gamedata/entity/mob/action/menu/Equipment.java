@@ -32,30 +32,36 @@ public class Equipment extends Action {
         userInterface.console.writeToConsole(new Line("Worn Gear:", "5CONT4CONT1DY", "", false, true));
 
         int longestSlotSize = 0;
+        String lastLineSlot = "Head";
         for(String gearSlot : parentEntity.gear.keySet()) {
-            if(gearSlot.length() > longestSlotSize) {longestSlotSize = gearSlot.length();}
+            if(parentEntity.gear.get(gearSlot) != null
+            && gearSlot.length() > longestSlotSize) {
+                longestSlotSize = gearSlot.length();
+            }
+            if(parentEntity.gear.get(gearSlot) != null) {
+                lastLineSlot = gearSlot;
+            }
         }
 
         boolean isLastLine = false;
         ArrayList<String> gearSlotList = new ArrayList<>(parentEntity.gear.keySet());
-        for(int i = 0; i < gearSlotList.size(); i++) {
-            String gearSlot = gearSlotList.get(i);
-            if(i == gearSlotList.size() - 1) {isLastLine = true;}
+        for(int i = 0; i < Mob.gearSlotList.size(); i++) {
+            String gearSlot = Mob.gearSlotList.get(i);
+            if(gearSlot.equals(lastLineSlot)) {isLastLine = true;}
 
-            String gearItemString = "Nothing";
-            String gearItemColorCode = "7CONT";
-            if(parentEntity.gear.get(gearSlot) != null) {
-                gearItemString = parentEntity.gear.get(gearSlot).prefix + parentEntity.gear.get(gearSlot).name.label;
-                gearItemColorCode = String.valueOf(parentEntity.gear.get(gearSlot).prefix.length()) + "CONT" + parentEntity.gear.get(gearSlot).name.colorCode;
-            }
+            if(parentEntity.gear.containsKey(gearSlot)
+            && parentEntity.gear.get(gearSlot) != null) {
+                String gearItemString = parentEntity.gear.get(gearSlot).prefix + parentEntity.gear.get(gearSlot).name.label;
+                String gearItemColorCode = String.valueOf(parentEntity.gear.get(gearSlot).prefix.length()) + "CONT" + parentEntity.gear.get(gearSlot).name.colorCode;
 
-            String spaceString = "";
-            if(gearSlot.length() < longestSlotSize) {
-                for(int ii = 0; ii < longestSlotSize - gearSlot.length(); ii++) {spaceString += " ";}
+                String spaceString = "";
+                if(gearSlot.length() < longestSlotSize) {
+                    for(int ii = 0; ii < longestSlotSize - gearSlot.length(); ii++) {spaceString += " ";}
+                }
+                String gearSlotString = spaceString + "[" + gearSlot + "] - " + gearItemString;
+                String gearSlotColorCode = String.valueOf(spaceString.length()) + "W1DR" + String.valueOf(gearSlot).length() + "CONT1DR3DY" + gearItemColorCode;
+                userInterface.console.writeToConsole(new Line(gearSlotString, gearSlotColorCode, "", isLastLine, true));
             }
-            String gearSlotString = spaceString + "[" + gearSlot + "] - " + gearItemString;
-            String gearSlotColorCode = String.valueOf(spaceString.length()) + "W1DR" + String.valueOf(gearSlot).length() + "CONT1DR3DY" + gearItemColorCode;
-            userInterface.console.writeToConsole(new Line(gearSlotString, gearSlotColorCode, "", isLastLine, true));
         }
     }
 }

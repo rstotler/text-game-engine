@@ -12,8 +12,12 @@ import java.util.stream.Collectors;
 import static com.jbs.textgameengine.screen.gamescreen.GameScreen.userInterface;
 
 public class Look extends Action {
+    public String targetContainerString;
+
     public Look(Mob parentEntity) {
         super(parentEntity);
+
+        targetContainerString = "";
     }
 
     public Look() {

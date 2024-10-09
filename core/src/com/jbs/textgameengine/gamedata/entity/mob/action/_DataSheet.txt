@@ -21,12 +21,6 @@
     # Wield '#' Item #
     # Wield Item #
 
-    # Remove All #
-    # Remove All Gear/Weapon #
-    # Remove Gear/Weapon 'GearSlot' #
-    # Remove '#' Gear/Weapon #
-    # Remove Gear/Weapon #
-
     # Attack Mob #
     # Attack #
     # Dodge #
