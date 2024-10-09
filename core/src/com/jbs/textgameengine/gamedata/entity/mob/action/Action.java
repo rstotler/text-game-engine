@@ -81,6 +81,7 @@ public class Action {
         actionList.add(new OCLU());
         actionList.add(new Get());
         actionList.add(new Drop());
+        actionList.add(new Disband());
 
         actionList.add(new Inventory());
         actionList.add(new Group());

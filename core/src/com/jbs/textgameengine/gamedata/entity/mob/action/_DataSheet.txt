@@ -54,11 +54,6 @@
     # Recruit Mob #
     # Recruit #
 
-    # Disband All Mob #
-    # Disband '#' Mob #
-    # Disband All #
-    # Disband Mob #
-    # Disband #
     # Stop #
 
     # Gear #
