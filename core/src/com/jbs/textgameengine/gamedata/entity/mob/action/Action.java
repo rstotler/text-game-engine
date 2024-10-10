@@ -3,7 +3,11 @@ package com.jbs.textgameengine.gamedata.entity.mob.action;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.god.Manifest;
-import com.jbs.textgameengine.gamedata.entity.mob.action.item.*;
+import com.jbs.textgameengine.gamedata.entity.mob.action.item.general.*;
+import com.jbs.textgameengine.gamedata.entity.mob.action.item.skill.Craft;
+import com.jbs.textgameengine.gamedata.entity.mob.action.item.skill.Harvest;
+import com.jbs.textgameengine.gamedata.entity.mob.action.item.skill.Plant;
+import com.jbs.textgameengine.gamedata.entity.mob.action.item.skill.Prospect;
 import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Equipment;
 import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Group;
 import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Inventory;
@@ -77,8 +81,11 @@ public class Action {
 
         actionList.add(new Look());
         actionList.add(new Move());
+        actionList.add(new Search());
         actionList.add(new Recruit());
         actionList.add(new Disband());
+        actionList.add(new Stop());
+        actionList.add(new Config());
 
         actionList.add(new OCLU());
         actionList.add(new Get());
@@ -88,6 +95,13 @@ public class Action {
         actionList.add(new Wear());
         actionList.add(new Wield());
         actionList.add(new Remove());
+        actionList.add(new Eat());
+        actionList.add(new Empty());
+
+        actionList.add(new Plant());
+        actionList.add(new Harvest());
+        actionList.add(new Prospect());
+        actionList.add(new Craft());
 
         actionList.add(new Inventory());
         actionList.add(new Equipment());
@@ -98,6 +112,7 @@ public class Action {
         actionList.add(new Launch());
         actionList.add(new Radar());
         actionList.add(new Course());
+        actionList.add(new Throttle());
         actionList.add(new Land());
 
         actionList.add(new Target());

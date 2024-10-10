@@ -1,38 +1,18 @@
-    # Empty Container/Drink #
-
     # Dodge #
     # Parry #
     # Switch #
-
-    # Stop #
 
     # Character/Status #
     # Weather #
     # Astro(?) #
 
-    # Search #
     # Push/Press #
-    # Eat/Drink #
     # Fill #
     # List #
-    # Buy(?) #
-    # Sell(?) #
+    # Buy #
+    # Sell #
 
-    # Throttle/Speed #
     # Scan #
     # Calculate #
 
     # Inspect #
-    # Prospect #
-    # Plant All #
-    # Plant All Item #
-    # Plant '#' Item #
-    # Plant Item #
-    # Forage/Harvest #
-    # Craft/Create #
-
-    # Auto Loot #
-    # Auto Reload #
-    # Auto Combat #
-    # Team Damage #
-    # Heal Enemies #

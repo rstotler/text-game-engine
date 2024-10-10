@@ -18,8 +18,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CombatAction extends Action {
+    public TargetRoomData targetRoomData;
+
     public CombatAction(Mob parentEntity, Skill combatSkill) {
         super(parentEntity, combatSkill);
+
+        targetRoomData = null;
     }
 
     public CombatAction() {
@@ -241,6 +245,15 @@ public class CombatAction extends Action {
                 targetCount = targetRoomData.distance;
             }
 
+            // Set Target Room For PerformAction() //
+            if(targetRoomData == null) {
+                this.targetRoomData = new TargetRoomData();
+                this.targetRoomData.targetRoom = targetRoom;
+                this.targetRoomData.distance = 0;
+            } else {
+                this.targetRoomData = targetRoomData;
+            }
+
             // Group Entity In Target Room & Combat Target In Target Room Checks //
             boolean groupEntityInTargetRoom = false;
             boolean combatTargetInRoom = false;
@@ -371,6 +384,5 @@ public class CombatAction extends Action {
     }
 
     public void performAction() {
-
     }
 }

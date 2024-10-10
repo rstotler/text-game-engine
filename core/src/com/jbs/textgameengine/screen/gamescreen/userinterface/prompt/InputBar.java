@@ -138,9 +138,11 @@ public class InputBar extends UserInterfaceElement {
     }
 
     public void enterUserInput() {
-        inputList.add(0, userInput);
-        if(inputList.size() > inputListLimit) {
-            inputList.remove(inputList.size() - 1);
+        if(userInput.length() > 1) {
+            inputList.add(0, userInput);
+            if(inputList.size() > inputListLimit) {
+                inputList.remove(inputList.size() - 1);
+            }
         }
 
         userInput = "";
