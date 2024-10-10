@@ -1,57 +1,11 @@
-    # Put All Item In Container #
-    # Put All In Container #
-    # Put '#' Item In Container #
-    # Put Item In Container #
-
-    # Loot Item From All #
-    # Loot Item From Container #
-    # Loot All #
-    # Loot Container #
-
     # Empty Container/Drink #
 
-    # Wear All #
-    # Wear All Item #
-    # Wear Item 'GearSlot' #
-    # Wear '#' Item #
-    # Wear Item #
-    # Wield All #
-    # Wield Item 'Slot' #
-    # Wield All Item #
-    # Wield '#' Item #
-    # Wield Item #
-
-    # Attack Mob #
-    # Attack #
     # Dodge #
     # Parry #
     # Switch #
 
-    # Reload Left/Right Ammo #
-    # Reload All Ammo #
-    # Reload Weapon Ammo #
-    # Reload All #
-    # Reload Left/Right #
-    # Reload Weapon/Ammo #
-    # Reload #
-    # Unload All Ammo #
-    # Unload All #
-    # Unload Left/Right #
-    # Unload Weapon #
-    # Unload #
-
-    # Recruit/Tame/Group #
-    # Recruit All Mob #
-    # Recruit '#' Mob #
-    # Recruit List #
-    # Recruit All #
-    # Recruit Mob #
-    # Recruit #
-
     # Stop #
 
-    # Gear #
-    # Skills #
     # Character/Status #
     # Weather #
     # Astro(?) #
@@ -64,8 +18,6 @@
     # Buy(?) #
     # Sell(?) #
 
-    # Course X Y #
-    # Course Target #
     # Throttle/Speed #
     # Scan #
     # Calculate #

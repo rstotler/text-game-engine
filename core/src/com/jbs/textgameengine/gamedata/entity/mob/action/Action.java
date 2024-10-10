@@ -1,13 +1,13 @@
 package com.jbs.textgameengine.gamedata.entity.mob.action;
 
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
-import com.jbs.textgameengine.gamedata.entity.mob.action.combat.Attack;
-import com.jbs.textgameengine.gamedata.entity.mob.action.combat.CombatAction;
-import com.jbs.textgameengine.gamedata.entity.mob.action.combat.Target;
+import com.jbs.textgameengine.gamedata.entity.mob.action.combat.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.god.Manifest;
+import com.jbs.textgameengine.gamedata.entity.mob.action.item.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Equipment;
 import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Group;
 import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Inventory;
+import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Skills;
 import com.jbs.textgameengine.gamedata.entity.mob.action.other.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.*;
@@ -73,27 +73,38 @@ public class Action {
 
         actionList.add(new Look());
         actionList.add(new Move());
+        actionList.add(new Recruit());
+        actionList.add(new Disband());
+
         actionList.add(new OCLU());
         actionList.add(new Get());
+        actionList.add(new Loot());
         actionList.add(new Drop());
+        actionList.add(new Put());
+        actionList.add(new Wear());
+        actionList.add(new Wield());
         actionList.add(new Remove());
-        actionList.add(new Disband());
 
         actionList.add(new Inventory());
         actionList.add(new Equipment());
+        actionList.add(new Skills());
         actionList.add(new Group());
 
         actionList.add(new Board());
         actionList.add(new Launch());
         actionList.add(new Radar());
+        actionList.add(new Course());
         actionList.add(new Land());
 
         actionList.add(new Target());
         actionList.add(new CombatAction());
         actionList.add(new Attack());
+        actionList.add(new Reload());
+        actionList.add(new Unload());
 
         actionList.add(new Time());
         actionList.add(new Emote());
+
         actionList.add(new Manifest());
 
         return actionList;
