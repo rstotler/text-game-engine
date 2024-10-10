@@ -1,6 +1,7 @@
 package com.jbs.textgameengine.gamedata.entity.mob.action.menu;
 
 import com.jbs.textgameengine.gamedata.entity.Entity;
+import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
@@ -101,7 +102,11 @@ public class Inventory extends Action {
                     if(itemLineMap.containsKey(item.name.label)
                     && itemLineMap.get(item.name.label) > 1) {
                         countString = " (" + String.valueOf(itemLineMap.get(item.name.label)) + ")";
-                        countColorCode = "2DR" + String.valueOf(itemLineMap.get(item.name.label)).length() + "DW1DR";
+                        countColorCode = "2DR" + String.valueOf(itemLineMap.get(item.name.label)).length() + "DDW1DR";
+                    }
+                    else if(((Item) item).isQuantity) {
+                        countString = " (" + String.valueOf(((Item) item).quantity) + ")";
+                        countColorCode = "2DR" + String.valueOf(((Item) item).quantity).length() + "DDW1DR";
                     }
                     String itemString = item.prefix + item.name.label + countString;
                     String itemColorCode = String.valueOf(item.prefix).length() + "CONT" + item.name.colorCode + countColorCode;

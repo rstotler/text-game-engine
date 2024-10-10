@@ -188,7 +188,7 @@ public class Room {
                         String countColorCode = "";
                         if(mobNameMap.get(targetLabel) > 1) {
                             countString = " (" + String.valueOf(mobNameMap.get(targetLabel)) + ")";
-                            countColorCode = "2DR" + String.valueOf(mobNameMap.get(targetLabel)).length() + "DW1DR";
+                            countColorCode = "2DR" + String.valueOf(mobNameMap.get(targetLabel)).length() + "DDW1DR";
                         }
 
                         String mobRoomDescriptionLabel = "is here, milling about.";
@@ -268,15 +268,19 @@ public class Room {
                         String countColorCode = "";
                         if(itemNameMap.get(item.name.label) > 1) {
                             countString = " (" + String.valueOf(itemNameMap.get(item.name.label)) + ")";
-                            countColorCode = "2DR" + String.valueOf(itemNameMap.get(item.name.label)).length() + "W1DR";
+                            countColorCode = "2DR" + String.valueOf(itemNameMap.get(item.name.label)).length() + "DDW1DR";
                         }
                         else if(item.isQuantity) {
                             countString = " (" + String.valueOf(item.quantity) + ")";
-                            countColorCode = "2DR" + String.valueOf(item.quantity).length() + "W1DR";
+                            countColorCode = "2DR" + String.valueOf(item.quantity).length() + "DDW1DR";
                         }
 
-                        String itemNameLabel = item.prefix + item.name.label + " is laying on the ground." + countString;
-                        String itemNameColorCode = String.valueOf(item.prefix.length()) + "CONT" + item.name.colorCode + "1W3CONT7CONT3CONT4CONT6CONT1DY" + countColorCode;
+                        String itemNameLabel = item.prefix + item.name.label + " is lying on the ground." + countString;
+                        String itemNameColorCode = String.valueOf(item.prefix.length()) + "CONT" + item.name.colorCode + "1W3CONT6CONT3CONT4CONT6CONT1DY" + countColorCode;
+                        if(item.roomDescription != null) {
+                            itemNameLabel = item.prefix + item.name.label + item.roomDescription.label + countString;
+                            itemNameColorCode = String.valueOf(item.prefix.length()) + "CONT" + item.name.colorCode + item.roomDescription.colorCode + countColorCode;
+                        }
                         Line itemLine = new Line(itemNameLabel, itemNameColorCode, item.name.effectCode, isLastLine, true);
                         GameScreen.userInterface.console.writeToConsole(itemLine);
 

@@ -19,8 +19,8 @@ public class Entity {
     public boolean isItem;
     public boolean isSpaceship;
 
-    public Entity(Location startLocation) {
-        id = -1;
+    public Entity(int id, Location startLocation) {
+        this.id = id;
         this.location = new Location(startLocation.galaxy, startLocation.solarSystem, startLocation.planetoid, startLocation.area, startLocation.room, startLocation.spaceship);
         prefix = "A ";
         name = null;

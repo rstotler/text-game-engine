@@ -26,8 +26,8 @@ public class Mob extends Entity {
     public ArrayList<Mob> groupList;
     public ArrayList<Mob> combatList;
 
-    public Mob(Location startLocation) {
-        super(startLocation);
+    public Mob(int id, Location startLocation) {
+        super(id, startLocation);
         isMob = true;
 
         inventory = loadInventory();
@@ -43,7 +43,7 @@ public class Mob extends Entity {
     }
 
     public static Mob load(int id, Location startLocation) {
-        Mob mob = new Mob(startLocation);
+        Mob mob = new Mob(id, startLocation);
 
         // 001 - A Greeter Droid //
         if(id == 1) {

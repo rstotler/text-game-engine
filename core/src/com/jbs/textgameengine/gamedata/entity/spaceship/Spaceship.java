@@ -23,7 +23,7 @@ public class Spaceship extends Entity {
     public Room cockpitRoom;
 
     public Spaceship(Location startLocation) {
-        super(startLocation);
+        super(-1, startLocation);
         location.spaceship = this;
         isSpaceship = true;
 

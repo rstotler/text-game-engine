@@ -8,8 +8,8 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 public class Gear extends Item {
     public String gearSlot;
 
-    public Gear(Location startLocation) {
-        super(startLocation);
+    public Gear(int id, Location startLocation) {
+        super(id, startLocation);
         type = "Gear";
         pocket = "Gear";
 
@@ -17,7 +17,7 @@ public class Gear extends Item {
     }
 
     public static Gear load(int id, Location startLocation) {
-        Gear gearItem = new Gear(startLocation);
+        Gear gearItem = new Gear(id, startLocation);
 
         // 001 - An Iron Helmet //
         if(id == 1) {
@@ -49,7 +49,8 @@ public class Gear extends Item {
         // 006 - A pair of Leather Gloves //
         else if(id == 6) {
             gearItem.prefix = "A pair of ";
-            gearItem.name = new Line("Leather Gloves", "8SHIAO6SHIAO", "", true, true);
+            gearItem.name = new Line("Leather Gloves", "8SHIAO6CONT", "", true, true);
+            gearItem.roomDescription = new Line(" are lying on the ground.", "1W4CONT6CONT3CONT4CONT6CONT1DY", "", true, true);
         }
 
         // 007 - A Ruby Ring //
@@ -71,12 +72,14 @@ public class Gear extends Item {
         // 010 - A pair of Iron Greaves //
         else if(id == 10) {
             gearItem.name = new Line("Iron Greaves", "5SHIAGR7SHIAGR", "", true, true);
+            gearItem.roomDescription = new Line(" are lying on the ground.", "1W4CONT6CONT3CONT4CONT6CONT1DY", "", true, true);
         }
 
         // 011 - A pair of Leather Boots //
         else if(id == 11) {
             gearItem.prefix = "A pair of ";
-            gearItem.name = new Line("Leather Boots", "8SHIAO5SHIAO", "", true, true);
+            gearItem.name = new Line("Leather Boots", "8SHIAO5CONT", "", true, true);
+            gearItem.roomDescription = new Line(" are lying on the ground.", "1W4CONT6CONT3CONT4CONT6CONT1DY", "", true, true);
         }
 
         // 012 - A Backpack //

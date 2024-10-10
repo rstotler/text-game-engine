@@ -8,7 +8,6 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import java.util.ArrayList;
 
 public class Item extends Entity {
-    public int id;
     public String type;
     public String pocket;
     public int quantity;
@@ -17,8 +16,8 @@ public class Item extends Entity {
     public ArrayList<Integer> keyList;
     public ArrayList<Item> containerItemList;
 
-    public Item(Location startLocation) {
-        super(startLocation);
+    public Item(int id, Location startLocation) {
+        super(id, startLocation);
         isItem = true;
 
         type = "General";
@@ -36,7 +35,7 @@ public class Item extends Entity {
         if(itemType.equals("Gear")) {item = Gear.load(id, startLocation);}
 
         else {
-            item = new Item(startLocation);
+            item = new Item(id, startLocation);
 
             // 001 - A Silver Key //
             if(id == 1) {
@@ -52,18 +51,29 @@ public class Item extends Entity {
                 item.keyList.add(7777);
             }
 
+            // 003 - A Piece of Gold //
+            else if(id == 3) {
+                item.name = new Line("Piece of Gold", "6CONT3CONT4SHIAY", "", true, true);
+                item.isQuantity = true;
+            }
+
             // Default Item //
             else {
                 item.name = new Line("Default Item", "8CONT4CONT", "", true, true);
             }
 
             item.nameKeyList = Entity.createNameKeyList(item.prefix + item.name.label);
+
+            if(item.isQuantity
+            && item.quantity == -1) {
+                item.quantity = 1;
+            }
         }
 
         return item;
     }
 
-    public static Item load(String itemType, int id, Location startLocation, int quantity) { // test this with armor
+    public static Item load(String itemType, int id, Location startLocation, int quantity) {
         Item quantityItem = load(itemType, id, startLocation);
         if(quantityItem.isQuantity) {
             quantityItem.quantity = quantity;

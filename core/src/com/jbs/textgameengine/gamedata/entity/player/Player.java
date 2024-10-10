@@ -9,7 +9,7 @@ public class Player extends Mob {
     public int updateTimer;
 
     public Player(Location startLocation) {
-        super(startLocation);
+        super(-1, startLocation);
         isPlayer = true;
         name = new Line("Player Entity", "7CONT6CONT");
 
@@ -22,6 +22,7 @@ public class Player extends Mob {
         addItemToInventory(Item.load("General", 1, location));
         addItemToInventory(Item.load("General", 1, location));
         addItemToInventory(Item.load("General", 2, location));
+        addItemToInventory(Item.load("General", 3, location, 30521));
 
         gear.put("Head", Item.load("Gear", 1, location));
     }
