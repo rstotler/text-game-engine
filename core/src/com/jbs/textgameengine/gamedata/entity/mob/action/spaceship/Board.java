@@ -75,11 +75,11 @@ public class Board extends Action {
             }
         }
 
-        // Message - It is locked. //
+        // Message - The door is locked. //
         else if(targetSpaceship.hatchStatus.equals("Locked")
         && !parentEntity.hasKey(targetSpaceship.keyNum)) {
             if(parentEntity.isPlayer) {
-                GameScreen.userInterface.console.writeToConsole(new Line("It is locked.", "3CONT3CONT6CONT1DY", "", true, true));
+                GameScreen.userInterface.console.writeToConsole(new Line("The door is locked.", "4CONT5CONT3CONT6CONT1DY", "", true, true));
             }
         }
 

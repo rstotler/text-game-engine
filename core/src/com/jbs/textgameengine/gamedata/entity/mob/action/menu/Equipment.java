@@ -33,6 +33,7 @@ public class Equipment extends Action {
 
         int longestSlotSize = 0;
         String lastLineSlot = "Head";
+        boolean nakedCheck = true;
         for(String gearSlot : parentEntity.gear.keySet()) {
             if(parentEntity.gear.get(gearSlot) != null
             && gearSlot.length() > longestSlotSize) {
@@ -40,7 +41,12 @@ public class Equipment extends Action {
             }
             if(parentEntity.gear.get(gearSlot) != null) {
                 lastLineSlot = gearSlot;
+                if(nakedCheck) {nakedCheck = false;}
             }
+        }
+
+        if(nakedCheck) {
+            userInterface.console.writeToConsole(new Line("-Nothing", "1DY7CONT", "", true, true));
         }
 
         boolean isLastLine = false;

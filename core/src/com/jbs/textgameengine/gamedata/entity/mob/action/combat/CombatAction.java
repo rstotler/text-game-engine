@@ -6,6 +6,7 @@ import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.combateffect.Fumble;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.combateffect.Stumble;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
+import com.jbs.textgameengine.gamedata.entity.player.Player;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.gamedata.world.utility.TargetRoomData;
@@ -351,10 +352,18 @@ public class CombatAction extends Action {
                 else {
                     parentEntity.interruptAction();
 
-                    // parentEntity.currentAction = this;
+                    if(parentEntity.isPlayer) {((Player) parentEntity).updateTimer = 0;}
+                    parentEntity.currentAction = this;
+
+                    String targetDirectionString = "";
+                    String targetDirectionColorCode = "";
+                    if(!targetDirection.isEmpty()) {
+                        targetDirectionString = " to the " + targetDirection.toLowerCase();
+                        targetDirectionColorCode = "1W3CONT4CONT" + String.valueOf(targetDirection.length()) + "CONT";
+                    }
 
                     if(parentEntity.isPlayer) {
-                        GameScreen.userInterface.console.writeToConsole(new Line("You prepare to " + skill.toString().toLowerCase() + "..", "4CONT8CONT3CONT" + String.valueOf(skill.toString().length()) + "CONT2DY", "", true, true));
+                        GameScreen.userInterface.console.writeToConsole(new Line("You prepare to " + skill.toString().toLowerCase() + targetDirectionString + "..", "4CONT8CONT3CONT" + String.valueOf(skill.toString().length()) + "CONT" + targetDirectionColorCode + "2DY", "", true, true));
                     }
                 }
             }
@@ -362,5 +371,6 @@ public class CombatAction extends Action {
     }
 
     public void performAction() {
+
     }
 }

@@ -53,18 +53,23 @@ public class Emote extends Action {
         }
 
         else if(Arrays.asList("ahah").contains(inputList.get(0))
-                && inputList.size() == 1) {
+        && inputList.size() == 1) {
             return new Emote(parentEntity, "Ahah");
         }
 
         else if(Arrays.asList("gaze").contains(inputList.get(0))
-                && inputList.size() == 1) {
+        && inputList.size() == 1) {
             return new Emote(parentEntity, "Gaze");
         }
 
         else if(Arrays.asList("cackle").contains(inputList.get(0))
         && inputList.size() == 1) {
             return new Emote(parentEntity, "Cackle");
+        }
+
+        else if(Arrays.asList("cheer").contains(inputList.get(0))
+        && inputList.size() == 1) {
+            return new Emote(parentEntity, "Cheer");
         }
 
         else if(Arrays.asList("say").contains(inputList.get(0))) {
@@ -142,6 +147,12 @@ public class Emote extends Action {
                 } else {
                     GameScreen.userInterface.console.writeToConsole(new Line("You cackle with insane glee!", "4CONT7CONT5CONT7CONT4CONT1DY", "", true, true));
                 }
+            }
+        }
+
+        else if(actionType.equals("Cheer")) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("And the peasants rejoiced.", "4CONT4CONT9CONT8CONT1DY", "", true, true));
             }
         }
 

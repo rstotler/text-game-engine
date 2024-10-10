@@ -51,6 +51,8 @@ public class Skill {
     public ArrayList<Entity> getTargetList(Room targetRoom, CombatAction combatAction) {
         ArrayList<Entity> targetList = new ArrayList<>();
 
+        boolean displayDebugData = false;
+
         boolean combatTargetInRoom = false;
         boolean groupMemberInRoom = false;
         for(Entity mob : combatAction.parentEntity.targetList) {
@@ -127,7 +129,9 @@ public class Skill {
                 if(singleOnly
                 || (!allOnly && combatAction.selfCheck)
                 || (!allOnly && !combatTargetInRoom && combatAction.actionType.equals("CombatAction"))) {
-                    System.out.println("\n----===[ Only Player ]===----");
+                    if(displayDebugData) {
+                        System.out.println("\n----===[ Only Player ]===----");
+                    }
                     return targetList;
                 }
             }
@@ -310,7 +314,7 @@ public class Skill {
         }
 
         // Debug Output //
-        if(true) {
+        if(displayDebugData) {
             System.out.println("\n----===[ Target List ]===----");
             for(Entity mob : targetList) {
                 System.out.println(mob.name.label + ", " + combatAction.parentEntity.groupList.contains(mob));

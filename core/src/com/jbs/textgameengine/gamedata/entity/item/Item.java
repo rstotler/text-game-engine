@@ -2,6 +2,7 @@ package com.jbs.textgameengine.gamedata.entity.item;
 
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.type.Gear;
+import com.jbs.textgameengine.gamedata.entity.item.type.Weapon;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
@@ -33,6 +34,7 @@ public class Item extends Entity {
         Item item = null;
 
         if(itemType.equals("Gear")) {item = Gear.load(id, startLocation);}
+        else if(itemType.equals("Weapon")) {item = Weapon.load(id, startLocation);}
 
         else {
             item = new Item(id, startLocation);

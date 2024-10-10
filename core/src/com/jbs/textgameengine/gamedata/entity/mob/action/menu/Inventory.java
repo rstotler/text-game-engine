@@ -16,6 +16,7 @@ public class Inventory extends Action {
         HashMap<String, ArrayList<String>> inventoryNameKeyMap = new HashMap<>();
         inventoryNameKeyMap.put("General", new ArrayList<>(Arrays.asList("inventory", "inventor", "invento", "invent", "inven", "inve", "inv", "in", "i", "general", "genera", "gener", "gene", "gen", "ge", "g")));
         inventoryNameKeyMap.put("Gear", new ArrayList<>(Arrays.asList("gear", "gea")));
+        inventoryNameKeyMap.put("Weapons", new ArrayList<>(Arrays.asList("weapons", "weapon", "weapo", "weap")));
 
         return inventoryNameKeyMap;
     }

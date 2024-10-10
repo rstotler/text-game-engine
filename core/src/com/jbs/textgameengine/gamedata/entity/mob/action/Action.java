@@ -32,6 +32,8 @@ public class Action {
     public Mob parentEntity;
     public Skill skill;
 
+    public int performActionTimer;
+
     public Action(Mob parentEntity, Skill skill) {
         actionType = "";
 
@@ -46,6 +48,8 @@ public class Action {
 
         this.parentEntity = parentEntity;
         this.skill = skill;
+
+        performActionTimer = 1;
     }
 
     public Action(Mob parentEntity) {

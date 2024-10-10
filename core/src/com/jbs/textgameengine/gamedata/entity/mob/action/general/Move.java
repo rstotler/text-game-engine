@@ -74,13 +74,13 @@ public class Move extends Action {
                 }
             }
 
-            // Message - It's locked. //
+            // Message - The door is locked. //
             else if(parentRoom.doorMap.containsKey(targetDirection)
             && parentRoom.doorMap.get(targetDirection) != null
             && parentRoom.doorMap.get(targetDirection).status.equals("Locked")
             && !parentEntity.hasKey(parentRoom.doorMap.get(targetDirection).keyNum)) {
                 if(parentEntity.isPlayer) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("It's locked.", "2CONT1DY2DDW6CONT1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("The door is locked.", "4CONT5CONT3CONT6CONT1DY", "", true, true));
                 }
             }
 

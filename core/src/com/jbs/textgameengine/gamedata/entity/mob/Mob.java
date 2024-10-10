@@ -13,7 +13,7 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import java.util.*;
 
 public class Mob extends Entity {
-    public static ArrayList<String> gearSlotList = new ArrayList<>(Arrays.asList("Head", "Face", "Body", "About", "Hands", "Legs", "Boots", "Neck 1", "Neck 2", "Ring 1", "Ring 2"));
+    public static ArrayList<String> gearSlotList = new ArrayList<>(Arrays.asList("Head", "Face", "Body", "About", "Hands", "Legs", "Boots", "Neck 1", "Neck 2", "Ring 1", "Ring 2", "Left Hand", "Right Hand"));
 
     public HashMap<String, ArrayList<Item>> inventory;
     public HashMap<String, Item> gear;
@@ -75,6 +75,7 @@ public class Mob extends Entity {
         HashMap<String, ArrayList<Item>> inventory = new HashMap<String, ArrayList<Item>>();
         inventory.put("General", new ArrayList<Item>());
         inventory.put("Gear", new ArrayList<Item>());
+        inventory.put("Weapons", new ArrayList<Item>());
 
         return inventory;
     }
@@ -123,6 +124,15 @@ public class Mob extends Entity {
             }
 
             targetList.clear();
+        }
+
+        // Current Action Check //
+        if(currentAction != null) {
+            currentAction.performActionTimer -= 1;
+            if(currentAction.performActionTimer <= 0) {
+                currentAction.performAction();
+                currentAction = null;
+            }
         }
     }
 

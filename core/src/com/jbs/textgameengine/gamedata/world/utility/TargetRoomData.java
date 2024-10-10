@@ -108,6 +108,7 @@ public class TargetRoomData {
             return targetRoomData;
         }
 
+        Room targetRoom = startRoom;
         for(String direction : Arrays.asList("North", "East", "South", "West", "Up", "Down")) {
             targetDirection = direction;
 
@@ -131,6 +132,7 @@ public class TargetRoomData {
                 || (targetEntity.isMob && currentRoom.mobList.contains(targetEntity))
                 || (targetEntity.isItem && currentRoom.itemList.contains(targetEntity))
                 || (targetEntity.isSpaceship && currentRoom.spaceshipList.contains(targetEntity))) {
+                    targetRoom = currentRoom;
                     message = masterMessage;
                     targetFound = true;
                     targetRange = i + 1;
@@ -158,6 +160,7 @@ public class TargetRoomData {
                         || (targetEntity.isMob && sideRoom.mobList.contains(targetEntity))
                         || (targetEntity.isItem && sideRoom.itemList.contains(targetEntity))
                         || (targetEntity.isSpaceship && sideRoom.spaceshipList.contains(targetEntity))) {
+                            targetRoom = currentRoom;
                             targetFound = true;
                             targetRange = (i + 1) + (sideIndex + 1);
                             break;
@@ -177,6 +180,7 @@ public class TargetRoomData {
         }
         else {
             TargetRoomData targetRoomData = new TargetRoomData();
+            targetRoomData.targetRoom = targetRoom;
             targetRoomData.distance = targetRange;
             targetRoomData.targetDirection = targetDirection;
             targetRoomData.message = message;
