@@ -6,6 +6,7 @@ import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
+import com.jbs.textgameengine.screen.utility.Utility;
 
 import java.util.*;
 
@@ -102,12 +103,14 @@ public class Inventory extends Action {
                     String countColorCode = "";
                     if(itemLineMap.containsKey(item.name.label)
                     && itemLineMap.get(item.name.label) > 1) {
-                        countString = " (" + String.valueOf(itemLineMap.get(item.name.label)) + ")";
-                        countColorCode = "2DR" + String.valueOf(itemLineMap.get(item.name.label)).length() + "DDW1DR";
+                        Line countLine = Utility.insertCommas(itemLineMap.get(item.name.label));
+                        countString = " (" + countLine.label + ")";
+                        countColorCode = "2DR" + countLine.colorCode + "1DR";
                     }
                     else if(((Item) item).isQuantity) {
-                        countString = " (" + String.valueOf(((Item) item).quantity) + ")";
-                        countColorCode = "2DR" + String.valueOf(((Item) item).quantity).length() + "DDW1DR";
+                        Line countLine = Utility.insertCommas(((Item) item).quantity);
+                        countString = " (" + countLine.label + ")";
+                        countColorCode = "2DR" + countLine.colorCode + "1DR";
                     }
                     String itemString = item.prefix + item.name.label + countString;
                     String itemColorCode = String.valueOf(item.prefix).length() + "CONT" + item.name.colorCode + countColorCode;

@@ -1,4 +1,4 @@
-package com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.general;
+package com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.debug;
 
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
 

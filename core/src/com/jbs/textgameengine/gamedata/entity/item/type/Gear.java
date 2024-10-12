@@ -92,8 +92,6 @@ public class Gear extends Item {
             gearItem.name = new Line("Default Gear Item", "8CONT5CONT4CONT", "", true, true);
         }
 
-        gearItem.nameKeyList = Entity.createNameKeyList(gearItem.prefix + gearItem.name.label);
-
         return gearItem;
     }
 }

@@ -11,8 +11,14 @@ import java.util.ArrayList;
 public class Item extends Entity {
     public String type;
     public String pocket;
+    public float weight;
+
+    public String status;
+    public int keyNum;
+
     public int quantity;
     public boolean isQuantity;
+    public boolean noGet;
 
     public ArrayList<Integer> keyList;
     public ArrayList<Item> containerItemList;
@@ -23,11 +29,26 @@ public class Item extends Entity {
 
         type = "General";
         pocket = "General";
+        weight = 1.0f;
+
+        status = "";
+        keyNum = -9999;
+
         quantity = -1;
         isQuantity = false;
+        noGet = false;
 
         keyList = null;
         containerItemList = null;
+    }
+
+    public float getWeight() {
+        if(isQuantity) {
+            return weight * quantity;
+        }
+        else {
+            return weight;
+        }
     }
 
     public static Item load(String itemType, int id, Location startLocation) {
@@ -46,16 +67,18 @@ public class Item extends Entity {
                 item.keyList.add(1234);
             }
 
-            // 002 - A Key To Starship Heart of Gold //
+            // 002 - The Key To Starship Heart of Gold //
             else if(id == 2) {
+                item.prefix = "The ";
                 item.name = new Line("Key to Starship Heart of Gold", "4CONT3CONT9CONT6SHIAR3CONT4SHIAY", "", true, true);
                 item.keyList = new ArrayList<>();
                 item.keyList.add(7777);
             }
 
-            // 003 - A Piece of Gold //
+            // 003 - A piece of Gold //
             else if(id == 3) {
-                item.name = new Line("Piece of Gold", "6CONT3CONT4SHIAY", "", true, true);
+                item.prefix = "A piece of ";
+                item.name = new Line("Gold", "4SHIAY", "", true, true);
                 item.isQuantity = true;
             }
 
@@ -63,13 +86,17 @@ public class Item extends Entity {
             else {
                 item.name = new Line("Default Item", "8CONT4CONT", "", true, true);
             }
+        }
 
-            item.nameKeyList = Entity.createNameKeyList(item.prefix + item.name.label);
+        item.nameKeyList = Entity.createNameKeyList(item.prefix + item.name.label);
 
-            if(item.isQuantity
-            && item.quantity == -1) {
-                item.quantity = 1;
-            }
+        if(item.isQuantity
+        && item.quantity == -1) {
+            item.quantity = 1;
+        }
+
+        if(item.containerItemList != null) {
+            item.status = "Closed";
         }
 
         return item;

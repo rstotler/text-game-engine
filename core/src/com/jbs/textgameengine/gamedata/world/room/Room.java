@@ -9,6 +9,7 @@ import com.jbs.textgameengine.gamedata.world.room.door.Door;
 import com.jbs.textgameengine.gamedata.world.room.hiddenexit.HiddenExit;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
+import com.jbs.textgameengine.screen.utility.Utility;
 
 import java.util.*;
 
@@ -187,8 +188,9 @@ public class Room {
                         String countString = "";
                         String countColorCode = "";
                         if(mobNameMap.get(targetLabel) > 1) {
-                            countString = " (" + String.valueOf(mobNameMap.get(targetLabel)) + ")";
-                            countColorCode = "2DR" + String.valueOf(mobNameMap.get(targetLabel)).length() + "DDW1DR";
+                            Line countLine = Utility.insertCommas(mobNameMap.get(targetLabel));
+                            countString = " (" + countLine.label + ")";
+                            countColorCode = "2DR" + countLine.colorCode + "1DR";
                         }
 
                         String mobRoomDescriptionLabel = "is here, milling about.";
@@ -267,12 +269,14 @@ public class Room {
                         String countString = "";
                         String countColorCode = "";
                         if(itemNameMap.get(item.name.label) > 1) {
-                            countString = " (" + String.valueOf(itemNameMap.get(item.name.label)) + ")";
-                            countColorCode = "2DR" + String.valueOf(itemNameMap.get(item.name.label)).length() + "DDW1DR";
+                            Line countLine = Utility.insertCommas(itemNameMap.get(item.name.label));
+                            countString = " (" + countLine.label + ")";
+                            countColorCode = "2DR" + countLine.colorCode + "1DR";
                         }
                         else if(item.isQuantity) {
-                            countString = " (" + String.valueOf(item.quantity) + ")";
-                            countColorCode = "2DR" + String.valueOf(item.quantity).length() + "DDW1DR";
+                            Line countLine = Utility.insertCommas(item.quantity);
+                            countString = " (" + countLine.label + ")";
+                            countColorCode = "2DR" + countLine.colorCode + "1DR";
                         }
 
                         String itemNameLabel = item.prefix + item.name.label + " is lying on the ground." + countString;
@@ -338,8 +342,9 @@ public class Room {
             String countString = "";
             String countColorCode = "";
             if(mobList.size() > 1) {
-                countString = " (" + String.valueOf(mobList.size()) + ")";
-                countColorCode = "2DR" + String.valueOf(mobList.size()).length() + "W1DR";
+                Line countLine = Utility.insertCommas(mobList.size());
+                countString = " (" + countLine.label + ")";
+                countColorCode = "2DR" + countLine.colorCode + "W1DR";
             }
             Line mobsLine = new Line("There is someone here." + countString, "6CONT3CONT8CONT4CONT1DY" + countColorCode, "", isLastLine, true);
             GameScreen.userInterface.console.writeToConsole(mobsLine);
@@ -354,8 +359,9 @@ public class Room {
             String countString = "";
             String countColorCode = "";
             if(spaceshipList.size() > 1) {
-                countString = " (" + String.valueOf(spaceshipList.size()) + ")";
-                countColorCode = "2DR" + String.valueOf(spaceshipList.size()).length() + "W1DR";
+                Line countLine = Utility.insertCommas(spaceshipList.size());
+                countString = " (" + countLine.label + ")";
+                countColorCode = "2DR" + countLine.colorCode + "W1DR";
             }
             Line spaceshipsLine = new Line("A spaceship is sitting on the launch pad." + countString, "2W10CONT3CONT8CONT3CONT4CONT7CONT3CONT1DY" + countColorCode, "", isLastLine, true);
             GameScreen.userInterface.console.writeToConsole(spaceshipsLine);
@@ -366,8 +372,9 @@ public class Room {
             String countString = "";
             String countColorCode = "";
             if(itemList.size() > 1) {
-                countString = " (" + String.valueOf(itemList.size()) + ")";
-                countColorCode = "2DR" + String.valueOf(itemList.size()).length() + "W1DR";
+                Line countLine = Utility.insertCommas(itemList.size());
+                countString = " (" + countLine.label + ")";
+                countColorCode = "2DR" + countLine.colorCode + "W1DR";
             }
             Line itemsLine = new Line("There is something on the ground." + countString, "6CONT3CONT10CONT3CONT4CONT6CONT1DY" + countColorCode, "", true, true);
             GameScreen.userInterface.console.writeToConsole(itemsLine);

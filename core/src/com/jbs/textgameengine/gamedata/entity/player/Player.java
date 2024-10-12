@@ -19,7 +19,7 @@ public class Player extends Mob {
     }
 
     public void loadDebugPlayer() {
-        addItemToInventory(Item.load("General", 3, location, 30521));
+        // addItemToInventory(Item.load("General", 3, location, 3966252));
     }
 
     public void update() {

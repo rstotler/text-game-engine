@@ -4,7 +4,7 @@ import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
-import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.general.*;
+import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.debug.*;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.statuseffect.StatusEffect;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
@@ -146,6 +146,28 @@ public class Mob extends Entity {
         return false;
     }
 
+    public float getWeight() {
+        float currentWeight = 0.0f;
+
+        for(String pocket : inventory.keySet()) {
+            for(Item item : inventory.get(pocket)) {
+                currentWeight += item.getWeight();
+            }
+        }
+        for(String gearSlot : gear.keySet()) {
+            Item item = gear.get(gearSlot);
+            if(item != null) {
+                currentWeight += item.getWeight();
+            }
+        }
+
+        return currentWeight;
+    }
+
+    public float getMaxWeight() {
+        return 5.0f;
+    }
+
     public int getMaxViewDistance() {
         return 5;
     }
@@ -168,6 +190,29 @@ public class Mob extends Entity {
         if(!quantityItemInInventory) {
             inventory.get(targetItem.pocket).add(targetItem);
         }
+    }
+
+    public Item getItemFromInventory(String key) {
+        for(String pocket : inventory.keySet()) {
+            for(Item item : inventory.get(pocket)) {
+                if(item.nameKeyList.contains(key)) {
+                    return item;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public Item getItemFromGear(String key) {
+        for(String gearSlot : gear.keySet()) {
+            Item item = gear.get(gearSlot);
+            if(item != null && item.nameKeyList.contains(key)) {
+                return item;
+            }
+        }
+
+        return null;
     }
 
     public boolean hasKey(int keyNum) {

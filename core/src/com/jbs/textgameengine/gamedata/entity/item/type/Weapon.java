@@ -135,8 +135,6 @@ public class Weapon extends Item {
             gearItem.name = new Line("Default Weapon Item", "8CONT7CONT4CONT", "", true, true);
         }
 
-        gearItem.nameKeyList = Entity.createNameKeyList(gearItem.prefix + gearItem.name.label);
-
         return gearItem;
     }
 }

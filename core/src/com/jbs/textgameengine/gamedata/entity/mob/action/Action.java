@@ -4,14 +4,8 @@ import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.god.Manifest;
 import com.jbs.textgameengine.gamedata.entity.mob.action.item.general.*;
-import com.jbs.textgameengine.gamedata.entity.mob.action.item.skill.Craft;
-import com.jbs.textgameengine.gamedata.entity.mob.action.item.skill.Harvest;
-import com.jbs.textgameengine.gamedata.entity.mob.action.item.skill.Plant;
-import com.jbs.textgameengine.gamedata.entity.mob.action.item.skill.Prospect;
-import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Equipment;
-import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Group;
-import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Inventory;
-import com.jbs.textgameengine.gamedata.entity.mob.action.menu.Skills;
+import com.jbs.textgameengine.gamedata.entity.mob.action.item.skill.*;
+import com.jbs.textgameengine.gamedata.entity.mob.action.menu.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.other.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.*;
@@ -62,18 +56,6 @@ public class Action {
 
     public Action() {
         this(null, null);
-    }
-
-    public Action getActionFromInput(String input, Mob parentEntity) {
-        return null;
-    }
-
-    public void initiate() {}
-
-    public void performAction() {}
-
-    public String toString() {
-        return getClass().toString().substring(getClass().toString().lastIndexOf(".") + 1);
     }
 
     public static ArrayList<Action> loadActionList() {
@@ -127,5 +109,17 @@ public class Action {
         actionList.add(new Manifest());
 
         return actionList;
+    }
+
+    public Action getActionFromInput(String input, Mob parentEntity) {
+        return null;
+    }
+
+    public void initiate() {}
+
+    public void performAction() {}
+
+    public String toString() {
+        return getClass().toString().substring(getClass().toString().lastIndexOf(".") + 1);
     }
 }

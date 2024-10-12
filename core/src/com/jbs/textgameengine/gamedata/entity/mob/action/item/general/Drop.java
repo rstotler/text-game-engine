@@ -192,10 +192,11 @@ public class Drop extends Action {
                 String itemCountString = "";
                 String itemCountColorCode = "";
                 if(dropCount > 1) {
-                    itemCountString = " (" + String.valueOf(dropCount) + ")";
-                    itemCountColorCode = "2DR" + String.valueOf(dropCount).length() + "CONT1DR";
+                    Line itemCountLine = Utility.insertCommas(dropCount);
+                    itemCountString = " (" + itemCountLine.label + ")";
+                    itemCountColorCode = "2DR" + itemCountLine.colorCode + "1DR";
                 }
-                userInterface.console.writeToConsole(new Line("You drop " + targetItem.prefix + targetItem.name.label + itemCountString + " on the ground.", "4CONT5CONT" + String.valueOf(targetItem.prefix.length()) + "CONT" + targetItem.name.colorCode + itemCountColorCode + "1W3CONT4CONT6CONT1DY", "", true, true));
+                userInterface.console.writeToConsole(new Line("You drop " + targetItem.prefix.toLowerCase() + targetItem.name.label + itemCountString + " on the ground.", "4CONT5CONT" + String.valueOf(targetItem.prefix.length()) + "CONT" + targetItem.name.colorCode + itemCountColorCode + "1W3CONT4CONT6CONT1DY", "", true, true));
             }
         }
     }
