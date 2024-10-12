@@ -315,6 +315,10 @@ public class Get extends Action {
                                 parentEntity.addItemToInventory(item);
                                 getIndexList.add(0, i);
                                 getCount += 1;
+
+                                if((itemListData.itemListLocation.equals("Room") || itemListData.itemListLocation.equals("Get Item From Room"))) {
+                                    parentEntityCurrentWeight += item.getWeight();
+                                }
                             }
 
                             // Quantity Items //
@@ -332,6 +336,10 @@ public class Get extends Action {
                                 if(quantityRemainder == 0) {getIndexList.add(0, i);}
                                 else {item.quantity = quantityRemainder;}
                                 getCount += itemQuantity;
+
+                                if((itemListData.itemListLocation.equals("Room") || itemListData.itemListLocation.equals("Get Item From Room"))) {
+                                    parentEntityCurrentWeight += quantityItem.getWeight();
+                                }
                             }
 
                             if(targetItem == null) {targetItem = item;}
@@ -372,16 +380,8 @@ public class Get extends Action {
                 if(breakCheck) {break;}
             }
 
-            // Message - You don't see it. (Don't see TargetContainer OR TargetItem in Room) //
-            if((!targetContainerString.isEmpty() && targetContainer == null)
-            || (targetContainerString.isEmpty() && !containerAllCheck && !targetEntityString.isEmpty() && targetItem == null)) {
-                if(parentEntity.isPlayer) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("You don't see it.", "4CONT3CONT1DY2DDW4CONT2CONT1DY", "", true, true));
-                }
-            }
-
             // Message - It's locked. //
-            else if((getCount == 0 && lockedCheck)
+            if((getCount == 0 && lockedCheck)
             || (targetContainer != null
             && ((Item) targetContainer).status.equals("Locked")
             && !parentEntity.hasKey(((Item) targetContainer).keyNum))) {
@@ -395,14 +395,6 @@ public class Get extends Action {
             && ((Item) targetContainer).containerItemList.isEmpty()) {
                 if(parentEntity.isPlayer) {
                     GameScreen.userInterface.console.writeToConsole(new Line("It's empty.", "2CONT1DY2DDW5CONT1DY", "", true, true));
-                }
-            }
-
-            // Message - You can't find it. (Can't find TargetItem in TargetContainer) //
-            else if(!targetEntityString.isEmpty()
-            && targetItem == null) {
-                if(parentEntity.isPlayer) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("You can't find it.", "4CONT3CONT1DY2DDW5CONT2CONT1DY", "", true, true));
                 }
             }
 
@@ -427,6 +419,22 @@ public class Get extends Action {
             && cantGetCheck) {
                 if(parentEntity.isPlayer) {
                     GameScreen.userInterface.console.writeToConsole(new Line("You can't pick that up.", "4CONT3CONT1DY2DDW5CONT5CONT2CONT1DY", "", true, true));
+                }
+            }
+
+            // Message - You don't see it. (Don't see TargetContainer OR TargetItem in Room) //
+            else if((!targetContainerString.isEmpty() && targetContainer == null)
+            || (targetContainerString.isEmpty() && !containerAllCheck && !targetEntityString.isEmpty() && targetItem == null)) {
+                if(parentEntity.isPlayer) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("You don't see it.", "4CONT3CONT1DY2DDW4CONT2CONT1DY", "", true, true));
+                }
+            }
+
+            // Message - You can't find it. (Can't find TargetItem in TargetContainer) //
+            else if(!targetEntityString.isEmpty()
+            && targetItem == null) {
+                if(parentEntity.isPlayer) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("You can't find it.", "4CONT3CONT1DY2DDW5CONT2CONT1DY", "", true, true));
                 }
             }
 

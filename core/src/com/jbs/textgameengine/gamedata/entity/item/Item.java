@@ -63,6 +63,7 @@ public class Item extends Entity {
             // 001 - A Silver Key //
             if(id == 1) {
                 item.name = new Line("Silver Key", "7SHIAGR3CONT", "", true, true);
+                item.weight = 0;
                 item.keyList = new ArrayList<>();
                 item.keyList.add(1234);
             }
@@ -71,6 +72,7 @@ public class Item extends Entity {
             else if(id == 2) {
                 item.prefix = "The ";
                 item.name = new Line("Key to Starship Heart of Gold", "4CONT3CONT9CONT6SHIAR3CONT4SHIAY", "", true, true);
+                item.weight = 0;
                 item.keyList = new ArrayList<>();
                 item.keyList.add(7777);
             }
@@ -79,6 +81,7 @@ public class Item extends Entity {
             else if(id == 3) {
                 item.prefix = "A piece of ";
                 item.name = new Line("Gold", "4SHIAY", "", true, true);
+                item.weight = 0;
                 item.isQuantity = true;
             }
 

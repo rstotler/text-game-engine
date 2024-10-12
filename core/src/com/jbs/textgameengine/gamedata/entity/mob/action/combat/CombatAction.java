@@ -324,11 +324,11 @@ public class CombatAction extends Action {
                 }
             }
 
-            // Message - The door is closed. //
+            // Message - Your view to the Direction is obstructed by a door. //
             else if(targetRoomData != null
             && targetRoomData.message.equals("Door Is Closed")) {
                 if(parentEntity.isPlayer) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("The door is closed.", "4CONT5CONT3CONT6CONT1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("Your view to the " + targetRoomData.targetDirection.toLowerCase() + " is obstructed by a door.", "5CONT5CONT3CONT4CONT" + String.valueOf(targetRoomData.targetDirection.length()) + "CONT1W3CONT11CONT3CONT2W4CONT1DY", "", true, true));
                 }
             }
 
