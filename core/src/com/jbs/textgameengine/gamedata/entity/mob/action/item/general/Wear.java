@@ -116,7 +116,7 @@ public class Wear extends Action {
         ArrayList<Item> wearGearList = new ArrayList<>();
         ArrayList<Item> removeGearList = new ArrayList<>();
 
-        // Wear/Wield //
+        // Wear/Wield Item(s) //
         ArrayList<ArrayList<Item>> itemListArray = new ArrayList<>();
         itemListArray.add(parentEntity.inventory.get("Gear"));
         itemListArray.add(parentEntity.inventory.get("Weapons"));
@@ -125,6 +125,7 @@ public class Wear extends Action {
             ArrayList<Integer> deleteIndexList = new ArrayList<>();
             for(int i = 0; i < targetInventoryItemList.size(); i++) {
                 Item item = targetInventoryItemList.get(i);
+
                 if((targetEntityString.isEmpty() && allCheck)
                 || (!targetEntityString.isEmpty() && item.nameKeyList.contains(targetEntityString))) {
 
