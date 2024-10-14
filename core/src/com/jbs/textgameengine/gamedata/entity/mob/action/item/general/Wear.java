@@ -352,8 +352,26 @@ public class Wear extends Action {
                 Item removeItem = removeGearList.get(0);
                 String inOnString = " on";
                 if(wearItem.type.equals("Weapon")) {inOnString = " in";}
-                String removeString = "You remove " + removeItem.prefix.toLowerCase() + removeItem.name.label + " and " + actionType.toLowerCase() + " " + wearItem.prefix.toLowerCase() + wearItem.name.label + inOnString + " your " + wearGearSlot.toLowerCase() + ".";
-                String removeColorCode = "4CONT7CONT" + String.valueOf(removeItem.prefix.length()) + "CONT" + removeItem.name.colorCode + "1W4CONT" + String.valueOf(actionType.length()) + "CONT1W" + String.valueOf(wearItem.prefix.length()) + "CONT" + wearItem.name.colorCode + "1W3CONT5CONT" + String.valueOf(wearGearSlot.length()) + "CONT1DY";
+
+                String wearGearSlotRaw = " your " + wearGearSlot.toLowerCase();
+                String wearGearSlotRawColorCode = "1W5CONT" + String.valueOf(wearGearSlot.length()) + "CONT";
+                if(wearItem.type.equals("Weapon")
+                && (((Weapon) wearItem).noDualWield || (((Weapon) wearItem).twoHanded && !parentEntity.canDualWield()))) {
+                    wearGearSlotRaw = " both hands";
+                    wearGearSlotRawColorCode = "1W5CONT5CONT";
+                }
+                else if(wearItem.type.equals("Gear")) {
+                    if(Arrays.asList("Neck 1", "Neck 2").contains(wearGearSlot)) {
+                        wearGearSlotRaw = " your " + wearGearSlot.substring(0, 4).toLowerCase();
+                        wearGearSlotRawColorCode = "1W5CONT4CONT";
+                    } else if(Arrays.asList("Ring 1", "Ring 2").contains(wearGearSlot)) {
+                        wearGearSlotRaw = " your finger";
+                        wearGearSlotRawColorCode = "1W5CONT6CONT";
+                    }
+                }
+
+                String removeString = "You remove " + removeItem.prefix.toLowerCase() + removeItem.name.label + " and " + actionType.toLowerCase() + " " + wearItem.prefix.toLowerCase() + wearItem.name.label + inOnString + wearGearSlotRaw + ".";
+                String removeColorCode = "4CONT7CONT" + String.valueOf(removeItem.prefix.length()) + "CONT" + removeItem.name.colorCode + "1W4CONT" + String.valueOf(actionType.length()) + "CONT1W" + String.valueOf(wearItem.prefix.length()) + "CONT" + wearItem.name.colorCode + "1W2CONT" + wearGearSlotRawColorCode + "1DY";
                 GameScreen.userInterface.console.writeToConsole(new Line(removeString, removeColorCode, "", true, true));
             }
         }
@@ -364,8 +382,17 @@ public class Wear extends Action {
         && !wearGearCheck) {
             if(parentEntity.isPlayer) {
                 Item wearItem = wearGearList.get(0);
-                String removeString = "You remove your weapons and wield " + wearItem.prefix.toLowerCase() + wearItem.name.label + " in your " + wearGearSlot.toLowerCase() + ".";
-                String removeColorCode = "4CONT7CONT5CONT8CONT4CONT6CONT" + String.valueOf(wearItem.prefix.length()) + "CONT" + wearItem.name.colorCode + "1W3CONT5CONT" + String.valueOf(wearGearSlot.length()) + "CONT1DY";
+
+                String wearGearSlotRaw = " your " + wearGearSlot.toLowerCase();
+                String wearGearSlotRawColorCode = "1W5CONT" + String.valueOf(wearGearSlot.length()) + "CONT";
+                if(wearItem.type.equals("Weapon")
+                && (((Weapon) wearItem).noDualWield || (((Weapon) wearItem).twoHanded && !parentEntity.canDualWield()))) {
+                    wearGearSlotRaw = " both hands";
+                    wearGearSlotRawColorCode = "1W5CONT5CONT";
+                }
+
+                String removeString = "You remove your weapons and wield " + wearItem.prefix.toLowerCase() + wearItem.name.label + " in" + wearGearSlotRaw + ".";
+                String removeColorCode = "4CONT7CONT5CONT8CONT4CONT6CONT" + String.valueOf(wearItem.prefix.length()) + "CONT" + wearItem.name.colorCode + "1W2CONT" + wearGearSlotRawColorCode + "1DY";
                 GameScreen.userInterface.console.writeToConsole(new Line(removeString, removeColorCode, "", true, true));
             }
         }
@@ -386,10 +413,28 @@ public class Wear extends Action {
         else if(wearGearList.size() == 1) {
             if(parentEntity.isPlayer) {
                 Item wearItem = wearGearList.get(0);
-                String inOnString = " on ";
-                if(wearItem.type.equals("Weapon")) {inOnString = " in ";}
-                String removeString = "You " + actionType.toLowerCase() + " " + wearItem.prefix.toLowerCase() + wearItem.name.label + inOnString + "your " + wearGearSlot.toLowerCase() + ".";
-                String removeColorCode = "4CONT" + String.valueOf(actionType.length()) + "CONT1W" + String.valueOf(wearItem.prefix.length()) + "CONT" + wearItem.name.colorCode + "1W3CONT5CONT" + String.valueOf(wearGearSlot.length()) + "CONT1DY";
+                String inOnString = " on";
+                if(wearItem.type.equals("Weapon")) {inOnString = " in";}
+
+                String wearGearSlotRaw = " your " + wearGearSlot.toLowerCase();
+                String wearGearSlotRawColorCode = "1W5CONT" + String.valueOf(wearGearSlot.length()) + "CONT";
+                if(wearItem.type.equals("Weapon")
+                && (((Weapon) wearItem).noDualWield || (((Weapon) wearItem).twoHanded && !parentEntity.canDualWield()))) {
+                    wearGearSlotRaw = " both hands";
+                    wearGearSlotRawColorCode = "1W5CONT5CONT";
+                }
+                else if(wearItem.type.equals("Gear")) {
+                    if(Arrays.asList("Neck 1", "Neck 2").contains(wearGearSlot)) {
+                        wearGearSlotRaw = " your " + wearGearSlot.substring(0, 4).toLowerCase();
+                        wearGearSlotRawColorCode = "1W5CONT4CONT";
+                    } else if(Arrays.asList("Ring 1", "Ring 2").contains(wearGearSlot)) {
+                        wearGearSlotRaw = " your finger";
+                        wearGearSlotRawColorCode = "1W5CONT6CONT";
+                    }
+                }
+
+                String removeString = "You " + actionType.toLowerCase() + " " + wearItem.prefix.toLowerCase() + wearItem.name.label + inOnString + wearGearSlotRaw + ".";
+                String removeColorCode = "4CONT" + String.valueOf(actionType.length()) + "CONT1W" + String.valueOf(wearItem.prefix.length()) + "CONT" + wearItem.name.colorCode + "1W3CONT" + wearGearSlotRawColorCode + "1DY";
                 GameScreen.userInterface.console.writeToConsole(new Line(removeString, removeColorCode, "", true, true));
             }
         }

@@ -1,5 +1,6 @@
 package com.jbs.textgameengine.gamedata.entity.mob.action.menu;
 
+import com.jbs.textgameengine.gamedata.entity.item.type.weapon.Weapon;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
@@ -48,11 +49,16 @@ public class Equipment extends Action {
                     gearSlot = gearSlot + " Hand";
                 }
 
-                if(parentEntity.gear.get(gearSlot) != null
-                && gearSlot.length() > longestSlotSize) {
-                    longestSlotSize = gearSlot.length();
-                }
                 if(parentEntity.gear.get(gearSlot) != null) {
+                    if(gearSlot.length() > longestSlotSize) {
+                        longestSlotSize = gearSlot.length();
+
+                        if(parentEntity.gear.get("Main Hand") != null
+                        && (((Weapon) parentEntity.gear.get("Main Hand")).noDualWield
+                        || (((Weapon) parentEntity.gear.get("Main Hand")).twoHanded && !parentEntity.canDualWield()))) {
+                            longestSlotSize = "Both Hands".length();
+                        }
+                    }
                     lastLineSlot = gearSlot;
                     if(nakedCheck) {nakedCheck = false;}
                 }
@@ -86,6 +92,11 @@ public class Equipment extends Action {
                     String gearItemColorCode = String.valueOf(parentEntity.gear.get(gearSlot).prefix.length()) + "CONT" + parentEntity.gear.get(gearSlot).name.colorCode;
 
                     String spaceString = "";
+                    if(parentEntity.gear.get("Main Hand") != null
+                    && (((Weapon) parentEntity.gear.get("Main Hand")).noDualWield
+                    || (((Weapon) parentEntity.gear.get("Main Hand")).twoHanded && !parentEntity.canDualWield()))) {
+                        gearSlot = "Both Hands";
+                    }
                     if(gearSlot.length() < longestSlotSize) {
                         for(int ii = 0; ii < longestSlotSize - gearSlot.length(); ii++) {spaceString += " ";}
                     }

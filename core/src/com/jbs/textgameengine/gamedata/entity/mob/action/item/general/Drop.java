@@ -173,7 +173,8 @@ public class Drop extends Action {
         }
 
         // Message - You drop everything on the ground. //
-        else if(dropCount == inventoryItemCount) {
+        else if(dropCount > 1
+        && dropCount == inventoryItemCount) {
             if(parentEntity.isPlayer) {
                 userInterface.console.writeToConsole(new Line("You drop everything on the ground.", "4CONT5CONT11CONT3CONT4CONT6CONT1DY", "", true, true));
             }
