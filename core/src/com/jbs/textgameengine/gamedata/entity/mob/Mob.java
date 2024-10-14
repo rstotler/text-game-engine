@@ -13,7 +13,7 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import java.util.*;
 
 public class Mob extends Entity {
-    public static ArrayList<String> gearSlotList = new ArrayList<>(Arrays.asList("Head", "Face", "Body", "About", "Hands", "Legs", "Boots", "Neck 1", "Neck 2", "Ring 1", "Ring 2", "Left Hand", "Right Hand"));
+    public static ArrayList<String> gearSlotList = new ArrayList<>(Arrays.asList("Head", "Face", "Body", "About", "Hands", "Legs", "Feet", "Boots", "Neck", "Ring", "Main", "Off"));
 
     public HashMap<String, ArrayList<Item>> inventory;
     public HashMap<String, Item> gear;
@@ -84,7 +84,14 @@ public class Mob extends Entity {
         HashMap<String, Item> gear = new HashMap<>();
 
         for(String gearSlot : gearSlotList) {
-            gear.put(gearSlot, null);
+            if(Arrays.asList("Neck", "Ring").contains(gearSlot)) {
+                gear.put(gearSlot + " 1", null);
+                gear.put(gearSlot + " 2", null);
+            } else if(Arrays.asList("Main", "Off").contains(gearSlot)) {
+                gear.put(gearSlot + " Hand", null);
+            } else {
+                gear.put(gearSlot, null);
+            }
         }
 
         return gear;
@@ -165,7 +172,7 @@ public class Mob extends Entity {
     }
 
     public float getMaxWeight() {
-        return 5.0f;
+        return 50.0f;
     }
 
     public int getMaxViewDistance() {
@@ -259,5 +266,9 @@ public class Mob extends Entity {
         }
 
         return false;
+    }
+
+    public boolean canDualWield() {
+        return true;
     }
 }

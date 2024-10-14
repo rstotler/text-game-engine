@@ -2,7 +2,7 @@ package com.jbs.textgameengine.gamedata.entity.item;
 
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.type.Gear;
-import com.jbs.textgameengine.gamedata.entity.item.type.Weapon;
+import com.jbs.textgameengine.gamedata.entity.item.type.weapon.Weapon;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
@@ -46,9 +46,14 @@ public class Item extends Entity {
         if(isQuantity) {
             return weight * quantity;
         }
-        else {
-            return weight;
+        if(containerItemList != null) {
+            float containerWeight = weight;
+            for(Item item : containerItemList) {
+                containerWeight += item.getWeight();
+            }
+            return containerWeight;
         }
+        return weight;
     }
 
     public static Item load(String itemType, int id, Location startLocation) {

@@ -11,12 +11,12 @@ import java.util.stream.Collectors;
 import static com.jbs.textgameengine.screen.gamescreen.GameScreen.userInterface;
 
 public class Remove extends Action {
-    public String gearSlot;
+    public String targetGearSlot;
 
     public Remove(Mob parentEntity) {
         super(parentEntity);
 
-        gearSlot = "";
+        targetGearSlot = "";
     }
 
     public Remove() {
@@ -50,7 +50,7 @@ public class Remove extends Action {
                 removeAction.targetCount = 1;
                 List<String> targetEntityStringList = inputList.subList(1, inputList.size() - 1);
                 removeAction.targetEntityString = targetEntityStringList.stream().collect(Collectors.joining(" "));
-                removeAction.gearSlot = inputList.get(inputList.size() - 1);
+                removeAction.targetGearSlot = inputList.get(inputList.size() - 1);
             }
 
             // Remove # Entity //
