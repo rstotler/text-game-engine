@@ -76,6 +76,7 @@ public class Action {
         actionList.add(new Put());
         actionList.add(new Wear());
         actionList.add(new Remove());
+        actionList.add(new Switch());
         actionList.add(new Eat());
         actionList.add(new Empty());
 
