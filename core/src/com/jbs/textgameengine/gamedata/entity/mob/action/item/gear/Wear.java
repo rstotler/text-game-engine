@@ -1,4 +1,4 @@
-package com.jbs.textgameengine.gamedata.entity.mob.action.item.general;
+package com.jbs.textgameengine.gamedata.entity.mob.action.item.gear;
 
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.item.type.Gear;

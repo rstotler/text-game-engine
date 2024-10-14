@@ -3,7 +3,9 @@ package com.jbs.textgameengine.gamedata.entity.mob.action;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.god.Manifest;
+import com.jbs.textgameengine.gamedata.entity.mob.action.item.gear.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.item.general.*;
+import com.jbs.textgameengine.gamedata.entity.mob.action.item.shop.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.item.skill.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.menu.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.other.*;
@@ -74,11 +76,16 @@ public class Action {
         actionList.add(new Loot());
         actionList.add(new Drop());
         actionList.add(new Put());
+        actionList.add(new Eat());
+        actionList.add(new Empty());
+
         actionList.add(new Wear());
         actionList.add(new Remove());
         actionList.add(new Switch());
-        actionList.add(new Eat());
-        actionList.add(new Empty());
+
+        actionList.add(new Buy());
+        actionList.add(new Sell());
+        actionList.add(new List());
 
         actionList.add(new Plant());
         actionList.add(new Harvest());
@@ -104,6 +111,7 @@ public class Action {
         actionList.add(new Unload());
 
         actionList.add(new Time());
+        actionList.add(new Weather());
         actionList.add(new Emote());
 
         actionList.add(new Manifest());

@@ -14,8 +14,12 @@ import java.util.stream.Collectors;
 import static com.jbs.textgameengine.screen.gamescreen.GameScreen.userInterface;
 
 public class Drop extends Action {
+    public String targetPocket;
+
     public Drop(Mob parentEntity) {
         super(parentEntity);
+
+        targetPocket = "";
     }
 
     public Drop() {
@@ -29,7 +33,7 @@ public class Drop extends Action {
             Drop dropAction = new Drop(parentEntity);
 
             String targetPocketString = "";
-            if(inputList.size() >= 3
+            if(inputList.size() == 3
             && inputList.get(1).equals("all")) {
                 List<String> targetPocketStringList = inputList.subList(2, inputList.size());
                 targetPocketString = targetPocketStringList.stream().collect(Collectors.joining(" "));
@@ -43,13 +47,12 @@ public class Drop extends Action {
             }
 
             // Drop All Pocket //
-            else if(inputList.size() >= 3
+            else if(inputList.size() == 3
             && inputList.get(1).equals("all")
             && Inventory.inventoryNameKeyMap.containsKey(targetPocketString)) {
                 dropAction.allCheck = true;
                 dropAction.actionType = "Drop All Pocket";
-                List<String> targetEntityStringList = inputList.subList(2, inputList.size());
-                dropAction.targetEntityString = targetEntityStringList.stream().collect(Collectors.joining(" "));
+                dropAction.targetPocket = targetPocketString;
             }
 
             // Drop All Item //
@@ -107,44 +110,42 @@ public class Drop extends Action {
         for(String pocket : parentEntity.inventory.keySet()) {
             deleteIndexMap.put(pocket, new ArrayList<Integer>());
 
-            if(actionType.isEmpty()
-            || (actionType.equals("Drop All Pocket") && pocket.equals(targetEntityString))) {
-                for(int i = 0; i < parentEntity.inventory.get(pocket).size(); i++) {
-                    Entity item = parentEntity.inventory.get(pocket).get(i);
+            for(int i = 0; i < parentEntity.inventory.get(pocket).size(); i++) {
+                Entity item = parentEntity.inventory.get(pocket).get(i);
 
-                    if((allCheck && targetEntityString.isEmpty())
-                    || (!targetEntityString.isEmpty() && item.nameKeyList.contains(targetEntityString))) {
+                if((allCheck && targetEntityString.isEmpty() && actionType.isEmpty())
+                || (!targetEntityString.isEmpty() && item.nameKeyList.contains(targetEntityString))
+                || (actionType.equals("Drop All Pocket") && pocket.equals(targetPocket))) {
 
-                        // Non-Quantity Item //
-                        if(!((Item) item).isQuantity) {
-                            parentEntity.location.room.addItemToRoom(item);
-                            deleteIndexMap.get(pocket).add(0, i);
-                            dropCount += 1;
+                    // Non-Quantity Item //
+                    if(!((Item) item).isQuantity) {
+                        parentEntity.location.room.addItemToRoom(item);
+                        deleteIndexMap.get(pocket).add(0, i);
+                        dropCount += 1;
+                    }
+
+                    // Quantity Item //
+                    else {
+                        int itemQuantity = ((Item) item).quantity;
+                        int quantityRemainder = 0;
+                        if(targetCount != -1 && itemQuantity + dropCount > targetCount) {
+                            quantityRemainder = (itemQuantity + dropCount) - targetCount;
+                            itemQuantity -= quantityRemainder;
                         }
+                        Entity quantityItem = Item.load(((Item) item).type, item.id, item.location, itemQuantity);
+                        parentEntity.location.room.addItemToRoom(quantityItem);
 
-                        // Quantity Item //
-                        else {
-                            int itemQuantity = ((Item) item).quantity;
-                            int quantityRemainder = 0;
-                            if(targetCount != -1 && itemQuantity + dropCount > targetCount) {
-                                quantityRemainder = (itemQuantity + dropCount) - targetCount;
-                                itemQuantity -= quantityRemainder;
-                            }
-                            Entity quantityItem = Item.load(((Item) item).type, item.id, item.location, itemQuantity);
-                            parentEntity.location.room.addItemToRoom(quantityItem);
+                        if(quantityRemainder == 0) {deleteIndexMap.get(pocket).add(0, i);}
+                        else {((Item) item).quantity = quantityRemainder;}
+                        dropCount += itemQuantity;
+                    }
 
-                            if(quantityRemainder == 0) {deleteIndexMap.get(pocket).add(0, i);}
-                            else {((Item) item).quantity = quantityRemainder;}
-                            dropCount += itemQuantity;
-                        }
+                    if(targetItem == null) {targetItem = item;}
+                    else if(targetItem.id != item.id) {multipleItemTypes = true;}
 
-                        if(targetItem == null) {targetItem = item;}
-                        else if(targetItem.id != item.id) {multipleItemTypes = true;}
-
-                        if(targetCount != -1 && dropCount >= targetCount) {
-                            breakCheck = true;
-                            break;
-                        }
+                    if(targetCount != -1 && dropCount >= targetCount) {
+                        breakCheck = true;
+                        break;
                     }
                 }
             }
