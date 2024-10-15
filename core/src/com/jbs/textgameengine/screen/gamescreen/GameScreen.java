@@ -22,6 +22,7 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.prompt.InputBar;
 
 import java.util.HashMap;
+import java.util.Random;
 
 public class GameScreen extends Screen {
     public static UserInterface userInterface;
@@ -196,17 +197,26 @@ public class GameScreen extends Screen {
         }
 
         if(!actionCheck) {
-            userInterface.console.writeToConsole(new Line("Huh?", "3CONT1DY", "", true, true));
+            int messageIndex = new Random().nextInt(3);
+            if(messageIndex == 0) {
+                userInterface.console.writeToConsole(new Line("Huh?", "3CONT1DY", "", true, true));
+            }
+            else if(messageIndex == 1) {
+                userInterface.console.writeToConsole(new Line("I didn't quite get that.", "2W4CONT1DY2DDW6CONT4CONT4CONT1DY", "", true, true));
+            }
+            else {
+                userInterface.console.writeToConsole(new Line("Care to try that again?", "5CONT3CONT4CONT5CONT5CONT1DY", "", true, true));
+            }
 
-//            userInterface.console.writeToConsole(new Line("This is a test line.", "19CONTR1Y", "", true, true));
-//            userInterface.console.writeToConsole(new Line("This is a test.", "14CONTR1Y", "", true, true));
-//            userInterface.console.writeToConsole(new Line("This is.", "7CONT1Y", "", true, true));
-//            userInterface.console.writeToConsole(new Line("This.", "4CONT1Y", "", true, true));
-//            userInterface.console.writeToConsole(new Line("This is a test line. It is really long. But not too long, or it would be way too long.", "85SHIBR1Y", "86GRABB", true, true));
-//            userInterface.console.writeToConsole(new Line("This is a test line. It is super long so I can test all the colors. Yo this should be multiple lines, yo.", "104SHIBR1Y", "105GRABB-Y-G", true, true));
-//            userInterface.console.writeToConsole(new Line("This is a test line. It is super long so I can test all the colors. Yo this should be multiple lines, yo.", "104SHIBR1Y", "105GRABB-Y", true, true));
-//            userInterface.console.writeToConsole(new Line("This is a test line. It is super long so I can test all the colors. Yo this should be multiple lines, yo.", "104SHIBR1Y", "105GRABB", true, true));
-//            userInterface.console.writeToConsole(new Line("This is a test line. It is super long so I can test all the colors. Yo this should be multiple lines, yo.", "104SHIBR1Y", "105GRAB", true, true));
+            // userInterface.console.writeToConsole(new Line("This is a test line.", "19CONTR1Y", "", true, true));
+            // userInterface.console.writeToConsole(new Line("This is a test.", "14CONTR1Y", "", true, true));
+            // userInterface.console.writeToConsole(new Line("This is.", "7CONT1Y", "", true, true));
+            // userInterface.console.writeToConsole(new Line("This.", "4CONT1Y", "", true, true));
+            // userInterface.console.writeToConsole(new Line("This is a test line. It is really long. But not too long, or it would be way too long.", "85SHIBR1Y", "86GRABB", true, true));
+            // userInterface.console.writeToConsole(new Line("This is a test line. It is super long so I can test all the colors. Yo this should be multiple lines, yo.", "104SHIBR1Y", "105GRABB-Y-G", true, true));
+            // userInterface.console.writeToConsole(new Line("This is a test line. It is super long so I can test all the colors. Yo this should be multiple lines, yo.", "104SHIBR1Y", "105GRABB-Y", true, true));
+            // userInterface.console.writeToConsole(new Line("This is a test line. It is super long so I can test all the colors. Yo this should be multiple lines, yo.", "104SHIBR1Y", "105GRABB", true, true));
+            // userInterface.console.writeToConsole(new Line("This is a test line. It is super long so I can test all the colors. Yo this should be multiple lines, yo.", "104SHIBR1Y", "105GRAB", true, true));
         }
     }
 

@@ -344,9 +344,6 @@ public class Get extends Action {
 
                             if(targetItem == null) {targetItem = item;}
                             else if(targetItem.id != item.id) {multipleItemTypes = true;}
-                            if(itemListData.itemList != null) {
-                                usedContainerList.add(itemListData.itemList);
-                            }
 
                             if(targetCount != -1 && getCount >= targetCount) {
                                 breakCheck = true;
@@ -354,6 +351,12 @@ public class Get extends Action {
                             }
                         }
                     }
+                }
+
+                // Update Used Container List //
+                if(itemListData.itemList != null
+                && itemListData.parentItem != null && itemListData.parentItem.containerItemList != null) {
+                    usedContainerList.add(itemListData.itemList);
                 }
 
                 // Remove Items From Room/Target Containers //
@@ -391,7 +394,8 @@ public class Get extends Action {
             }
 
             // Message - It's empty. //
-            else if(targetContainer != null
+            else if(getCount == 0
+            && targetContainer != null
             && ((Item) targetContainer).containerItemList.isEmpty()) {
                 if(parentEntity.isPlayer) {
                     GameScreen.userInterface.console.writeToConsole(new Line("It's empty.", "2CONT1DY2DDW5CONT1DY", "", true, true));
@@ -511,9 +515,9 @@ public class Get extends Action {
             && multipleItemTypes) {
                 if(parentEntity.isPlayer) {
                     if(unlockContainerCheck) {
-                        GameScreen.userInterface.console.writeToConsole(new Line("You unlock and open " + targetContainer.prefix.toLowerCase() + targetContainer.name.label + ".", "4CONT7CONT4CONT5CONT" + String.valueOf(targetContainer.prefix.length()) + "CONT" + targetContainer.name.label + "1DY", "", true, true));
+                        GameScreen.userInterface.console.writeToConsole(new Line("You unlock and open " + targetContainer.prefix.toLowerCase() + targetContainer.name.label + ".", "4CONT7CONT4CONT5CONT" + String.valueOf(targetContainer.prefix.length()) + "CONT" + targetContainer.name.colorCode + "1DY", "", false, true));
                     } else if(openContainerCheck) {
-                        GameScreen.userInterface.console.writeToConsole(new Line("You open " + targetContainer.prefix + targetContainer.name.label + ".", "4CONT5CONT" + String.valueOf(targetContainer.prefix.length()) + "CONT" + targetContainer.name.label + "1DY", "", true, true));
+                        GameScreen.userInterface.console.writeToConsole(new Line("You open " + targetContainer.prefix.toLowerCase() + targetContainer.name.label + ".", "4CONT5CONT" + String.valueOf(targetContainer.prefix.length()) + "CONT" + targetContainer.name.colorCode + "1DY", "", false, true));
                     }
 
                     String getString = "You get some things out of " + targetContainer.prefix.toLowerCase() + targetContainer.name.label + ".";
@@ -528,9 +532,9 @@ public class Get extends Action {
             && usedContainerList.size() == 1) {
                 if(parentEntity.isPlayer) {
                     if(unlockContainerCheck) {
-                        GameScreen.userInterface.console.writeToConsole(new Line("You unlock and open " + targetContainer.prefix.toLowerCase() + targetContainer.name.label + ".", "4CONT7CONT4CONT5CONT" + String.valueOf(targetContainer.prefix.length()) + "CONT" + targetContainer.name.label + "1DY", "", true, true));
+                        GameScreen.userInterface.console.writeToConsole(new Line("You unlock and open " + targetContainer.prefix.toLowerCase() + targetContainer.name.label + ".", "4CONT7CONT4CONT5CONT" + String.valueOf(targetContainer.prefix.length()) + "CONT" + targetContainer.name.colorCode + "1DY", "", true, true));
                     } else if(openContainerCheck) {
-                        GameScreen.userInterface.console.writeToConsole(new Line("You open " + targetContainer.prefix + targetContainer.name.label + ".", "4CONT5CONT" + String.valueOf(targetContainer.prefix.length()) + "CONT" + targetContainer.name.label + "1DY", "", true, true));
+                        GameScreen.userInterface.console.writeToConsole(new Line("You open " + targetContainer.prefix.toLowerCase() + targetContainer.name.label + ".", "4CONT5CONT" + String.valueOf(targetContainer.prefix.length()) + "CONT" + targetContainer.name.colorCode + "1DY", "", true, true));
                     }
 
                     String countString = "";

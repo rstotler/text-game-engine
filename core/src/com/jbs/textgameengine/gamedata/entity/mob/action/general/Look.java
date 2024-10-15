@@ -213,8 +213,10 @@ public class Look extends Action {
                     && ((Item) targetEntity).containerItemList != null
                     && ((Item) targetEntity).status.equals("Open")) {
                         atInsideString = "inside ";
-                        itContainsString = " It contains:";
-                        itContainsColorCode = "1W3CONT8CONT1DY";
+                        if(((Item) targetEntity).status.equals("Open")) {
+                            itContainsString = " It contains:";
+                            itContainsColorCode = "1W3CONT8CONT1DY";
+                        }
                     }
                     String directionString = "";
                     String directionColorCode = "";
