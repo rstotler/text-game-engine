@@ -49,7 +49,7 @@ public class Entity {
         return nameModLine;
     }
 
-    public void displayLookDescription() {
+    public void displayLookDescription(int lookFromDistance) {
         GameScreen.userInterface.console.writeToConsole(new Line("You see nothing special.", "4CONT4CONT8CONT7CONT1DY", "", true, true));
     }
 

@@ -211,9 +211,10 @@ public class Look extends Action {
                     String itContainsColorCode = "";
                     if(targetEntity.isItem
                     && ((Item) targetEntity).containerItemList != null
-                    && ((Item) targetEntity).status.equals("Open")) {
+                    && ((Item) targetEntity).status.equals("Open")
+                    && targetDirection.isEmpty()) {
                         atInsideString = "inside ";
-                        if(((Item) targetEntity).status.equals("Open")) {
+                        if(!((Item) targetEntity).containerItemList.isEmpty()) {
                             itContainsString = " It contains:";
                             itContainsColorCode = "1W3CONT8CONT1DY";
                         }
@@ -236,7 +237,7 @@ public class Look extends Action {
                     if(targetEntity.isSpaceship) {prefixColorCode = "";}
                     GameScreen.userInterface.console.writeToConsole(new Line("You look " + atInsideString + targetEntity.prefix.toLowerCase() + targetEntity.name.label + inContainerString + directionString + "." + itContainsString, "4CONT5CONT" + String.valueOf(atInsideString.length()) + "CONT" + prefixColorCode + targetEntity.name.colorCode + inContainerColorCode + directionColorCode + "1DY" + itContainsColorCode, "", false, true));
                 }
-                targetEntity.displayLookDescription();
+                targetEntity.displayLookDescription(targetDirectionCount);
             }
         }
     }

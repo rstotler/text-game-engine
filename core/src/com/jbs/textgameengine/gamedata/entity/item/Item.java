@@ -58,9 +58,10 @@ public class Item extends Entity {
         return weight;
     }
 
-    public void displayLookDescription() {
-        if(containerItemList == null) {
-            super.displayLookDescription();
+    public void displayLookDescription(int lookFromDistance) {
+        if(containerItemList == null
+        || lookFromDistance > 0) {
+            super.displayLookDescription(lookFromDistance);
         }
 
         // Container Item (Display Container Item List) //
