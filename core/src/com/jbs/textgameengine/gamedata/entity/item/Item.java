@@ -4,9 +4,11 @@ import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.type.Gear;
 import com.jbs.textgameengine.gamedata.entity.item.type.weapon.Weapon;
 import com.jbs.textgameengine.gamedata.world.Location;
+import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
+import com.jbs.textgameengine.screen.utility.Utility;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class Item extends Entity {
     public String type;
@@ -56,6 +58,69 @@ public class Item extends Entity {
         return weight;
     }
 
+    public void displayLookDescription() {
+        if(containerItemList == null) {
+            super.displayLookDescription();
+        }
+
+        // Container Item (Display Container Item List) //
+        else {
+            if(status.equals("Closed") || status.equals("Locked")) {
+                GameScreen.userInterface.console.writeToConsole(new Line("It's closed.", "2CONT1DY2DDW6CONT1DY", "", true, true));
+            }
+            else if(containerItemList.isEmpty()) {
+                GameScreen.userInterface.console.writeToConsole(new Line("It's empty.", "2CONT1DY2DDW5CONT1DY", "", true, true));
+            }
+            else {
+                HashMap<String, Integer> itemNameMap = new HashMap<>();
+                Item lastLineItem = null;
+
+                for(Item item : containerItemList) {
+                    Line itemNameMod = item.getNameMod();
+
+                    if(itemNameMap.containsKey(item.name.label + itemNameMod.label)) {
+                        int currentCount = itemNameMap.get(item.name.label + itemNameMod.label);
+                        itemNameMap.put(item.name.label + itemNameMod.label, currentCount + 1);
+                    }
+                    else {
+                        itemNameMap.put(item.name.label + itemNameMod.label, 1);
+                        lastLineItem = item;
+                    }
+                }
+
+                boolean isLastLine = false;
+                for(int i = 0; i < containerItemList.size(); i++) {
+                    Item item = containerItemList.get(i);
+                    Line itemNameMod = item.getNameMod();
+
+                    if(itemNameMap.containsKey(item.name.label + itemNameMod.label)) {
+                        if(item == lastLineItem) {isLastLine = true;}
+
+                        String countString = "";
+                        String countColorCode = "";
+                        if(itemNameMap.get(item.name.label + itemNameMod.label) > 1) {
+                            Line countLine = Utility.insertCommas(itemNameMap.get(item.name.label + itemNameMod.label));
+                            countString = " (" + countLine.label + ")";
+                            countColorCode = "2DR" + countLine.colorCode + "1DR";
+                        }
+                        else if(item.isQuantity) {
+                            Line countLine = Utility.insertCommas(item.quantity);
+                            countString = " (" + countLine.label + ")";
+                            countColorCode = "2DR" + countLine.colorCode + "1DR";
+                        }
+
+                        String itemNameLabel = item.prefix + item.name.label + itemNameMod.label + countString;
+                        String itemNameColorCode = String.valueOf(item.prefix.length()) + "CONT" + item.name.colorCode + itemNameMod.colorCode + countColorCode;
+                        Line itemLine = new Line(itemNameLabel, itemNameColorCode, "", isLastLine, true);
+                        GameScreen.userInterface.console.writeToConsole(itemLine);
+
+                        itemNameMap.remove(item.name.label + itemNameMod.label);
+                    }
+                }
+            }
+        }
+    }
+
     public static Item load(String itemType, int id, Location startLocation) {
         Item item = null;
 
@@ -88,6 +153,32 @@ public class Item extends Entity {
                 item.name = new Line("Gold", "4SHIAY", "", true, true);
                 item.weight = 0;
                 item.isQuantity = true;
+            }
+
+            // 004 - An Ornate Chest //
+            else if(id == 4) {
+                item.prefix = "An ";
+                item.name = new Line("Ornate Chest", "7SHIAY5SHIAO", "", true, true);
+                item.containerItemList = new ArrayList<>();
+            }
+
+            // 005 - A Weapon Cabinet //
+            else if(id == 5) {
+                item.name = new Line("Weapon Cabinet", "7SHIA7SHIAO", "", true, true);
+                item.containerItemList = new ArrayList<>();
+            }
+
+            // 006 - A Gun Cabinet //
+            else if(id == 6) {
+                item.name = new Line("Gun Cabinet", "4SHIA7SHIAO", "", true, true);
+                item.containerItemList = new ArrayList<>();
+            }
+
+            // 007 - Am Ammo Crate //
+            else if(id == 7) {
+                item.prefix = "An ";
+                item.name = new Line("Ammo Crate", "5CONT5SHIAG", "", true, true);
+                item.containerItemList = new ArrayList<>();
             }
 
             // Default Item //

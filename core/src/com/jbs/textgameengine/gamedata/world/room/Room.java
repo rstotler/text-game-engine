@@ -294,7 +294,7 @@ public class Room {
                             itemNameLabel = item.prefix + item.name.label + itemNameMod.label + item.roomDescription.label + countString;
                             itemNameColorCode = String.valueOf(item.prefix.length()) + "CONT" + item.name.colorCode + itemNameMod.colorCode + item.roomDescription.colorCode + countColorCode;
                         }
-                        Line itemLine = new Line(itemNameLabel, itemNameColorCode, item.name.effectCode, isLastLine, true);
+                        Line itemLine = new Line(itemNameLabel, itemNameColorCode, "", isLastLine, true);
                         GameScreen.userInterface.console.writeToConsole(itemLine);
 
                         itemNameMap.remove(item.name.label + itemNameMod.label);

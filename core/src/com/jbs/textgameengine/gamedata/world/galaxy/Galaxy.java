@@ -1,5 +1,6 @@
 package com.jbs.textgameengine.gamedata.world.galaxy;
 
+import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.area.Area;
 import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
@@ -60,11 +61,6 @@ public class Galaxy {
         Line cotuRoom00Name = new Line("Center Of The Universe", "7CONT3CONT4CONT8CONT", "", true, true);
         Location cotuRoom00Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom00 = new Room(cotuRoom00Name, null, cotuRoom00Location);
-        cotuRoom00.createEntity("Mob", "", 1);
-        cotuRoom00.createEntity("Mob", "", 1);
-        cotuRoom00.createEntity("Mob", "", 2);
-        cotuRoom00.createEntity("Item", "General", 1);
-        cotuRoom00.createEntity("Item", "General", 2);
         areaCOTU.roomList.add(cotuRoom00);
 
         // Room 01 - Standing On A Crystal Bridge //
@@ -72,10 +68,6 @@ public class Galaxy {
         Location cotuRoom01Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom01 = new Room(cotuRoom01Name, null, cotuRoom01Location);
         cotuRoom01.createExit("South", cotuRoom00);
-        cotuRoom01.createEntity("Mob", "", 1);
-        cotuRoom01.createEntity("Mob", "", 1);
-        cotuRoom01.createEntity("Mob", "", 2);
-        cotuRoom01.createEntity("Mob", "", 3);
         areaCOTU.roomList.add(cotuRoom01);
 
         // Room 02 - A Peaceful Garden //
@@ -83,10 +75,6 @@ public class Galaxy {
         Location cotuRoom02Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom02 = new Room(cotuRoom02Name, null, cotuRoom02Location);
         cotuRoom02.createExit("South", cotuRoom01);
-        cotuRoom02.createEntity("Mob", "", 2);
-        for(int i = 1; i <= 10; i++) {
-            cotuRoom02.createEntity("Item", "Weapon", i);
-        }
         areaCOTU.roomList.add(cotuRoom02);
 
         // Room 03 - In A Wooden Cabin //
@@ -94,10 +82,7 @@ public class Galaxy {
         Location cotuRoom03Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom03 = new Room(cotuRoom03Name, null, cotuRoom03Location);
         cotuRoom03.inside = true;
-        cotuRoom03.createExit("East", cotuRoom02, "Manual", 1234);
-        for(int i = 11; i <= 19; i++) {
-            cotuRoom03.createEntity("Item", "Weapon", i);
-        }
+        cotuRoom03.createExit("East", cotuRoom02, "Manual");
         areaCOTU.roomList.add(cotuRoom03);
 
         // Room 04 - Spaceport Entrance //
@@ -106,10 +91,6 @@ public class Galaxy {
         Room cotuRoom04 = new Room(cotuRoom04Name, null, cotuRoom04Location);
         cotuRoom04.inside = true;
         cotuRoom04.createExit("North", cotuRoom00, "Automatic", 1234);
-        cotuRoom04.createEntity("Mob", "", 1);
-        for(int i = 1; i <= 12; i++) {
-            cotuRoom04.createEntity("Item", "Gear", i);
-        }
         areaCOTU.roomList.add(cotuRoom04);
 
         // Room 05 - Bridge To The Spaceport //
@@ -124,8 +105,6 @@ public class Galaxy {
         Line cotuRoom06Name = new Line("Landing Pad", "8CONT3CONT", "", true, true);
         Location cotuRoom06Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom06 = new Room(cotuRoom06Name, null, cotuRoom06Location);
-        cotuRoom06.createExit("North", cotuRoom05);
-        cotuRoom06.createEntity("Spaceship", "", 1);
         cotuRoom06.createExit("North", cotuRoom05, "Automatic");
         areaCOTU.roomList.add(cotuRoom06);
         planetLapine.landingPadList.add(cotuRoom06);
@@ -137,7 +116,41 @@ public class Galaxy {
         cotuRoom07.createHiddenExit("West", cotuRoom02);
         areaCOTU.roomList.add(cotuRoom07);
 
+        loadDebugEntities(debugGalaxy);
+
         return debugGalaxy;
+    }
+
+    public static void loadDebugEntities(HashMap<String, Galaxy> debugGalaxy) {
+        Area areaCOTU = ((Planet) debugGalaxy.get("Cotton Tail Nebula").solarSystemMap.get("Lago Morpha").planetoidList.get(1)).areaMap.get("Center Of The Universe");
+        areaCOTU.roomList.get(0).createEntity("Mob", null, 1);
+        areaCOTU.roomList.get(0).createEntity("Item", "General", 1);
+
+        areaCOTU.roomList.get(6).createEntity("Spaceship", null, 1);
+        areaCOTU.roomList.get(6).createEntity("Item", "General", 2);
+
+        Room roomWoodenCabin = areaCOTU.roomList.get(3);
+        Item ornateChest = Item.load("General", 4, roomWoodenCabin.location);
+        ornateChest.status = "Open";
+        for(int i = 1; i <= 12; i ++) {
+            ornateChest.containerItemList.add(Item.load("Gear", i, roomWoodenCabin.location));
+        }
+        areaCOTU.roomList.get(3).addItemToRoom(ornateChest);
+
+        Item weaponCabinet = Item.load("General", 5, roomWoodenCabin.location);
+        weaponCabinet.status = "Open";
+        for(int i = 1; i <= 10; i++) {
+            weaponCabinet.containerItemList.add(Item.load("Weapon", i, roomWoodenCabin.location));
+        }
+        weaponCabinet.containerItemList.add(Item.load("Weapon", 19, roomWoodenCabin.location));
+        areaCOTU.roomList.get(3).addItemToRoom(weaponCabinet);
+
+        Item gunCabinet = Item.load("General", 6, roomWoodenCabin.location);
+        gunCabinet.status = "Open";
+        for(int i = 11; i <= 18; i++) {
+            gunCabinet.containerItemList.add(Item.load("Weapon", i, roomWoodenCabin.location));
+        }
+        areaCOTU.roomList.get(3).addItemToRoom(gunCabinet);
     }
 
     public static Room getRoom(String targetGalaxy, String targetSolarSystem, int planetoidIndex, String targetArea, int roomIndex) {

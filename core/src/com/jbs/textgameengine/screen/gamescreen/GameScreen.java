@@ -7,7 +7,6 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.jbs.textgameengine.Settings;
-import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.Move;
 import com.jbs.textgameengine.gamedata.entity.player.Player;
@@ -42,16 +41,10 @@ public class GameScreen extends Screen {
         Location startLocation = Galaxy.getRoom("Cotton Tail Nebula", "Lago Morpha", 1, "Center Of The Universe", 0).location;
         player = new Player(startLocation);
 
-        // Debug Data //
+        // Start Game Time At Noon //
         if(true) {
             player.location.planetoid.minuteCountDay = player.location.planetoid.minutesInDay / 2;
             player.location.planetoid.minuteCountYear = player.location.planetoid.minuteCountDay;
-
-            player.groupList.add((Mob) player.location.room.mobList.get(0));//
-            player.groupList.add((Mob) player.location.room.exitMap.get("North").mobList.get(1));//
-            player.targetList.add((Mob) player.location.room.exitMap.get("North").mobList.get(0));//
-            // player.targetList.add((Mob) player.location.room.exitMap.get("North").mobList.get(3));//
-            // player.targetList.add((Mob) player.location.room.exitMap.get("North").exitMap.get("North").mobList.get(0));//
         }
 
         ((Planet) (player.location.planetoid)).updateDayNightTimers();

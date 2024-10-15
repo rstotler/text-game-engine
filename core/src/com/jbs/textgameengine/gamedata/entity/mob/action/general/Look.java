@@ -206,13 +206,33 @@ public class Look extends Action {
             // Display Target Entity Look Description //
             else {
                 if(parentEntity.isPlayer) {
+                    String atInsideString = "at ";
+                    String itContainsString = "";
+                    String itContainsColorCode = "";
+                    if(targetEntity.isItem
+                    && ((Item) targetEntity).containerItemList != null
+                    && ((Item) targetEntity).status.equals("Open")) {
+                        atInsideString = "inside ";
+                        itContainsString = " It contains:";
+                        itContainsColorCode = "1W3CONT8CONT1DY";
+                    }
                     String directionString = "";
                     String directionColorCode = "";
                     if(!targetDirection.isEmpty()) {
                         directionString = " to the " + targetDirection.toLowerCase();
                         directionColorCode = "1W3CONT4CONT" + String.valueOf(targetDirection.length()) + "CONT";
                     }
-                    GameScreen.userInterface.console.writeToConsole(new Line("You look at " + targetEntity.prefix.toLowerCase() + targetEntity.name.label + directionString + ".", "4CONT5CONT3CONT" + String.valueOf(targetEntity.prefix.length()) + "CONT" + targetEntity.name.colorCode + directionColorCode + "1DY", "", false, true));
+
+                    String inContainerString = "";
+                    String inContainerColorCode = "";
+                    if(targetContainer != null) {
+                        inContainerString = " inside of " + targetContainer.prefix.toLowerCase() + targetContainer.name.label;
+                        inContainerColorCode = "1W7CONT3CONT" + String.valueOf(targetContainer.prefix.length()) + "CONT" + targetContainer.name.colorCode;
+                    }
+
+                    String prefixColorCode = String.valueOf(targetEntity.prefix.length()) + "CONT";
+                    if(targetEntity.isSpaceship) {prefixColorCode = "";}
+                    GameScreen.userInterface.console.writeToConsole(new Line("You look " + atInsideString + targetEntity.prefix.toLowerCase() + targetEntity.name.label + inContainerString + directionString + "." + itContainsString, "4CONT5CONT" + String.valueOf(atInsideString.length()) + "CONT" + prefixColorCode + targetEntity.name.colorCode + inContainerColorCode + directionColorCode + "1DY" + itContainsColorCode, "", false, true));
                 }
                 targetEntity.displayLookDescription();
             }

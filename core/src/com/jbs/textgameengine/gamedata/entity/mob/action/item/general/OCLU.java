@@ -177,11 +177,17 @@ public class OCLU extends Action {
             }
         }
 
-        // Message - You can't TargetAction that. (Mobs & Non-Container Items) //
-        else if(targetEntity.isMob
-        || (targetEntity.isItem
+        // Message - It doesn't TargetAction. (Non-Container Items & Containers Without A Lock) //
+        else if(targetEntity.isItem
         && (((Item) targetEntity).containerItemList == null
-        || (Arrays.asList("Lock", "Unlock").contains(actionType) && ((Item) targetEntity).keyNum == -9999)))) {
+        || (Arrays.asList("Lock", "Unlock").contains(actionType) && ((Item) targetEntity).keyNum == -9999))) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("It doesn't " + actionType.toLowerCase() + ".", "3CONT5CONT1DY2DDW" + String.valueOf(actionType.length()) + "CONT1DY", "", true, true));
+            }
+        }
+
+        // Message - You can't TargetAction that. (Mobs) //
+        else if(targetEntity.isMob) {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("You can't " + actionType.toLowerCase() + " that.", "4CONT3CONT1DY2DDW" + String.valueOf(actionType.length()) + "CONT1W4CONT1DY", "", true, true));
             }
@@ -274,8 +280,10 @@ public class OCLU extends Action {
                     actionColorCode = "6CONT4CONT5CONT";
                 }
 
+                String prefixColorCode = String.valueOf(targetEntity.prefix.length()) + "CONT";
+                if(targetEntity.isSpaceship) {prefixColorCode = "";}
                 String ocluString = "You " + actionString + targetEntity.prefix.toLowerCase() + targetEntity.name.label + ".";
-                String ocluColorCode = "4CONT" + actionColorCode + String.valueOf(targetEntity.prefix.length()) + "CONT" + targetEntity.name.colorCode + "1DY";
+                String ocluColorCode = "4CONT" + actionColorCode + prefixColorCode + targetEntity.name.colorCode + "1DY";
                 GameScreen.userInterface.console.writeToConsole(new Line(ocluString, ocluColorCode, "", true, true));
             }
 

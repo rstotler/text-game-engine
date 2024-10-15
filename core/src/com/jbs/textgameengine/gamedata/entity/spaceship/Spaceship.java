@@ -83,6 +83,7 @@ public class Spaceship extends Entity {
             spaceship.keyNum = 7777;
         }
 
+        spaceship.prefix = "";
         spaceship.nameKeyList = Entity.createNameKeyList(spaceship.name.label);
         spaceship.nameKeyList.add("spaceship");
         spaceship.nameKeyList.add("ship");
