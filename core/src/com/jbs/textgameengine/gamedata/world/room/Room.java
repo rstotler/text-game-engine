@@ -146,11 +146,14 @@ public class Room {
             // Mobs //
             if(!mobList.isEmpty()) {
                 HashMap<String, Integer> mobNameMap = new HashMap<>();
+                Mob lastLineMob = null;
+
                 for(Entity entity : mobList) {
                     Mob mob = (Mob) entity;
+                    Line mobNameMod = mob.getNameMod();
 
                     // Get Group/Target Display Mods //
-                    String targetLabel = mob.prefix + mob.name.label;
+                    String targetLabel = mob.prefix + mob.name.label + mobNameMod.label;
                     if(GameScreen.player.groupList.contains(mob)) {
                         targetLabel = "[+]" + targetLabel;
                     }
@@ -164,14 +167,16 @@ public class Room {
                     }
                     else {
                         mobNameMap.put(targetLabel, 1);
+                        lastLineMob = mob;
                     }
                 }
 
                 for(int i = 0; i < mobList.size(); i++) {
                     Mob mob = (Mob) mobList.get(i);
+                    Line mobNameMod = mob.getNameMod();
 
                     // Get Group/Target Display Mods //
-                    String targetLabel = mob.prefix + mob.name.label;
+                    String targetLabel = mob.prefix + mob.name.label + mobNameMod.label;
                     if(GameScreen.player.groupList.contains(mob)) {
                         targetLabel = "[+]" + targetLabel;
                     }
@@ -180,8 +185,9 @@ public class Room {
                     }
 
                     if(mobNameMap.containsKey(targetLabel)) {
-                        if(mobNameMap.size() == 1
-                        && spaceshipList.isEmpty() && itemList.isEmpty()) {
+                        if(spaceshipList.isEmpty()
+                        && itemList.isEmpty()
+                        && mob == lastLineMob) {
                             isLastLine = true;
                         }
 
@@ -214,8 +220,8 @@ public class Room {
                             groupTargetEffectCode = "3X";
                         }
 
-                        String mobNameLabel = groupTargetString + mob.prefix + mob.name.label + " " + mobRoomDescriptionLabel + countString;
-                        String mobNameColorCode = groupTargetColorCode + String.valueOf(mob.prefix.length()) + "W" + mob.name.colorCode + "1W" + mobRoomDescriptionColorCode + countColorCode;
+                        String mobNameLabel = groupTargetString + mob.prefix + mob.name.label + mobNameMod.label + " " + mobRoomDescriptionLabel + countString;
+                        String mobNameColorCode = groupTargetColorCode + String.valueOf(mob.prefix.length()) + "W" + mob.name.colorCode + mobNameMod.colorCode + "1W" + mobRoomDescriptionColorCode + countColorCode;
                         String mobNameEffectCode = groupTargetEffectCode + String.valueOf(mob.prefix.length()) + "X" + mob.name.effectCode;
 
                         Line mobLine = new Line(mobNameLabel, mobNameColorCode, mobNameEffectCode, isLastLine, true);
@@ -246,30 +252,33 @@ public class Room {
             // Items //
             if(!itemList.isEmpty()) {
                 HashMap<String, Integer> itemNameMap = new HashMap<>();
+                Item lastLineItem = null;
+
                 for(Entity entity : itemList) {
                     Item item = (Item) entity;
+                    Line itemNameMod = item.getNameMod();
 
-                    if(itemNameMap.containsKey(item.name.label)) {
-                        int currentCount = itemNameMap.get(item.name.label);
-                        itemNameMap.put(item.name.label, currentCount + 1);
+                    if(itemNameMap.containsKey(item.name.label + itemNameMod.label)) {
+                        int currentCount = itemNameMap.get(item.name.label + itemNameMod.label);
+                        itemNameMap.put(item.name.label + itemNameMod.label, currentCount + 1);
                     }
                     else {
-                        itemNameMap.put(item.name.label, 1);
+                        itemNameMap.put(item.name.label + itemNameMod.label, 1);
+                        lastLineItem = item;
                     }
                 }
 
                 for(int i = 0; i < itemList.size(); i++) {
                     Item item = (Item) itemList.get(i);
+                    Line itemNameMod = item.getNameMod();
 
-                    if(itemNameMap.containsKey(item.name.label)) {
-                        if(itemNameMap.size() == 1) {
-                            isLastLine = true;
-                        }
+                    if(itemNameMap.containsKey(item.name.label + itemNameMod.label)) {
+                        if(item == lastLineItem) {isLastLine = true;}
 
                         String countString = "";
                         String countColorCode = "";
-                        if(itemNameMap.get(item.name.label) > 1) {
-                            Line countLine = Utility.insertCommas(itemNameMap.get(item.name.label));
+                        if(itemNameMap.get(item.name.label + itemNameMod.label) > 1) {
+                            Line countLine = Utility.insertCommas(itemNameMap.get(item.name.label + itemNameMod.label));
                             countString = " (" + countLine.label + ")";
                             countColorCode = "2DR" + countLine.colorCode + "1DR";
                         }
@@ -279,16 +288,16 @@ public class Room {
                             countColorCode = "2DR" + countLine.colorCode + "1DR";
                         }
 
-                        String itemNameLabel = item.prefix + item.name.label + " is lying on the ground." + countString;
-                        String itemNameColorCode = String.valueOf(item.prefix.length()) + "CONT" + item.name.colorCode + "1W3CONT6CONT3CONT4CONT6CONT1DY" + countColorCode;
+                        String itemNameLabel = item.prefix + item.name.label + itemNameMod.label + " is lying on the ground." + countString;
+                        String itemNameColorCode = String.valueOf(item.prefix.length()) + "CONT" + item.name.colorCode + itemNameMod.colorCode + "1W3CONT6CONT3CONT4CONT6CONT1DY" + countColorCode;
                         if(item.roomDescription != null) {
-                            itemNameLabel = item.prefix + item.name.label + item.roomDescription.label + countString;
-                            itemNameColorCode = String.valueOf(item.prefix.length()) + "CONT" + item.name.colorCode + item.roomDescription.colorCode + countColorCode;
+                            itemNameLabel = item.prefix + item.name.label + itemNameMod.label + item.roomDescription.label + countString;
+                            itemNameColorCode = String.valueOf(item.prefix.length()) + "CONT" + item.name.colorCode + itemNameMod.colorCode + item.roomDescription.colorCode + countColorCode;
                         }
                         Line itemLine = new Line(itemNameLabel, itemNameColorCode, item.name.effectCode, isLastLine, true);
                         GameScreen.userInterface.console.writeToConsole(itemLine);
 
-                        itemNameMap.remove(item.name.label);
+                        itemNameMap.remove(item.name.label + itemNameMod.label);
                     }
                 }
             }
@@ -485,6 +494,14 @@ public class Room {
     public boolean isLit() {
         if(location.spaceship == null
         && location.planetoid != null) {
+
+            // Glowing Item Check //
+            for(Entity item : itemList) {
+                if(item.glowing) {
+                    return true;
+                }
+            }
+
             return location.planetoid.isDay();
         }
 

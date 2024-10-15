@@ -70,16 +70,14 @@ public class Inventory extends Action {
             Entity lastLineItem = null;
             for(int i = 0; i < parentEntity.inventory.get(actionType).size(); i++) {
                 Entity item = parentEntity.inventory.get(actionType).get(i);
+                Line itemNameMod = item.getNameMod();
 
-                if(itemLineMap.containsKey(item.name.label)) {
-                    int count = itemLineMap.get(item.name.label);
-                    itemLineMap.put(item.name.label, count + 1);
+                if(itemLineMap.containsKey(item.name.label + itemNameMod.label)) {
+                    int count = itemLineMap.get(item.name.label + itemNameMod.label);
+                    itemLineMap.put(item.name.label + itemNameMod.label, count + 1);
                 }
                 else {
-                    itemLineMap.put(item.name.label, 1);
-                }
-
-                if(i == parentEntity.inventory.get(actionType).size() - 1) {
+                    itemLineMap.put(item.name.label + itemNameMod.label, 1);
                     lastLineItem = item;
                 }
             }
@@ -91,19 +89,20 @@ public class Inventory extends Action {
             ArrayList<String> displayedLines = new ArrayList<>();
             for(Entity item : parentEntity.inventory.get(actionType)) {
                 inventoryItemCount += 1;
+                Line itemNameMod = item.getNameMod();
 
-                if(!displayedLines.contains(item.name.label)) {
-                    displayedLines.add(item.name.label);
+                if(!displayedLines.contains(item.name.label + itemNameMod.label)) {
+                    displayedLines.add(item.name.label + itemNameMod.label);
 
-                    if(item.name.label.equals(lastLineItem.name.label)) {
+                    if(item == lastLineItem) {
                         isLastLine = true;
                     }
 
                     String countString = "";
                     String countColorCode = "";
-                    if(itemLineMap.containsKey(item.name.label)
-                    && itemLineMap.get(item.name.label) > 1) {
-                        Line countLine = Utility.insertCommas(itemLineMap.get(item.name.label));
+                    if(itemLineMap.containsKey(item.name.label + itemNameMod.label)
+                    && itemLineMap.get(item.name.label + itemNameMod.label) > 1) {
+                        Line countLine = Utility.insertCommas(itemLineMap.get(item.name.label + itemNameMod.label));
                         countString = " (" + countLine.label + ")";
                         countColorCode = "2DR" + countLine.colorCode + "1DR";
                     }
@@ -112,8 +111,9 @@ public class Inventory extends Action {
                         countString = " (" + countLine.label + ")";
                         countColorCode = "2DR" + countLine.colorCode + "1DR";
                     }
-                    String itemString = item.prefix + item.name.label + countString;
-                    String itemColorCode = String.valueOf(item.prefix).length() + "CONT" + item.name.colorCode + countColorCode;
+
+                    String itemString = item.prefix + item.name.label + itemNameMod.label + countString;
+                    String itemColorCode = String.valueOf(item.prefix).length() + "CONT" + item.name.colorCode + itemNameMod.colorCode + countColorCode;
                     GameScreen.userInterface.console.writeToConsole(new Line(itemString, itemColorCode, "", isLastLine, true));
                 }
             }

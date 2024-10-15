@@ -20,6 +20,8 @@ public class Entity {
     public boolean isItem;
     public boolean isSpaceship;
 
+    public boolean glowing;
+
     public Entity(int id, Location startLocation) {
         this.id = id;
         this.location = new Location(startLocation.galaxy, startLocation.solarSystem, startLocation.planetoid, startLocation.area, startLocation.room, startLocation.spaceship);
@@ -32,6 +34,19 @@ public class Entity {
         isMob = false;
         isItem = false;
         isSpaceship = false;
+
+        glowing = false;
+    }
+
+    public Line getNameMod() {
+        String nameModString = "";
+        String nameModColorCode = "";
+        if(glowing) {
+            nameModString = " (Glowing)";
+            nameModColorCode = "2DR7CONT1DR";
+        }
+        Line nameModLine = new Line(nameModString, nameModColorCode, "", true, true);
+        return nameModLine;
     }
 
     public void displayLookDescription() {

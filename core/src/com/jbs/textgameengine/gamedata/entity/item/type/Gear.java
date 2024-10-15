@@ -77,6 +77,7 @@ public class Gear extends Item {
         else if(id == 9) {
             gearItem.name = new Line("Gold Ring", "5SHIAY4SHIAY", "", true, true);
             gearItem.gearSlot = "Ring";
+            gearItem.glowing = true;
         }
 
         // 010 - A pair of Iron Greaves //
