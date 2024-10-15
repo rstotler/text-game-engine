@@ -52,8 +52,7 @@ public class Move extends Action {
     }
 
     public void initiate() {
-        if(actionType.equals("Direction #")) {
-        }
+        if(actionType.equals("Direction #")) {}
 
         else if(actionType.equals("Direction")) {
             Room parentRoom = parentEntity.location.room;

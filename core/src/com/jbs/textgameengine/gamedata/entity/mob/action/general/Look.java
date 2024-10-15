@@ -1,5 +1,7 @@
 package com.jbs.textgameengine.gamedata.entity.mob.action.general;
 
+import com.jbs.textgameengine.gamedata.entity.Entity;
+import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.world.Location;
@@ -47,22 +49,22 @@ public class Look extends Action {
                 lookAction.actionType = "Look Direction #";
             }
 
-            // Look Direction # Entity //
-            else if(inputList.size() >= 4 && Location.directionList.contains(inputList.get(1)) && Utility.isInteger(inputList.get(2))) {
-                lookAction.targetDirection = Location.getDirectionFromSubstring(inputList.get(1));
-                lookAction.targetDirectionCount = Integer.valueOf(inputList.get(2));
-                List<String> targetEntityStringList = inputList.subList(3, inputList.size());
+            // Look Entity Direction # //
+            else if(inputList.size() >= 4 && Location.directionList.contains(inputList.get(inputList.size() - 2)) && Utility.isInteger(inputList.get(inputList.size() - 1))) {
+                lookAction.targetDirection = Location.getDirectionFromSubstring(inputList.get(inputList.size() - 2));
+                lookAction.targetDirectionCount = Integer.valueOf(inputList.get(inputList.size() - 1));
+                List<String> targetEntityStringList = inputList.subList(1, inputList.size() - 2);
                 lookAction.targetEntityString = targetEntityStringList.stream().collect(Collectors.joining(" "));
-                lookAction.actionType = "Look Direction # Entity";
+                lookAction.actionType = "Look Entity Direction #";
             }
 
-            // Look Direction Entity //
-            else if(inputList.size() >= 3 && Location.directionList.contains(inputList.get(1))) {
-                lookAction.targetDirection = Location.getDirectionFromSubstring(inputList.get(1));
+            // Look Entity Direction //
+            else if(inputList.size() >= 3 && Location.directionList.contains(inputList.get(inputList.size() - 1))) {
+                lookAction.targetDirection = Location.getDirectionFromSubstring(inputList.get(inputList.size() - 1));
                 lookAction.targetDirectionCount = 1;
-                List<String> targetEntityStringList = inputList.subList(2, inputList.size());
+                List<String> targetEntityStringList = inputList.subList(1, inputList.size() - 1);
                 lookAction.targetEntityString = targetEntityStringList.stream().collect(Collectors.joining(" "));
-                lookAction.actionType = "Look Direction Entity";
+                lookAction.actionType = "Look Entity Direction";
             }
 
             // Look Entity In Container //
@@ -105,9 +107,11 @@ public class Look extends Action {
 
     public void initiate() {
         Room targetRoom = parentEntity.location.room;
+        Entity targetEntity = null;
+        Entity targetContainer = null;
 
-        // Get Target Room //
-        if(actionType.startsWith("Look Direction")) {
+        // Get Target Room And Target Entity Data //
+        if(actionType.startsWith("Look Direction") || actionType.startsWith("Look Entity Direction")) {
             ArrayList<String> directionList = new ArrayList<>();
             for(int i = 0; i < targetDirectionCount; i++) {directionList.add(targetDirection);}
             TargetRoomData targetRoomData = TargetRoomData.getTargetRoomFromStartRoom(targetRoom, directionList, false, false);
@@ -139,19 +143,79 @@ public class Look extends Action {
             }
         }
 
+        // Look At TargetEntity In Room/Gear/Inv //
+        if(targetContainerString.isEmpty()) {
+            targetEntity = targetRoom.getEntityFromNameKey(targetEntityString, null);
+            if(targetEntity == null) {targetEntity = parentEntity.getItemFromInventory(targetEntityString);}
+            if(targetEntity == null) {targetEntity = parentEntity.getItemFromGear(targetEntityString);}
+        }
+
+        // Look At TargetEntity In TargetContainer //
+        else {
+            targetContainer = targetRoom.getEntityFromNameKey(targetContainerString, "Item");
+            if(targetContainer == null) {targetContainer = parentEntity.getItemFromInventory(targetContainerString);}
+            if(targetContainer == null) {targetContainer = parentEntity.getItemFromGear(targetContainerString);}
+
+            if(targetContainer != null
+            && targetContainer.isItem
+            && ((Item) targetContainer).containerItemList != null) {
+                for(Item item : ((Item) targetContainer).containerItemList) {
+                    if(item.nameKeyList.contains(targetEntityString)) {
+                        targetEntity = item;
+                        break;
+                    }
+                }
+            }
+        }
+
         // Display Room //
         if(actionType.equals("Look")
         || actionType.equals("Look Direction")
         || actionType.equals("Look Direction #")) {
+            if(!targetDirection.isEmpty()) {
+                if(parentEntity.isPlayer) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("You look " + targetDirection.toLowerCase() + ".", "4CONT5CONT" + String.valueOf(targetDirection.length()) + "CONT1DY", "", true, true));
+                }
+            }
+
             targetRoom.display();
         }
 
         // OR Display Target Entity Description //
-        else if(actionType.equals("Look Direction # Entity")
-        || actionType.equals("Look Direction Entity")
+        else if(actionType.equals("Look Entity Direction #")
+        || actionType.equals("Look Entity Direction")
         || actionType.equals("Look Entity In Container")
         || actionType.equals("Look Entity")
         || actionType.equals("Look Target")) {
+
+            // Message - That isn't a container. //
+            if(targetContainer != null
+            && !(targetContainer.isItem && ((Item) targetContainer).containerItemList != null)) {
+                if(parentEntity.isPlayer) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("That isn't a container.", "5CONT3CONT1DY2DDW2W9CONT1DY", "", true, true));
+                }
+            }
+
+            // Message - You don't see it. //
+            else if(targetEntity == null) {
+                if(parentEntity.isPlayer) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("You don't see it.", "4CONT3CONT1DY2DDW4CONT2CONT1DY", "", true, true));
+                }
+            }
+
+            // Display Target Entity Look Description //
+            else {
+                if(parentEntity.isPlayer) {
+                    String directionString = "";
+                    String directionColorCode = "";
+                    if(!targetDirection.isEmpty()) {
+                        directionString = " to the " + targetDirection.toLowerCase();
+                        directionColorCode = "1W3CONT4CONT" + String.valueOf(targetDirection.length()) + "CONT";
+                    }
+                    GameScreen.userInterface.console.writeToConsole(new Line("You look at " + targetEntity.prefix.toLowerCase() + targetEntity.name.label + directionString + ".", "4CONT5CONT3CONT" + String.valueOf(targetEntity.prefix.length()) + "CONT" + targetEntity.name.colorCode + directionColorCode + "1DY", "", false, true));
+                }
+                targetEntity.displayLookDescription();
+            }
         }
     }
 }

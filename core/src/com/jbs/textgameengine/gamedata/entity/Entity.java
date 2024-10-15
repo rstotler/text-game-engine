@@ -1,6 +1,7 @@
 package com.jbs.textgameengine.gamedata.entity;
 
 import com.jbs.textgameengine.gamedata.world.Location;
+import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
 import java.util.*;
@@ -31,6 +32,10 @@ public class Entity {
         isMob = false;
         isItem = false;
         isSpaceship = false;
+    }
+
+    public void displayLookDescription() {
+        GameScreen.userInterface.console.writeToConsole(new Line("You see nothing special.", "4CONT4CONT8CONT7CONT1DY", "", true, true));
     }
 
     public static ArrayList<String> createNameKeyList(String targetString) {
