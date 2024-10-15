@@ -455,7 +455,10 @@ public class Room {
 
     public Entity getEntityFromNameKey(String key, String entityType) {
         ArrayList<String> listsToSearch = new ArrayList<>();
-        listsToSearch.add(entityType);
+        if(entityType != null && !entityType.isEmpty()) {
+            listsToSearch.add(entityType);
+        }
+
         if(!listsToSearch.contains("Mob")) {listsToSearch.add("Mob");}
         if(!listsToSearch.contains("Spaceship")) {listsToSearch.add("Spaceship");}
         if(!listsToSearch.contains("Item")) {listsToSearch.add("Item");}
@@ -466,10 +469,12 @@ public class Room {
             else if(listType.equals("Spaceship")) {targetEntityList = spaceshipList;}
             else if(listType.equals("Item")) {targetEntityList = itemList;}
 
-            for(Entity entity : targetEntityList) {
-                if(key.equals("ANY")
-                || entity.nameKeyList.contains(key)) {
-                    return entity;
+            if(targetEntityList != null) {
+                for(Entity entity : targetEntityList) {
+                    if(key.equals("ANY")
+                    || entity.nameKeyList.contains(key)) {
+                        return entity;
+                    }
                 }
             }
         }

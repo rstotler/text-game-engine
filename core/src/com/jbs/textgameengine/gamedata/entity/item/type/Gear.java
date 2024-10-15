@@ -4,6 +4,8 @@ import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
+import java.util.ArrayList;
+
 public class Gear extends Item {
     public String gearSlot;
 
@@ -97,6 +99,7 @@ public class Gear extends Item {
         else if(id == 12) {
             gearItem.name = new Line("Backpack", "8SHIAO", "", true, true);
             gearItem.gearSlot = "About";
+            gearItem.containerItemList = new ArrayList<>();
         }
 
         // Default Item //

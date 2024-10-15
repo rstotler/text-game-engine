@@ -1,9 +1,11 @@
 package com.jbs.textgameengine.gamedata.entity.mob.action.item.general;
 
+import com.jbs.textgameengine.gamedata.entity.Entity;
+import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
+import com.jbs.textgameengine.gamedata.entity.spaceship.Spaceship;
 import com.jbs.textgameengine.gamedata.world.Location;
-import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.gamedata.world.room.door.Door;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
@@ -100,8 +102,8 @@ public class OCLU extends Action {
         // Message - It's already TargetAction. //
         else if((actionType.equals("Open") && targetDoor.status.equals("Open"))
         || (actionType.equals("Close") && targetDoor.status.equals("Closed"))
-        || (actionType.equals("Lock") && targetDoor.status.equals("Locked"))
         || (actionType.equals("Close") && targetDoor.status.equals("Locked"))
+        || (actionType.equals("Lock") && targetDoor.status.equals("Locked"))
         || (actionType.equals("Unlock") && targetDoor.status.equals("Open"))
         || (actionType.equals("Unlock") && targetDoor.status.equals("Closed"))) {
             if(parentEntity.isPlayer) {
@@ -160,37 +162,131 @@ public class OCLU extends Action {
     }
 
     public void initiateOCLUEntity() {
+        // Initiate OCLU Action Is At BOTTOM Of Function //
+        Entity targetEntity = null;
 
-        // Open/Close/Lock/Unlock Entity //
+        // Get Target Entity Data //
+        targetEntity = parentEntity.location.room.getEntityFromNameKey(targetEntityString, "Item");
+        if(targetEntity == null) {targetEntity = parentEntity.getItemFromInventory(targetEntityString);}
+        if(targetEntity == null) {targetEntity = parentEntity.getItemFromGear(targetEntityString);}
 
         // Message - You can't find it. //
-//        if() {
-//
-//        }
-//
-//        // Message - You can't TargetAction that. //
-//        else if() {
-//
-//        }
-//
-//        // Message - It's already TargetAction. //
-//        else if() {
-//
-//        }
-//
-//        // Message - It's locked. //
-//        else if() {
-//
-//        }
-//
-//        // Message - You lack the key. //
-//        else if() {
-//
-//        }
-//
-//        // Message - You TargetAction TargetContainer. //
-//        else if() {
-//
-//        }
+        if(targetEntity == null) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("You can't find it.", "4CONT3CONT1DY2DDW5CONT2CONT1DY", "", true, true));
+            }
+        }
+
+        // Message - You can't TargetAction that. (Mobs & Non-Container Items) //
+        else if(targetEntity.isMob
+        || (targetEntity.isItem
+        && (((Item) targetEntity).containerItemList == null
+        || (Arrays.asList("Lock", "Unlock").contains(actionType) && ((Item) targetEntity).keyNum == -9999)))) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("You can't " + actionType.toLowerCase() + " that.", "4CONT3CONT1DY2DDW" + String.valueOf(actionType.length()) + "CONT1W4CONT1DY", "", true, true));
+            }
+        }
+
+        // Message - The ship's door opens/closes automatically. //
+        else if(targetEntity.isSpaceship
+        && Arrays.asList("Open", "Close").contains(actionType)) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("The ship's door " + actionType.toLowerCase() + "s automatically.", "4CONT4CONT1DY2DDW5CONT" + String.valueOf(actionType.length() + 1) + "CONT1W13CONT1DY", "", true, true));
+            }
+        }
+
+        // Message - The ship's door doesn't have a lock. //
+        else if(targetEntity.isSpaceship
+        && Arrays.asList("Lock", "Unlock").contains(actionType)
+        && ((Spaceship) targetEntity).keyNum == -9999) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("The ship's door doesn't have a lock.", "4CONT4CONT1DY2DDW5CONT5CONT1DY2DDW5CONT2W4CONT1DY", "", true, true));
+            }
+        }
+
+        // Message - It's already TargetAction. (Spaceship) //
+        else if(targetEntity.isSpaceship
+        && ((Spaceship) targetEntity).keyNum != -9999
+        && ((actionType.equals("Lock") && ((Spaceship) targetEntity).hatchStatus.equals("Locked"))
+        || (actionType.equals("Unlock") && ((Spaceship) targetEntity).hatchStatus.equals("Closed")))) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("It's already " + actionType.toLowerCase() + "ed.", "2CONT1DY2DDW8CONT" + String.valueOf(actionType.length() + 2) + "CONT1DY", "", true, true));
+            }
+        }
+
+        // Message - It's already TargetAction. (Container) //
+        else if(targetEntity.isItem
+        && ((actionType.equals("Open") && ((Item) targetEntity).status.equals("Open"))
+        || (actionType.equals("Close") && ((Item) targetEntity).status.equals("Closed"))
+        || (actionType.equals("Close") && ((Item) targetEntity).status.equals("Locked"))
+        || (actionType.equals("Lock") && ((Item) targetEntity).status.equals("Locked"))
+        || (actionType.equals("Unlock") && ((Item) targetEntity).status.equals("Open"))
+        || (actionType.equals("Unlock") && ((Item) targetEntity).status.equals("Closed")))) {
+            if(parentEntity.isPlayer) {
+                String actionTypeString = actionType.toLowerCase();
+                if(actionType.equals("Close")) {actionTypeString = actionTypeString + "d";}
+                else if(!actionType.equals("Open")) {actionTypeString = actionTypeString + "ed";}
+                GameScreen.userInterface.console.writeToConsole(new Line("It's already " + actionTypeString + ".", "2CONT1DY2DDW8CONT" + String.valueOf(actionTypeString.length()) + "CONT1DY", "", true, true));
+            }
+        }
+
+        // Message - You lack the key. //
+        else if((targetEntity.isSpaceship
+        && ((actionType.equals("Lock") && ((Spaceship) targetEntity).keyNum != -9999) || (actionType.equals("Unlock") && ((Spaceship) targetEntity).hatchStatus.equals("Locked")))
+        && !parentEntity.hasKey(((Spaceship) targetEntity).keyNum))
+        || (targetEntity.isItem
+        && ((actionType.equals("Lock") && ((Item) targetEntity).keyNum != -9999) || (actionType.equals("Unlock") && ((Item) targetEntity).status.equals("Locked")))
+        && !parentEntity.hasKey(((Item) targetEntity).keyNum))) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("You lack the key.", "4CONT5CONT4CONT3CONT1DY", "", true, true));
+            }
+        }
+
+        // Message - It's locked. //
+        else if((targetEntity.isSpaceship
+        && ((Spaceship) targetEntity).hatchStatus.equals("Locked")
+        && (actionType.equals("Open") || actionType.equals("Unlock"))
+        && !parentEntity.hasKey(((Spaceship) targetEntity).keyNum))
+        || (targetEntity.isItem
+        && ((Item) targetEntity).status.equals("Locked")
+        && (actionType.equals("Open") || actionType.equals("Unlock"))
+        && !parentEntity.hasKey(((Item) targetEntity).keyNum))) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("It's locked.", "2CONT1DY2DDW6CONT1DY", "", true, true));
+            }
+        }
+
+        // Initiate Action & Message - You TargetAction TargetContainer. //
+        else {
+            if(parentEntity.isPlayer) {
+                String actionString = actionType.toLowerCase() + " ";
+                String actionColorCode = String.valueOf(actionType.length() + 1) + "CONT";
+                if(actionType.equals("Open")
+                && ((targetEntity.isSpaceship && ((Spaceship) targetEntity).hatchStatus.equals("Locked"))
+                || (targetEntity.isItem && ((Item) targetEntity).status.equals("Locked")))) {
+                    actionString = "unlock and open ";
+                    actionColorCode = "7CONT4CONT5CONT";
+                }
+                else if(actionType.equals("Lock")
+                && ((targetEntity.isSpaceship && ((Spaceship) targetEntity).hatchStatus.equals("Open"))
+                || (targetEntity.isItem && ((Item) targetEntity).status.equals("Open")))) {
+                    actionString = "close and lock ";
+                    actionColorCode = "6CONT4CONT5CONT";
+                }
+
+                String ocluString = "You " + actionString + targetEntity.prefix.toLowerCase() + targetEntity.name.label + ".";
+                String ocluColorCode = "4CONT" + actionColorCode + String.valueOf(targetEntity.prefix.length()) + "CONT" + targetEntity.name.colorCode + "1DY";
+                GameScreen.userInterface.console.writeToConsole(new Line(ocluString, ocluColorCode, "", true, true));
+            }
+
+            // Set New Container Status //
+            String newDoorStatus = actionType;
+            if(newDoorStatus.equals("Close")) {newDoorStatus = "Closed";}
+            else if(newDoorStatus.equals("Lock")) {newDoorStatus = "Locked";}
+            else if(newDoorStatus.equals("Unlock")) {newDoorStatus = "Closed";}
+
+            if(targetEntity.isSpaceship) {((Spaceship) targetEntity).hatchStatus = newDoorStatus;}
+            else if(targetEntity.isItem) {((Item) targetEntity).status = newDoorStatus;}
+        }
     }
 }
