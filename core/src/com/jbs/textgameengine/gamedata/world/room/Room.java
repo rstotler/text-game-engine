@@ -331,7 +331,8 @@ public class Room {
 
             if(exitMap.containsKey(direction)
             && exitMap.get(direction) != null
-            && exitMap.get(direction).isLit()) {
+            && exitMap.get(direction).isLit()
+            && !(doorMap.containsKey(direction) && doorMap.get(direction) != null && Arrays.asList("Closed", "Locked").contains(doorMap.get(direction).status))) {
                 exitName = exitMap.get(direction).name.label;
                 exitNameColorCode = exitMap.get(direction).name.colorCode;
             }

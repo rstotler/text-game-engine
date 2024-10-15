@@ -50,14 +50,22 @@ public class Equipment extends Action {
                 }
 
                 if(parentEntity.gear.get(gearSlot) != null) {
-                    if(gearSlot.length() > longestSlotSize) {
-                        longestSlotSize = gearSlot.length();
+                    int gearSlotLength = gearSlot.length();
+                    if(gearSlot.startsWith("Ring")) {
+                        gearSlotLength = 6; // Finger
+                    }
+                    else if(gearSlot.startsWith("Neck")) {
+                        gearSlotLength = 4;
+                    }
+                    else if(gearSlot.equals("Main Hand")
+                    && parentEntity.gear.get("Main Hand") != null
+                    && (((Weapon) parentEntity.gear.get("Main Hand")).noDualWield
+                    || (((Weapon) parentEntity.gear.get("Main Hand")).twoHanded && !parentEntity.canDualWield()))) {
+                        gearSlotLength = "Hands".length();
+                    }
 
-                        if(parentEntity.gear.get("Main Hand") != null
-                        && (((Weapon) parentEntity.gear.get("Main Hand")).noDualWield
-                        || (((Weapon) parentEntity.gear.get("Main Hand")).twoHanded && !parentEntity.canDualWield()))) {
-                            longestSlotSize = "Both Hands".length();
-                        }
+                    if(gearSlotLength > longestSlotSize) {
+                        longestSlotSize = gearSlotLength;
                     }
                     lastLineSlot = gearSlot;
                     if(nakedCheck) {nakedCheck = false;}
@@ -70,13 +78,14 @@ public class Equipment extends Action {
         }
 
         boolean isLastLine = false;
-        ArrayList<String> gearSlotList = new ArrayList<>(parentEntity.gear.keySet());
         for(int i = 0; i < Mob.gearSlotList.size(); i++) {
             String gearSlot = Mob.gearSlotList.get(i);
             int slotCount = 1;
             if(Arrays.asList("Neck", "Ring").contains(gearSlot)) {slotCount = 2;}
 
             for(int slotIndex = 0; slotIndex < slotCount; slotIndex++) {
+                gearSlot = Mob.gearSlotList.get(i);
+
                 if(gearSlot.startsWith("Neck") || gearSlot.startsWith("Ring")) {
                     gearSlot = gearSlot.substring(0, 4) + " " + String.valueOf(slotIndex + 1);
                 }
@@ -88,18 +97,24 @@ public class Equipment extends Action {
 
                 if(parentEntity.gear.containsKey(gearSlot)
                 && parentEntity.gear.get(gearSlot) != null) {
-                    String gearItemString = parentEntity.gear.get(gearSlot).prefix + parentEntity.gear.get(gearSlot).name.label;
-                    String gearItemColorCode = String.valueOf(parentEntity.gear.get(gearSlot).prefix.length()) + "CONT" + parentEntity.gear.get(gearSlot).name.colorCode;
+                    Line gearNameMod = parentEntity.gear.get(gearSlot).getNameMod();
+                    String gearItemString = parentEntity.gear.get(gearSlot).prefix + parentEntity.gear.get(gearSlot).name.label + gearNameMod.label;
+                    String gearItemColorCode = String.valueOf(parentEntity.gear.get(gearSlot).prefix.length()) + "CONT" + parentEntity.gear.get(gearSlot).name.colorCode + gearNameMod.colorCode;
 
                     String spaceString = "";
-                    if(parentEntity.gear.get("Main Hand") != null
+                    if(gearSlot.equals("Main Hand")
+                    && parentEntity.gear.get("Main Hand") != null
                     && (((Weapon) parentEntity.gear.get("Main Hand")).noDualWield
                     || (((Weapon) parentEntity.gear.get("Main Hand")).twoHanded && !parentEntity.canDualWield()))) {
-                        gearSlot = "Both Hands";
+                        gearSlot = "Hands";
                     }
+                    if(gearSlot.startsWith("Ring")) {gearSlot = "Finger";}
+                    else if(gearSlot.startsWith("Neck")) {gearSlot = "Neck";}
+
                     if(gearSlot.length() < longestSlotSize) {
                         for(int ii = 0; ii < longestSlotSize - gearSlot.length(); ii++) {spaceString += " ";}
                     }
+
                     String gearSlotString = spaceString + "[" + gearSlot + "] - " + gearItemString;
                     String gearSlotColorCode = String.valueOf(spaceString.length()) + "W1DR" + String.valueOf(gearSlot).length() + "CONT1DR3DY" + gearItemColorCode;
                     userInterface.console.writeToConsole(new Line(gearSlotString, gearSlotColorCode, "", isLastLine, true));
