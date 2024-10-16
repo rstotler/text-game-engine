@@ -3,6 +3,8 @@ package com.jbs.textgameengine.gamedata.entity.item;
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.type.Gear;
 import com.jbs.textgameengine.gamedata.entity.item.type.ammo.Ammo;
+import com.jbs.textgameengine.gamedata.entity.item.type.weapon.Firearm;
+import com.jbs.textgameengine.gamedata.entity.item.type.weapon.Throwable;
 import com.jbs.textgameengine.gamedata.entity.item.type.weapon.Weapon;
 import com.jbs.textgameengine.gamedata.entity.item.type.ammo.Magazine;
 import com.jbs.textgameengine.gamedata.entity.item.type.ammo.Quiver;
@@ -136,6 +138,8 @@ public class Item extends Entity {
 
         if(itemType.equals("Gear")) {item = Gear.load(id, startLocation);}
         else if(itemType.equals("Weapon")) {item = Weapon.load(id, startLocation);}
+        else if(itemType.equals("Firearm")) {item = Firearm.load(id, startLocation);}
+        else if(itemType.equals("Throwable")) {item = Throwable.load(id, startLocation);}
         else if(itemType.equals("Ammo")) {item = Ammo.load(id, startLocation);}
         else if(itemType.equals("Quiver")) {item = Quiver.load(id, startLocation);}
         else if(itemType.equals("Magazine")) {item = Magazine.load(id, startLocation);}

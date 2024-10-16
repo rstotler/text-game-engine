@@ -103,7 +103,7 @@ public class Gear extends Item {
             gearItem.containerItemList = new ArrayList<>();
         }
 
-        // Default Item //
+        // Default Gear Item //
         else {
             gearItem.name = new Line("Default Gear Item", "8CONT5CONT4CONT", "", true, true);
         }

@@ -15,20 +15,20 @@ public class Quiver extends Item {
     }
 
     public static Quiver load(int id, Location startLocation) {
-        Quiver ammoItem = new Quiver(id, startLocation);
+        Quiver quiverItem = new Quiver(id, startLocation);
 
         // 001 - A Quiver //
         if(id == 1) {
-            ammoItem.name = new Line("A Quiver", "2W6CONT", "", true, true);
-            ammoItem.containerItemList = new ArrayList<>();
-            ammoItem.containerItemTypeList = new ArrayList<>(Arrays.asList("Arrow", "Bolt"));
+            quiverItem.name = new Line("Quiver", "6CONT", "", true, true);
+            quiverItem.containerItemList = new ArrayList<>();
+            quiverItem.containerItemTypeList = new ArrayList<>(Arrays.asList("Arrow", "Bolt"));
         }
 
-        // Default Item //
+        // Default Quiver Item //
         else {
-            ammoItem.name = new Line("Default Ammo Item", "8CONT5CONT4CONT", "", true, true);
+            quiverItem.name = new Line("Default Quiver Item", "8CONT&CONT4CONT", "", true, true);
         }
 
-        return ammoItem;
+        return quiverItem;
     }
 }

@@ -68,7 +68,7 @@ public class Ammo extends Item {
             ammoItem.isQuantity = true;
         }
 
-        // Default Item //
+        // Default Ammo Item //
         else {
             ammoItem.name = new Line("Default Ammo Item", "8CONT5CONT4CONT", "", true, true);
         }
