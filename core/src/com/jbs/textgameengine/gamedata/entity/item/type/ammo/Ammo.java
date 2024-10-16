@@ -42,29 +42,57 @@ public class Ammo extends Item {
             ammoItem.isQuantity = true;
         }
 
-        // 004 - A .45 Round //
+        // 004 - A 9mm HP Round //
         else if(id == 4) {
+            ammoItem.name = new Line("9mm HP Round", "4CONT3CONT5CONT", "", true, true);
+            ammoItem.ammoType = "9mm";
+            ammoItem.isQuantity = true;
+        }
+
+        // 005 - A .45 Round //
+        else if(id == 5) {
             ammoItem.name = new Line(".45 Round", "1DY1W1W1W5CONT", "", true, true);
             ammoItem.ammoType = ".45";
             ammoItem.isQuantity = true;
         }
 
-        // 005 - A 5.56 Round //
-        else if(id == 5) {
+        // 006 - A .45 HP Round //
+        else if(id == 6) {
+            ammoItem.name = new Line(".45 HP Round", "1DY1W1W1W3CONT5CONT", "", true, true);
+            ammoItem.ammoType = ".45";
+            ammoItem.isQuantity = true;
+        }
+
+        // 007 - A 5.56 Round //
+        else if(id == 7) {
             ammoItem.name = new Line("5.56 Round", "1W1DY1W1W1W5CONT", "", true, true);
             ammoItem.ammoType = "5.56";
             ammoItem.isQuantity = true;
         }
 
-        // 006 - A 12-Gauge Slug //
-        else if(id == 6) {
+        // 008 - A 5.56 HP Round //
+        else if(id == 8) {
+            ammoItem.name = new Line("5.56 HP Round", "1W1DY1W1W1W3CONT5CONT", "", true, true);
+            ammoItem.ammoType = "5.56";
+            ammoItem.isQuantity = true;
+        }
+
+        // 009 - A 12-Gauge Shell //
+        else if(id == 9) {
+            ammoItem.name = new Line("12-Gauge Shell", "2W1DY6CONT5CONT", "", true, true);
+            ammoItem.ammoType = "12-Gauge";
+            ammoItem.isQuantity = true;
+        }
+
+        // 010 - A 12-Gauge Slug //
+        else if(id == 10) {
             ammoItem.name = new Line("12-Gauge Slug", "2W1DY6CONT4CONT", "", true, true);
             ammoItem.ammoType = "12-Gauge";
             ammoItem.isQuantity = true;
         }
 
-        // 007 - A Rocket-Propelled Missile //
-        else if(id == 7) {
+        // 011 - A Rocket-Propelled Missile //
+        else if(id == 11) {
             ammoItem.name = new Line("Rocket-Propelled Missile", "6CONT1DY10CONT7CONT", "", true, true);
             ammoItem.ammoType = "Rocket";
             ammoItem.isQuantity = true;

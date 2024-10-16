@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Snipe extends Skill {
     public Snipe() {
-        super(new Line("", "", "", true, true));
+        super(new Line("Snipe", "5CONT", "", true, true));
 
         nameKeyList = new ArrayList<>(Arrays.asList("snipe", "snip", "sni", "sn"));
     }

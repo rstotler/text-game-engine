@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Slash extends Skill {
     public Slash() {
-        super(new Line("", "", "", true, true));
+        super(new Line("Slash", "5CONT", "", true, true));
 
         nameKeyList = new ArrayList<>(Arrays.asList("slash", "slas", "sla", "sl"));
     }

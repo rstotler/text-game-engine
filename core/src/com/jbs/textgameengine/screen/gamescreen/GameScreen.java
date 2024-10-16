@@ -60,6 +60,13 @@ public class GameScreen extends Screen {
     public void initInputProcessor() {
         Gdx.input.setInputProcessor(new InputAdapter() {
 
+            // Mouse Input - Scroll Console //
+            @Override
+            public boolean scrolled(float amountX, float amountY) {
+                userInterface.console.scroll((int) amountY * -1);
+                return false;
+            }
+
             // Keyboard Input //
             @Override
             public boolean keyDown(int keyCode) {

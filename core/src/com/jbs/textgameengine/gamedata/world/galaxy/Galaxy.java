@@ -156,8 +156,10 @@ public class Galaxy {
 
         Item ammoCrate = Item.load("General", 7, roomWoodenCabin.location);
         ammoCrate.status = "Open";
-        for(int i = 1; i <= 7; i++) {
-            ammoCrate.containerItemList.add(Item.load("Ammo", i, roomWoodenCabin.location, 100));
+        for(int i = 1; i <= 11; i++) {
+            int ammoQuantity = 50;
+            if(i == 11) {ammoQuantity = 25;}
+            ammoCrate.containerItemList.add(Item.load("Ammo", i, roomWoodenCabin.location, ammoQuantity));
         }
         areaCOTU.roomList.get(3).addItemToRoom(ammoCrate);
     }

@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Stab extends Skill {
     public Stab() {
-        super(new Line("", "", "", true, true));
+        super(new Line("Stab", "4CONT", "", true, true));
 
         nameKeyList = new ArrayList<>(Arrays.asList("stab", "sta", "st"));
     }

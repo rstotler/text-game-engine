@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Kick extends Skill {
     public Kick() {
-        super(new Line("", "", "", true, true));
+        super(new Line("Kick", "4CONT", "", true, true));
 
         nameKeyList = new ArrayList<>(Arrays.asList("kick", "kic"));
     }

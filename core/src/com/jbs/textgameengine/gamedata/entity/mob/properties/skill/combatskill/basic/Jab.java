@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Jab extends Skill {
     public Jab() {
-        super(new Line("", "", "", true, true));
+        super(new Line("Jab", "3CONT", "", true, true));
 
         nameKeyList = new ArrayList<>(Arrays.asList("jab", "ja"));
     }

@@ -20,6 +20,7 @@ public class Console extends UserInterfaceElement {
 
     public ArrayList<Line> lineList;
     public ArrayList<Line> lineBufferList;
+    public int scrollIndex;
     public int updateTimer;
 
     public Console() {
@@ -29,6 +30,7 @@ public class Console extends UserInterfaceElement {
 
         lineList = new ArrayList<>();
         lineBufferList = new ArrayList<>();
+        scrollIndex = 0;
         updateTimer = 0;
 
         int consoleX = 0;
@@ -51,16 +53,21 @@ public class Console extends UserInterfaceElement {
         }
     }
 
+    public void scroll(int scrollDirection) {
+        scrollIndex += scrollDirection;
+        if(scrollIndex < 0) { scrollIndex = 0;}
+    }
+
     public void render() {
         super.render();
 
         int lineX = padding;
         int lineY = (int) rect.y + (int) glyphLayout.height + padding;
 
-        for(int i = 0; i < lineList.size(); i++) {
+        for(int i = scrollIndex; i < lineList.size(); i++) {
             Line line = lineList.get(i);
 
-            if(i != 0) {
+            if(i != scrollIndex) {
                 lineY += (int) glyphLayout.height + line.getSpaceHeight();
             }
 

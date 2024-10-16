@@ -103,20 +103,39 @@ public class Mob extends Entity {
         HashMap<String, ArrayList<Skill>> newSkillMap = new HashMap<>();
 
         ArrayList<Skill> combatSkillList = new ArrayList<>();
-        combatSkillList.add(new Block());
-        combatSkillList.add(new Dodge());
-        combatSkillList.add(new Sweep());
-        combatSkillList.add(new SpinPunch());
-        combatSkillList.add(new WindSlash());
-        combatSkillList.add(new Fireball());
-        combatSkillList.add(new Firestorm());
-        combatSkillList.add(new Ice());
-        combatSkillList.add(new Touch());
-        combatSkillList.add(new Smooches());
-        combatSkillList.add(new Heal());
-        combatSkillList.add(new ForceTouch());
-        combatSkillList.add(new WhiteWind());
-        combatSkillList.add(new FullLife());
+
+        // Debug Skills //
+        if(true) {
+            combatSkillList.add(new SpinPunch());
+            combatSkillList.add(new WindSlash());
+            combatSkillList.add(new Fireball());
+            combatSkillList.add(new Firestorm());
+            combatSkillList.add(new Ice());
+            combatSkillList.add(new Touch());
+            combatSkillList.add(new Smooches());
+            combatSkillList.add(new Heal());
+            combatSkillList.add(new ForceTouch());
+            combatSkillList.add(new WhiteWind());
+            combatSkillList.add(new FullLife());
+        }
+
+        // Basic Combat Skills //
+        if(true) {
+            combatSkillList.add(new Block());
+            combatSkillList.add(new Dodge());
+            combatSkillList.add(new Sweep());
+            combatSkillList.add(new Punch());
+            combatSkillList.add(new Jab());
+            combatSkillList.add(new Kick());
+            combatSkillList.add(new Bash());
+            combatSkillList.add(new Smash());
+            combatSkillList.add(new Slash());
+            combatSkillList.add(new Stab());
+            combatSkillList.add(new Shoot());
+            combatSkillList.add(new Snipe());
+            combatSkillList.add(new Throw());
+        }
+
         newSkillMap.put("Combat", combatSkillList);
 
         return newSkillMap;

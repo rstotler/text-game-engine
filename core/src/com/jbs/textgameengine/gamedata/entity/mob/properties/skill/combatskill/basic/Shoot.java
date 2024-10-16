@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Shoot extends Skill {
     public Shoot() {
-        super(new Line("", "", "", true, true));
+        super(new Line("Shoot", "5CONT", "", true, true));
 
         nameKeyList = new ArrayList<>(Arrays.asList("shoot", "shoo", "sho", "sh"));
     }

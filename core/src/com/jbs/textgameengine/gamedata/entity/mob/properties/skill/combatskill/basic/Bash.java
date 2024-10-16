@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Bash extends Skill {
     public Bash() {
-        super(new Line("", "", "", true, true));
+        super(new Line("Bash", "4CONT", "", true, true));
 
         nameKeyList = new ArrayList<>(Arrays.asList("bash", "bas", "ba"));
     }

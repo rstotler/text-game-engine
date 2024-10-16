@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Punch extends Skill {
     public Punch() {
-        super(new Line("", "", "", true, true));
+        super(new Line("Punch", "5CONT", "", true, true));
 
         nameKeyList = new ArrayList<>(Arrays.asList("punch", "punc", "pun"));
     }
