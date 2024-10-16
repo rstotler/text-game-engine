@@ -145,7 +145,8 @@ public class Mob extends Entity {
     }
 
     public boolean interruptAction() {
-        if(currentAction != null) {
+        if(currentAction != null
+        && !currentAction.noInterrupt) {
             GameScreen.userInterface.console.writeToConsole(new Line("You stop what you are doing.", "4CONT5CONT5CONT4CONT4CONT5CONT1DY", "", true, true));
             currentAction = null;
             return true;
@@ -173,7 +174,7 @@ public class Mob extends Entity {
     }
 
     public float getMaxWeight() {
-        return 50.0f;
+        return 100.0f;
     }
 
     public int getMaxViewDistance() {

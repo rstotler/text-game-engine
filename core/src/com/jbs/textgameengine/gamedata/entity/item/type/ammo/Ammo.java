@@ -12,6 +12,8 @@ public class Ammo extends Item {
         type = "Ammo";
         pocket = "Ammo";
 
+        weight = .025f;
+
         ammoType = "";
     }
 
@@ -35,21 +37,21 @@ public class Ammo extends Item {
 
         // 003 - A 9mm Round //
         else if(id == 3) {
-            ammoItem.name = new Line("9mm Round", "1W3DY5CONT", "", true, true);
+            ammoItem.name = new Line("9mm Round", "4CONT5CONT", "", true, true);
             ammoItem.ammoType = "9mm";
             ammoItem.isQuantity = true;
         }
 
         // 004 - A .45 Round //
         else if(id == 4) {
-            ammoItem.name = new Line(".45 Round", "1DY3W5CONT", "", true, true);
+            ammoItem.name = new Line(".45 Round", "1DY1W1W1W5CONT", "", true, true);
             ammoItem.ammoType = ".45";
             ammoItem.isQuantity = true;
         }
 
         // 005 - A 5.56 Round //
         else if(id == 5) {
-            ammoItem.name = new Line("5.56 Round", "1W1DY3W5CONT", "", true, true);
+            ammoItem.name = new Line("5.56 Round", "1W1DY1W1W1W5CONT", "", true, true);
             ammoItem.ammoType = "5.56";
             ammoItem.isQuantity = true;
         }

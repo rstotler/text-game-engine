@@ -24,6 +24,7 @@ public class CombatAction extends Action {
         super(parentEntity, combatSkill);
 
         targetRoomData = null;
+        noInterrupt = true;
     }
 
     public CombatAction() {
@@ -384,7 +385,7 @@ public class CombatAction extends Action {
                     }
 
                     if(parentEntity.isPlayer) {
-                        GameScreen.userInterface.console.writeToConsole(new Line("You prepare to " + skill.toString().toLowerCase() + targetDirectionString + "..", "4CONT8CONT3CONT" + String.valueOf(skill.toString().length()) + "CONT" + targetDirectionColorCode + "2DY", "", true, true));
+                        GameScreen.userInterface.console.writeToConsole(new Line("You prepare to " + skill.name.label.toLowerCase() + targetDirectionString + "..", "4CONT8CONT3CONT" + skill.name.colorCode + targetDirectionColorCode + "2DY", "", true, true));
                     }
                 }
             }
@@ -392,58 +393,47 @@ public class CombatAction extends Action {
     }
 
     public void performAction() {
-        ArrayList<Entity> targetMobList = Skill.getTargetList(targetRoomData.targetRoom, this);
 
-        // Message - Combat Message //
-        if(true) {
-            String actionString = "";
-            String actionColorCode = "";
+        // Message - You CombatAction to the Direction! //
+        if(parentEntity.isPlayer) {
+            String actionString = "You";
+            String actionColorCode = "3CONT";
 
-            // Message Mod - You/Target Entity //
-            if(parentEntity.isPlayer) {
-                actionString += "You";
-                actionColorCode += "3CONT";
-            }
-            else {
-                actionString += parentEntity.prefix + parentEntity.name.label;
-                actionColorCode += String.valueOf(parentEntity.prefix.length()) + "CONT" + parentEntity.name.colorCode;
-            }
+            actionString += " " + skill.name.label.toLowerCase();
+            actionColorCode += "1W" + skill.name.colorCode;
 
-            // Message Mod - CombatSkill Name //
-            actionString += " " + skill.toString();
-            actionColorCode += "1W" + String.valueOf(skill.toString().length()) + "CONT";
-            if(!parentEntity.isPlayer) {
-                actionString += "s";
-                actionColorCode += "1DDW";
-            }
-
-            // Message Mod - To the Direction //
             if(!targetRoomData.targetDirection.isEmpty()) {
                 actionString += " to the " + targetRoomData.targetDirection.toLowerCase();
                 actionColorCode += "1W3CONT4CONT" + String.valueOf(targetRoomData.targetDirection.length()) + "CONT";
             }
 
-            // Message Mod - Ending Punctuation //
             actionString += "!";
             actionColorCode += "1DY";
 
-            if(parentEntity.location.room == GameScreen.player.location.room) {
-                GameScreen.userInterface.console.writeToConsole(new Line(actionString, actionColorCode, "", false, true));
-            }
+            GameScreen.userInterface.console.writeToConsole(new Line(actionString, actionColorCode, "", false, true));
         }
 
         // Perform CombatAction On Target Mob List //
+        ArrayList<Entity> targetMobList = Skill.getTargetList(targetRoomData.targetRoom, this);
         boolean isLastLine = false;
+
         for(int i = 0; i < targetMobList.size(); i++) {
             Entity mob = targetMobList.get(i);
             skill.hitMob((Mob) mob);
             if(i == targetMobList.size() - 1) {isLastLine = true;}
 
-            // Message - Hit/Miss Messages //
+            // Message - Hit Mob Message //
             if(parentEntity.isPlayer) {
                 String actionString = "You hit " + mob.prefix.toLowerCase() + mob.name.label + ".";
                 String actionColorCode = "4CONT4CONT" + String.valueOf(mob.prefix.length()) + "CONT" + mob.name.colorCode + "1DY";
                 GameScreen.userInterface.console.writeToConsole(new Line(actionString, actionColorCode, "", isLastLine, true));
+            }
+        }
+
+        // Message - Your attack is met with only air. //
+        if(targetMobList.isEmpty()) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("Your attack is met with only air.", "5CONT7CONT3CONT4CONT5CONT5CONT3CONT1DY", "", true, true));
             }
         }
     }

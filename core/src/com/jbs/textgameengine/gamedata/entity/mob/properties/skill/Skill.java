@@ -4,10 +4,12 @@ import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.CombatAction;
 import com.jbs.textgameengine.gamedata.world.room.Room;
+import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
 import java.util.ArrayList;
 
 public class Skill {
+    public Line name;
     public ArrayList<String> nameKeyList;
 
     public int maxDistance;
@@ -17,7 +19,8 @@ public class Skill {
     public boolean allOnly;
     public boolean isHealing;
 
-    public Skill() {
+    public Skill(Line name) {
+        this.name = name;
         nameKeyList = new ArrayList<>();
 
         maxDistance = 0;
@@ -171,7 +174,8 @@ public class Skill {
                         targetList.add(mob);
                     }
 
-                    else if(!combatTargetInRoom
+                    else if(!combatAction.parentEntity.targetList.isEmpty()
+                    && combatAction.parentEntity.location.room != targetRoom
                     && !combatAction.parentEntity.groupList.contains(mob)) {
                         targetList.add(mob);
                     }

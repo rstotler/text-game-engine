@@ -40,13 +40,13 @@ public class Firearm extends Weapon {
 
         // 003 - A 9mm Pistol //
         else if(id == 3) {
-            firearmItem.name = new Line("9mm Pistol", "4SHIAGR6SHIAGR", "", true, true);
+            firearmItem.name = new Line("9mm Pistol", "4CONT6SHIAGR", "", true, true);
             firearmItem.ammoType = "9mm";
         }
 
         // 004 - A .45 Pistol //
         else if(id == 4) {
-            firearmItem.name = new Line(".45 Pistol", "1DY3SHIAGR6SHIAGR", "", true, true);
+            firearmItem.name = new Line(".45 Pistol", "1DY3CONT6SHIAGR", "", true, true);
             firearmItem.ammoType = ".45";
         }
 

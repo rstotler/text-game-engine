@@ -32,6 +32,7 @@ public class Action {
     public Mob parentEntity;
     public Skill skill;
 
+    public boolean noInterrupt;
     public int performActionTimer;
 
     public Action(Mob parentEntity, Skill skill) {
@@ -49,6 +50,7 @@ public class Action {
         this.parentEntity = parentEntity;
         this.skill = skill;
 
+        noInterrupt = false;
         performActionTimer = 1;
     }
 
@@ -100,6 +102,7 @@ public class Action {
         actionList.add(new Board());
         actionList.add(new Launch());
         actionList.add(new Radar());
+        actionList.add(new Scan());
         actionList.add(new Course());
         actionList.add(new Throttle());
         actionList.add(new Land());

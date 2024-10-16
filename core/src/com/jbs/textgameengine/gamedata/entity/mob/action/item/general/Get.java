@@ -509,7 +509,7 @@ public class Get extends Action {
                 }
             }
 
-            // Message - You get some things out of Entity. //
+            // Message - You get everything/some things out of Entity. //
             else if(targetContainer != null
             && usedContainerList.size() == 1
             && multipleItemTypes) {
@@ -520,8 +520,12 @@ public class Get extends Action {
                         GameScreen.userInterface.console.writeToConsole(new Line("You open " + targetContainer.prefix.toLowerCase() + targetContainer.name.label + ".", "4CONT5CONT" + String.valueOf(targetContainer.prefix.length()) + "CONT" + targetContainer.name.colorCode + "1DY", "", false, true));
                     }
 
-                    String getString = "You get some things out of " + targetContainer.prefix.toLowerCase() + targetContainer.name.label + ".";
-                    String getColorCode = "4CONT4CONT5CONT7CONT4CONT3CONT" + String.valueOf(targetContainer.prefix.length()) + "CONT" + targetContainer.name.colorCode + "1DY";
+                    String someThingsString = "some things ";
+                    if(((Item) targetContainer).containerItemList.isEmpty()) {
+                        someThingsString = "everything ";
+                    }
+                    String getString = "You get " + someThingsString + "out of " + targetContainer.prefix.toLowerCase() + targetContainer.name.label + ".";
+                    String getColorCode = "4CONT4CONT" + String.valueOf(someThingsString.length()) + "CONT4CONT3CONT" + String.valueOf(targetContainer.prefix.length()) + "CONT" + targetContainer.name.colorCode + "1DY";
                     GameScreen.userInterface.console.writeToConsole(new Line(getString, getColorCode, "", true, true));
                 }
             }

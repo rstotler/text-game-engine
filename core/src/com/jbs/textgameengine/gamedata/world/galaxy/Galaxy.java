@@ -139,18 +139,27 @@ public class Galaxy {
 
         Item weaponCabinet = Item.load("General", 5, roomWoodenCabin.location);
         weaponCabinet.status = "Open";
-        for(int i = 1; i <= 10; i++) {
+        for(int i = 1; i <= 11; i++) {
             weaponCabinet.containerItemList.add(Item.load("Weapon", i, roomWoodenCabin.location));
         }
-        weaponCabinet.containerItemList.add(Item.load("Weapon", 19, roomWoodenCabin.location));
         areaCOTU.roomList.get(3).addItemToRoom(weaponCabinet);
 
         Item gunCabinet = Item.load("General", 6, roomWoodenCabin.location);
         gunCabinet.status = "Open";
-        for(int i = 11; i <= 18; i++) {
-            gunCabinet.containerItemList.add(Item.load("Weapon", i, roomWoodenCabin.location));
+        for(int i = 1; i <= 7; i++) {
+            gunCabinet.containerItemList.add(Item.load("Firearm", i, roomWoodenCabin.location));
+        }
+        for(int i = 1; i <= 5; i++) {
+            gunCabinet.containerItemList.add(Item.load("Magazine", i, roomWoodenCabin.location));
         }
         areaCOTU.roomList.get(3).addItemToRoom(gunCabinet);
+
+        Item ammoCrate = Item.load("General", 7, roomWoodenCabin.location);
+        ammoCrate.status = "Open";
+        for(int i = 1; i <= 7; i++) {
+            ammoCrate.containerItemList.add(Item.load("Ammo", i, roomWoodenCabin.location, 100));
+        }
+        areaCOTU.roomList.get(3).addItemToRoom(ammoCrate);
     }
 
     public static Room getRoom(String targetGalaxy, String targetSolarSystem, int planetoidIndex, String targetArea, int roomIndex) {
