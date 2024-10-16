@@ -271,4 +271,19 @@ public class Mob extends Entity {
     public boolean canDualWield() {
         return true;
     }
+
+    public boolean isGlowing() {
+        if(glowing) {
+            return true;
+        }
+
+        for(String gearSlot : gear.keySet()) {
+            Item gearItem = gear.get(gearSlot);
+            if(gearItem != null && gearItem.glowing) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

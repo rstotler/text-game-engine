@@ -28,6 +28,9 @@ public class Skill {
         isHealing = false;
     }
 
+    public void hitMob(Mob targetMob) {
+    }
+
     public int getMaxDistance(Mob parentEntity) {
         if(maxDistance > parentEntity.getMaxViewDistance()) {
             return parentEntity.getMaxViewDistance();
@@ -48,7 +51,7 @@ public class Skill {
         return true;
     }
 
-    public ArrayList<Entity> getTargetList(Room targetRoom, CombatAction combatAction) {
+    public static ArrayList<Entity> getTargetList(Room targetRoom, CombatAction combatAction) {
         ArrayList<Entity> targetList = new ArrayList<>();
 
         boolean displayDebugData = false;
@@ -80,14 +83,14 @@ public class Skill {
 
                 // Has Combat Targets In Room //
                 else {
-                    if(allOnly) {
+                    if(combatAction.skill.allOnly) {
                         targetList.add(combatAction.parentEntity);
                     }
                 }
             }
 
             else if(combatAction.actionType.equals("CombatAction Entity/Self") && !combatAction.selfCheck) {
-                if(allOnly) {
+                if(combatAction.skill.allOnly) {
                     targetList.add(combatAction.parentEntity);
                 }
             }
@@ -99,13 +102,13 @@ public class Skill {
             else if(combatAction.actionType.equals("CombatAction Direction")) {} // Do Nothing
 
             else if(combatAction.actionType.equals("CombatAction All/Group") && combatAction.allCheck) {
-                if(singleOnly && targetRoom.mobList.isEmpty()) {
+                if(combatAction.skill.singleOnly && targetRoom.mobList.isEmpty()) {
                     targetList.add(combatAction.parentEntity);
                 }
             }
 
             else if(combatAction.actionType.equals("CombatAction All/Group") && combatAction.groupCheck) {
-                if(singleOnly && !groupMemberInRoom) {
+                if(combatAction.skill.singleOnly && !groupMemberInRoom) {
                     targetList.add(combatAction.parentEntity);
                 }
             }
@@ -126,9 +129,9 @@ public class Skill {
 
             // Break Check //
             if(!targetList.isEmpty()) {
-                if(singleOnly
-                || (!allOnly && combatAction.selfCheck)
-                || (!allOnly && !combatTargetInRoom && combatAction.actionType.equals("CombatAction"))) {
+                if(combatAction.skill.singleOnly
+                || (!combatAction.skill.allOnly && combatAction.selfCheck)
+                || (!combatAction.skill.allOnly && !combatTargetInRoom && combatAction.actionType.equals("CombatAction"))) {
                     if(displayDebugData) {
                         System.out.println("\n----===[ Only Player ]===----");
                     }
@@ -156,15 +159,15 @@ public class Skill {
 
                     else if(combatAction.parentEntity.combatList.isEmpty()
                     && !combatAction.parentEntity.groupList.contains(mob)
-                    && !isHealing
-                    && allOnly) {
+                    && !combatAction.skill.isHealing
+                    && combatAction.skill.allOnly) {
                         targetList.add(mob);
                     }
 
                     else if(combatAction.parentEntity.combatList.isEmpty()
                     && combatAction.parentEntity.groupList.contains(mob)
-                    && isHealing
-                    && allOnly) {
+                    && combatAction.skill.isHealing
+                    && combatAction.skill.allOnly) {
                         targetList.add(mob);
                     }
 
@@ -175,36 +178,36 @@ public class Skill {
                 }
 
                 else if(combatAction.actionType.equals("CombatAction Entity/Self") && !combatAction.selfCheck) {
-                    if((mob.nameKeyList.contains(combatAction.targetEntityString) || allOnly)
-                    && !(!isHealing && combatAction.parentEntity.groupList.contains(mob))) {
+                    if((mob.nameKeyList.contains(combatAction.targetEntityString) || combatAction.skill.allOnly)
+                    && !(!combatAction.skill.isHealing && combatAction.parentEntity.groupList.contains(mob))) {
                         targetList.add(mob);
                     }
                 }
 
                 else if(combatAction.actionType.equals("CombatAction Entity/Self") && combatAction.selfCheck) {
-                    if(allOnly
+                    if(combatAction.skill.allOnly
                     && combatAction.parentEntity.groupList.contains(mob)) {
                         targetList.add(mob);
                     }
                 }
 
                 else if(combatAction.actionType.equals("CombatAction Direction")) {
-                    if(!singleOnly
-                    && !isHealing
+                    if(!combatAction.skill.singleOnly
+                    && !combatAction.skill.isHealing
                     && !combatAction.parentEntity.groupList.contains(mob)) {
                         targetList.add(mob);
                     }
 
-                    else if(singleOnly
-                    && !isHealing
+                    else if(combatAction.skill.singleOnly
+                    && !combatAction.skill.isHealing
                     && !combatAction.parentEntity.groupList.contains(mob)
                     && !combatTargetInRoom
                     && targetRoom.mobList.contains(mob)) {
                         targetList.add(mob);
                     }
 
-                    else if(singleOnly
-                    && isHealing
+                    else if(combatAction.skill.singleOnly
+                    && combatAction.skill.isHealing
                     && !combatAction.parentEntity.groupList.contains(mob)
                     && !combatTargetInRoom
                     && targetRoom.mobList.contains(mob)) {
@@ -213,42 +216,42 @@ public class Skill {
 
                     else if(combatAction.parentEntity.combatList.isEmpty()
                     && combatAction.parentEntity.groupList.contains(mob)
-                    && isHealing
-                    && !singleOnly) {
+                    && combatAction.skill.isHealing
+                    && !combatAction.skill.singleOnly) {
                         targetList.add(mob);
                     }
                 }
 
                 else if(combatAction.actionType.equals("CombatAction All/Group") && combatAction.allCheck) {
-                    if(!(!isHealing && combatAction.parentEntity.groupList.contains(mob))) {
+                    if(!(!combatAction.skill.isHealing && combatAction.parentEntity.groupList.contains(mob))) {
                         targetList.add(mob);
                     }
                 }
 
                 else if(combatAction.actionType.equals("CombatAction All/Group") && combatAction.groupCheck) {
-                    if(isHealing
+                    if(combatAction.skill.isHealing
                     && combatAction.parentEntity.groupList.contains(mob)) {
                         targetList.add(mob);
                     }
                 }
 
                 else if(combatAction.actionType.equals("CombatAction Direction #")) {
-                    if(!singleOnly
-                    && !isHealing
+                    if(!combatAction.skill.singleOnly
+                    && !combatAction.skill.isHealing
                     && !combatAction.parentEntity.groupList.contains(mob)) {
                         targetList.add(mob);
                     }
 
-                    else if(singleOnly
-                    && !isHealing
+                    else if(combatAction.skill.singleOnly
+                    && !combatAction.skill.isHealing
                     && !combatAction.parentEntity.groupList.contains(mob)
                     && !combatTargetInRoom
                     && targetRoom.mobList.contains(mob)) {
                         targetList.add(mob);
                     }
 
-                    else if(singleOnly
-                    && isHealing
+                    else if(combatAction.skill.singleOnly
+                    && combatAction.skill.isHealing
                     && !combatAction.parentEntity.groupList.contains(mob)
                     && !combatTargetInRoom
                     && targetRoom.mobList.contains(mob)) {
@@ -257,47 +260,47 @@ public class Skill {
 
                     else if(combatAction.parentEntity.combatList.isEmpty()
                     && combatAction.parentEntity.groupList.contains(mob)
-                    && isHealing
-                    && !singleOnly) {
+                    && combatAction.skill.isHealing
+                    && !combatAction.skill.singleOnly) {
                         targetList.add(mob);
                     }
                 }
 
                 else if(combatAction.actionType.equals("CombatAction Entity Direction")) {
-                    if((mob.nameKeyList.contains(combatAction.targetEntityString) || allOnly)
-                    && !(!isHealing && combatAction.parentEntity.groupList.contains(mob))) {
+                    if((mob.nameKeyList.contains(combatAction.targetEntityString) || combatAction.skill.allOnly)
+                    && !(!combatAction.skill.isHealing && combatAction.parentEntity.groupList.contains(mob))) {
                         targetList.add(mob);
                     }
                 }
 
                 else if(combatAction.actionType.equals("CombatAction All/Group Direction") && combatAction.allCheck) {
-                    if(!(!isHealing && combatAction.parentEntity.groupList.contains(mob))) {
+                    if(!(!combatAction.skill.isHealing && combatAction.parentEntity.groupList.contains(mob))) {
                         targetList.add(mob);
                     }
                 }
 
                 else if(combatAction.actionType.equals("CombatAction All/Group Direction") && combatAction.groupCheck) {
-                    if(isHealing
+                    if(combatAction.skill.isHealing
                     && combatAction.parentEntity.groupList.contains(mob)) {
                         targetList.add(mob);
                     }
                 }
 
                 else if(combatAction.actionType.equals("CombatAction Entity Direction #")) {
-                    if((mob.nameKeyList.contains(combatAction.targetEntityString) || allOnly)
-                    && !(!isHealing && combatAction.parentEntity.groupList.contains(mob))) {
+                    if((mob.nameKeyList.contains(combatAction.targetEntityString) || combatAction.skill.allOnly)
+                    && !(!combatAction.skill.isHealing && combatAction.parentEntity.groupList.contains(mob))) {
                         targetList.add(mob);
                     }
                 }
 
                 else if(combatAction.actionType.equals("CombatAction All/Group Direction #") && combatAction.allCheck) {
-                    if(!(!isHealing && combatAction.parentEntity.groupList.contains(mob))) {
+                    if(!(!combatAction.skill.isHealing && combatAction.parentEntity.groupList.contains(mob))) {
                         targetList.add(mob);
                     }
                 }
 
                 else if(combatAction.actionType.equals("CombatAction All/Group Direction #") && combatAction.groupCheck) {
-                    if(isHealing
+                    if(combatAction.skill.isHealing
                     && combatAction.parentEntity.groupList.contains(mob)) {
                         targetList.add(mob);
                     }
@@ -305,8 +308,8 @@ public class Skill {
 
                 // Break Check //
                 if(targetList.size() > currentSize) {
-                    if(singleOnly
-                    || (!allOnly && !combatAction.targetEntityString.isEmpty())) {
+                    if(combatAction.skill.singleOnly
+                    || (!combatAction.skill.allOnly && !combatAction.targetEntityString.isEmpty())) {
                         break;
                     }
                 }

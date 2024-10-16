@@ -286,6 +286,7 @@ public class CombatAction extends Action {
 
             // Message - You need a target. //
             else if((parentEntity.targetList.isEmpty()
+            && targetEntityString.isEmpty()
             && !skill.isHealing
             && !skill.allOnly)
 
@@ -336,7 +337,12 @@ public class CombatAction extends Action {
             else {
 
                 // Get Data //
-                ArrayList<Entity> targetList = skill.getTargetList(targetRoom, this);
+                ArrayList<Entity> targetList = Skill.getTargetList(targetRoom, this);
+                if(targetRoomData == null) {
+                    targetRoomData = new TargetRoomData();
+                    targetRoomData.targetRoom = targetRoom;
+                    targetRoomData.distance = 0;
+                }
 
                 // Message - You don't see them. //
                 if(targetList.isEmpty()
@@ -368,6 +374,8 @@ public class CombatAction extends Action {
                     if(parentEntity.isPlayer) {((Player) parentEntity).updateTimer = 0;}
                     parentEntity.currentAction = this;
 
+                    this.targetRoomData = targetRoomData;
+
                     String targetDirectionString = "";
                     String targetDirectionColorCode = "";
                     if(!targetDirection.isEmpty()) {
@@ -384,5 +392,63 @@ public class CombatAction extends Action {
     }
 
     public void performAction() {
+        ArrayList<Entity> targetMobList = Skill.getTargetList(targetRoomData.targetRoom, this);
+        boolean multipleTargetTypes = false;
+        boolean selfCheck = false;
+        boolean combatTargetInRoom = false;
+        boolean groupMemberInRoom = false;
+
+        // Message - Combat Message //
+        if(true) {
+            String actionString = "";
+            String actionColorCode = "";
+
+            // Message Mod - You/Target Entity //
+            if(parentEntity.isPlayer) {
+                actionString += "You";
+                actionColorCode += "3CONT";
+            }
+            else {
+                actionString += parentEntity.prefix + parentEntity.name.label;
+                actionColorCode += String.valueOf(parentEntity.prefix.length()) + "CONT" + parentEntity.name.colorCode;
+            }
+
+            // Message Mod - CombatSkill Name //
+            actionString += " " + skill.toString();
+            actionColorCode += "1W" + String.valueOf(skill.toString().length()) + "CONT";
+            if(!parentEntity.isPlayer) {
+                actionString += "s";
+                actionColorCode += "1DDW";
+            }
+
+            // Message Mod - To the Direction //
+            if(!targetRoomData.targetDirection.isEmpty()) {
+                actionString += " to the " + targetRoomData.targetDirection.toLowerCase();
+                actionColorCode += "1W3CONT4CONT" + String.valueOf(targetRoomData.targetDirection.length()) + "CONT";
+            }
+
+            // Message Mod - Ending Punctuation //
+            actionString += "!";
+            actionColorCode += "1DY";
+
+            if(parentEntity.location.room == GameScreen.player.location.room) {
+                GameScreen.userInterface.console.writeToConsole(new Line(actionString, actionColorCode, "", false, true));
+            }
+        }
+
+        // Perform CombatAction On Target Mob List //
+        boolean isLastLine = false;
+        for(int i = 0; i < targetMobList.size(); i++) {
+            Entity mob = targetMobList.get(i);
+            skill.hitMob((Mob) mob);
+            if(i == targetMobList.size() - 1) {isLastLine = true;}
+
+            // Message - Hit/Miss Messages //
+            if(parentEntity.isPlayer) {
+                String actionString = "You hit " + mob.prefix.toLowerCase() + mob.name.label + ".";
+                String actionColorCode = "4CONT4CONT" + String.valueOf(mob.prefix.length()) + "CONT" + mob.name.colorCode + "1DY";
+                GameScreen.userInterface.console.writeToConsole(new Line(actionString, actionColorCode, "", isLastLine, true));
+            }
+        }
     }
 }

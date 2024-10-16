@@ -496,11 +496,22 @@ public class Room {
         if(location.spaceship == null
         && location.planetoid != null) {
 
-            // Glowing Item Check //
+            // Glowing Item On Ground Check //
             for(Entity item : itemList) {
                 if(item.glowing) {
                     return true;
                 }
+            }
+
+            // Glowing Entity Or Entity Gear Check //
+            for(Entity mob : mobList) {
+                if(((Mob) mob).isGlowing()) {
+                    return true;
+                }
+            }
+            if(GameScreen.player.location.room == this
+            && GameScreen.player.isGlowing()) {
+                return true;
             }
 
             return location.planetoid.isDay();
