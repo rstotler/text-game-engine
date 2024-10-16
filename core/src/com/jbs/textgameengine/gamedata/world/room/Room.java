@@ -449,7 +449,8 @@ public class Room {
         boolean quantityItemInRoom = false;
         if(((Item) targetItem).isQuantity) {
             for(Entity item : itemList) {
-                if(targetItem.id == item.id) {
+                if(targetItem.id == item.id
+                && ((Item) targetItem).type.equals(((Item) item).type)) {
                     ((Item) item).quantity += ((Item) targetItem).quantity;
                     quantityItemInRoom = true;
                     break;

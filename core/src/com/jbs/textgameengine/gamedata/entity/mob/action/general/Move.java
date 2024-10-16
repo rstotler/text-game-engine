@@ -24,7 +24,8 @@ public class Move extends Action {
     public Action getActionFromInput(String input, Mob parentEntity) {
         ArrayList<String> inputList = new ArrayList<>(Arrays.asList(input.split(" ")));
 
-        if(Location.directionList.contains(inputList.get(0))) {
+        if(Location.directionList.contains(inputList.get(0))
+        && (inputList.size() == 1 || (inputList.size() == 2 && Utility.isInteger(inputList.get(1))))) {
             Move moveAction = new Move(parentEntity);
 
             // Direction # //
@@ -38,11 +39,6 @@ public class Move extends Action {
             else if(inputList.size() == 1) {
                 moveAction.targetDirection = Location.getDirectionFromSubstring(inputList.get(0));
                 moveAction.actionType = "Direction";
-            }
-
-            else {
-                userInterface.console.writeToConsole(new Line("Move where?", "5CONT5CONT1DY", "", true, true));
-                moveAction.parentEntity = null;
             }
 
             return moveAction;

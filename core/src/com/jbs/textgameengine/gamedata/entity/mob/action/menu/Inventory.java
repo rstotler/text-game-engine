@@ -67,8 +67,8 @@ public class Inventory extends Action {
     public void initiate() {
         if(parentEntity.inventory.containsKey(actionType)) {
             HashMap<String, Integer> itemLineMap = new HashMap<>();
-
             Entity lastLineItem = null;
+
             for(int i = 0; i < parentEntity.inventory.get(actionType).size(); i++) {
                 Entity item = parentEntity.inventory.get(actionType).get(i);
                 Line itemNameMod = item.getNameMod();

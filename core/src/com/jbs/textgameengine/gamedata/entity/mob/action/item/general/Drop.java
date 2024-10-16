@@ -141,7 +141,7 @@ public class Drop extends Action {
                     }
 
                     if(targetItem == null) {targetItem = item;}
-                    else if(targetItem.id != item.id) {multipleItemTypes = true;}
+                    else if(targetItem.id != item.id || !((Item) targetItem).type.equals(((Item) item).type)) {multipleItemTypes = true;}
 
                     if(targetCount != -1 && dropCount >= targetCount) {
                         breakCheck = true;

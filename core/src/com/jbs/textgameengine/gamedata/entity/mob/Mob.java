@@ -4,6 +4,7 @@ import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
+import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.basic.*;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.debug.*;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.statuseffect.StatusEffect;
 import com.jbs.textgameengine.gamedata.world.Location;
@@ -104,7 +105,7 @@ public class Mob extends Entity {
         ArrayList<Skill> combatSkillList = new ArrayList<>();
         combatSkillList.add(new Block());
         combatSkillList.add(new Dodge());
-        combatSkillList.add(new Punch());
+        combatSkillList.add(new Sweep());
         combatSkillList.add(new SpinPunch());
         combatSkillList.add(new WindSlash());
         combatSkillList.add(new Fireball());
@@ -187,7 +188,8 @@ public class Mob extends Entity {
         boolean quantityItemInInventory = false;
         if(targetItem.isQuantity) {
             for(Entity item : inventory.get(targetItem.pocket)) {
-                if(targetItem.id == item.id) {
+                if(targetItem.id == item.id
+                && targetItem.type.equals(((Item) item).type)) {
                     ((Item) item).quantity += targetItem.quantity;
                     quantityItemInInventory = true;
                     break;

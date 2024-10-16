@@ -1,4 +1,4 @@
-package com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.debug;
+package com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.basic;
 
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;

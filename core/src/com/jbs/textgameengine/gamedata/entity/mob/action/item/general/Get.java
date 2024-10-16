@@ -343,7 +343,7 @@ public class Get extends Action {
                             }
 
                             if(targetItem == null) {targetItem = item;}
-                            else if(targetItem.id != item.id) {multipleItemTypes = true;}
+                            else if(targetItem.id != item.id || !((Item) targetItem).type.equals(item.type)) {multipleItemTypes = true;}
 
                             if(targetCount != -1 && getCount >= targetCount) {
                                 breakCheck = true;
