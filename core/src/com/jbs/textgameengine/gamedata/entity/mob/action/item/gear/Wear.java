@@ -150,7 +150,7 @@ public class Wear extends Action {
                             gearSlot = ((Gear) item).gearSlot;
                         }
                     }
-                    else if(item.type.equals("Weapon")) {
+                    else if(item.isWeapon) {
                         if(targetGearSlot.isEmpty()) {
                             if(parentEntity.gear.get("Main Hand") == null || parentEntity.gear.get("Off Hand") != null) {
                                 gearSlot = "Main Hand";
@@ -183,12 +183,12 @@ public class Wear extends Action {
                         }
                     }
 
-                    if((!item.type.equals("Gear") && !item.type.equals("Weapon"))
-                    || (!item.type.equals("Weapon") && actionType.equals("Wield"))
+                    if((!item.type.equals("Gear") && !item.isWeapon)
+                    || (!item.isWeapon && actionType.equals("Wield"))
                     || !parentEntity.gear.containsKey(gearSlot)) {
                         cantWearCheck = true;
                     }
-                    else if(item.type.equals("Weapon")
+                    else if(item.isWeapon
                     && ((Weapon) item).twoHanded
                     && (allCheck || targetCount > 1)
                     && ((((Weapon) item).noDualWield && (parentEntity.gear.get("Main Hand") != null || parentEntity.gear.get("Off Hand") != null))
@@ -197,7 +197,7 @@ public class Wear extends Action {
                     || (parentEntity.gear.get("Off Hand") != null && !parentEntity.canDualWield()))) {
                         // Do Nothing
                     }
-                    else if(item.type.equals("Weapon")
+                    else if(item.isWeapon
                     && !((Weapon) item).twoHanded
                     && (allCheck || targetCount > 1)
                     && ((parentEntity.gear.get("Main Hand") != null && ((Weapon) parentEntity.gear.get("Main Hand")).twoHanded && ((Weapon) parentEntity.gear.get("Main Hand")).noDualWield)
@@ -217,7 +217,7 @@ public class Wear extends Action {
                         }
 
                         // NoDualWield Removals //
-                        if(item.type.equals("Weapon")) {
+                        if(item.isWeapon) {
 
                             // Remove NoDualWield OR CantDualWield Main Hand Weapon If Target Gear Slot Is Off-Hand //
                             if(gearSlot.equals("Off Hand")
@@ -351,11 +351,11 @@ public class Wear extends Action {
                 Item wearItem = wearGearList.get(0);
                 Item removeItem = removeGearList.get(0);
                 String inOnString = " on";
-                if(wearItem.type.equals("Weapon")) {inOnString = " in";}
+                if(wearItem.isWeapon) {inOnString = " in";}
 
                 String wearGearSlotRaw = " your " + wearGearSlot.toLowerCase();
                 String wearGearSlotRawColorCode = "1W5CONT" + String.valueOf(wearGearSlot.length()) + "CONT";
-                if(wearItem.type.equals("Weapon")
+                if(wearItem.isWeapon
                 && (((Weapon) wearItem).noDualWield || (((Weapon) wearItem).twoHanded && !parentEntity.canDualWield()))) {
                     wearGearSlotRaw = " both hands";
                     wearGearSlotRawColorCode = "1W5CONT5CONT";
@@ -385,7 +385,7 @@ public class Wear extends Action {
 
                 String wearGearSlotRaw = " your " + wearGearSlot.toLowerCase();
                 String wearGearSlotRawColorCode = "1W5CONT" + String.valueOf(wearGearSlot.length()) + "CONT";
-                if(wearItem.type.equals("Weapon")
+                if(wearItem.isWeapon
                 && (((Weapon) wearItem).noDualWield || (((Weapon) wearItem).twoHanded && !parentEntity.canDualWield()))) {
                     wearGearSlotRaw = " both hands";
                     wearGearSlotRawColorCode = "1W5CONT5CONT";
@@ -414,11 +414,11 @@ public class Wear extends Action {
             if(parentEntity.isPlayer) {
                 Item wearItem = wearGearList.get(0);
                 String inOnString = " on";
-                if(wearItem.type.equals("Weapon")) {inOnString = " in";}
+                if(wearItem.isWeapon) {inOnString = " in";}
 
                 String wearGearSlotRaw = " your " + wearGearSlot.toLowerCase();
                 String wearGearSlotRawColorCode = "1W5CONT" + String.valueOf(wearGearSlot.length()) + "CONT";
-                if(wearItem.type.equals("Weapon")
+                if(wearItem.isWeapon
                 && (((Weapon) wearItem).noDualWield || (((Weapon) wearItem).twoHanded && !parentEntity.canDualWield()))) {
                     wearGearSlotRaw = " both hands";
                     wearGearSlotRawColorCode = "1W5CONT5CONT";

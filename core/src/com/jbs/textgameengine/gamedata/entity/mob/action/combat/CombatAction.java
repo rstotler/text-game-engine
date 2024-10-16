@@ -393,10 +393,6 @@ public class CombatAction extends Action {
 
     public void performAction() {
         ArrayList<Entity> targetMobList = Skill.getTargetList(targetRoomData.targetRoom, this);
-        boolean multipleTargetTypes = false;
-        boolean selfCheck = false;
-        boolean combatTargetInRoom = false;
-        boolean groupMemberInRoom = false;
 
         // Message - Combat Message //
         if(true) {

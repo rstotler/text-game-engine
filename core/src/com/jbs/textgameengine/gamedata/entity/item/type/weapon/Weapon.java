@@ -20,6 +20,7 @@ public class Weapon extends Item {
         super(id, startLocation);
         type = "Weapon";
         pocket = "Weapons";
+        isWeapon = true;
 
         weaponType = "Unarmed";
         cutLimbChance = -1.0f;
@@ -94,7 +95,9 @@ public class Weapon extends Item {
         // 011 - A Bow //
         else if(id == 11) {
             gearItem.name = new Line("Bow", "3SHIAO", "", true, true);
-            gearItem.maxDistance = 4;
+            gearItem.twoHanded = true;
+            gearItem.noDualWield = true;
+            gearItem.maxDistance = 3;
         }
 
         // 012 - A 9mm Pistol //
@@ -151,6 +154,14 @@ public class Weapon extends Item {
         // 019 - A Staff //
         else if(id == 19) {
             gearItem.name = new Line("Staff", "5SHIAO", "", true, true);
+        }
+
+        // 020 - A Crossbow //
+        else if(id == 11) {
+            gearItem.name = new Line("Crossbow", "8SHIAO", "", true, true);
+            gearItem.twoHanded = true;
+            gearItem.noDualWield = true;
+            gearItem.maxDistance = 5;
         }
 
         // Default Item //

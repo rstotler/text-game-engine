@@ -136,7 +136,7 @@ public class Remove extends Action {
                     removeGearList.add(gearItem);
                     parentEntity.gear.put(gearSlot, null);
 
-                    if(gearItem.type.equals("Weapon")) {
+                    if(gearItem.isWeapon) {
                         removeWeaponCheck = true;
                     }
 

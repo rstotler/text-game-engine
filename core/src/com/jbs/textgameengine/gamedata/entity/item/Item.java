@@ -2,7 +2,10 @@ package com.jbs.textgameengine.gamedata.entity.item;
 
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.type.Gear;
+import com.jbs.textgameengine.gamedata.entity.item.type.ammo.Ammo;
 import com.jbs.textgameengine.gamedata.entity.item.type.weapon.Weapon;
+import com.jbs.textgameengine.gamedata.entity.item.type.ammo.Magazine;
+import com.jbs.textgameengine.gamedata.entity.item.type.ammo.Quiver;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
@@ -18,12 +21,15 @@ public class Item extends Entity {
     public String status;
     public int keyNum;
 
+    public boolean isWeapon;
+
     public int quantity;
     public boolean isQuantity;
     public boolean noGet;
 
     public ArrayList<Integer> keyList;
     public ArrayList<Item> containerItemList;
+    public ArrayList<String> containerItemTypeList;
 
     public Item(int id, Location startLocation) {
         super(id, startLocation);
@@ -36,12 +42,15 @@ public class Item extends Entity {
         status = "";
         keyNum = -9999;
 
+        isWeapon = false;
+
         quantity = -1;
         isQuantity = false;
         noGet = false;
 
         keyList = null;
         containerItemList = null;
+        containerItemTypeList = null;
     }
 
     public float getWeight() {
@@ -127,6 +136,9 @@ public class Item extends Entity {
 
         if(itemType.equals("Gear")) {item = Gear.load(id, startLocation);}
         else if(itemType.equals("Weapon")) {item = Weapon.load(id, startLocation);}
+        else if(itemType.equals("Ammo")) {item = Ammo.load(id, startLocation);}
+        else if(itemType.equals("Quiver")) {item = Quiver.load(id, startLocation);}
+        else if(itemType.equals("Magazine")) {item = Magazine.load(id, startLocation);}
 
         else {
             item = new Item(id, startLocation);
