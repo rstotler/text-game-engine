@@ -45,7 +45,7 @@ public class Galaxy {
         Star starRigVeda = new Star(rigVedaName, rigVedaLocation, 0, -1, 7.25f, 36000, 0);
         systemLagoMorpha.planetoidList.add(starRigVeda);
 
-        // Planet - Lapine //
+        // Planet - Lapine (365 Days In Year, 1440 Minutes In Day) //
         Line lapineName = new Line("Lapine", "6CONT", "", true, true);
         Location lapineLocation = new Location(galaxyCottonTail, systemLagoMorpha);
         Planet planetLapine = new Planet(lapineName, lapineLocation, 93000000, -1, 23.45f, 1440, 525600);
@@ -115,6 +115,12 @@ public class Galaxy {
         Room cotuRoom07 = new Room(cotuRoom07Name, null, cotuRoom07Location);
         cotuRoom07.createHiddenExit("West", cotuRoom02);
         areaCOTU.roomList.add(cotuRoom07);
+
+        // Planet - Seres (670 Days In Year, 1480 Minutes In Day) //
+        Line seresName = new Line("Seres", "5CONT", "", true, true);
+        Location seresLocation = new Location(galaxyCottonTail, systemLagoMorpha);
+        Planet planetSeres = new Planet(seresName, seresLocation, 142500000, -1, 25.20f, 1480, 991600);
+        systemLagoMorpha.planetoidList.add(planetSeres);
 
         loadDebugEntities(debugGalaxy);
 

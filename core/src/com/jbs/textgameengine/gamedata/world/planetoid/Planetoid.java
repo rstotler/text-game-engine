@@ -1,13 +1,16 @@
 package com.jbs.textgameengine.gamedata.world.planetoid;
 
+import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import com.jbs.textgameengine.screen.utility.Point;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Planetoid {
     public Line name;
+    public ArrayList<String> nameKeyList;
     public Location location;
     public boolean isPlanet;
     public Point coordinates;
@@ -29,6 +32,7 @@ public class Planetoid {
 
     public Planetoid(Line name, Location location, int distanceFromCenter, int orbitDirection, float axialTilt, int minutesInDay, int minutesInYear) {
         this.name = name;
+        nameKeyList = Entity.createNameKeyList(name.label);
         this.location = new Location(location.galaxy, location.solarSystem, location.planetoid, null, null, null);
         isPlanet = false;
         coordinates = new Point(0, 0);

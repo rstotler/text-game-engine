@@ -46,6 +46,7 @@ public class GameScreen extends Screen {
         if(true) {
             player.location.planetoid.minuteCountDay = player.location.planetoid.minutesInDay / 2;
             player.location.planetoid.minuteCountYear = player.location.planetoid.minuteCountDay;
+            ((Planet) player.location.planetoid).updateDayNightTimers();
         }
 
         ((Planet) (player.location.planetoid)).updateDayNightTimers();

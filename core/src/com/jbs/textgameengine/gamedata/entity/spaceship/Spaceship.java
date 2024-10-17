@@ -3,9 +3,11 @@ package com.jbs.textgameengine.gamedata.entity.spaceship;
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.area.Area;
+import com.jbs.textgameengine.gamedata.world.planetoid.Planetoid;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
+import com.jbs.textgameengine.screen.utility.Point;
 
 import java.util.HashMap;
 
@@ -22,6 +24,9 @@ public class Spaceship extends Entity {
     public Room boardingRoom;
     public Room cockpitRoom;
 
+    public Planetoid headingPlanetoid;
+    public Point headingXY;
+
     public Spaceship(Location startLocation) {
         super(-1, startLocation);
         location.spaceship = this;
@@ -34,6 +39,9 @@ public class Spaceship extends Entity {
 
         keyNum = -9999;
         hatchStatus = "Closed";
+
+        headingPlanetoid = null;
+        headingXY = null;
 
         boardingRoomExitDirection = "West";
         loadMainCabin(startLocation);
@@ -75,7 +83,7 @@ public class Spaceship extends Entity {
             spaceship.status = "Orbit";
         }
         else {
-            spaceship.status = "Traveling";
+            spaceship.status = "Flight";
         }
 
         if(id == 1) {
@@ -94,6 +102,7 @@ public class Spaceship extends Entity {
     public boolean update() {
         if(status.equals("Launch")) {updateLaunch();}
         else if(status.equals("Land")) {updateLand();}
+        else if(status.equals("Orbit")) {updateOrbit();}
 
         return status.equals("Landed");
     }
@@ -107,7 +116,7 @@ public class Spaceship extends Entity {
 
             if(GameScreen.player.location.spaceship == this) {
                 if(currentPhase == 1) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("A computerized voice says, 'Commencing launch.'", "2W13CONT6CONT4CONT3DY11SHIA6SHIA2DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("A computerized voice says, 'Commencing launch'.", "2W13CONT6CONT4CONT3DY11SHIA6SHIA2DY", "", true, true));
                 }
 
                 else if(currentPhase == 2) {
@@ -137,7 +146,7 @@ public class Spaceship extends Entity {
 
             if(GameScreen.player.location.spaceship == this) {
                 if(currentPhase == 1) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("A computerized voice says, 'Initiating landing sequence.'", "2W13CONT6CONT4CONT3DY11SHIA8SHIA8SHIA2DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("A computerized voice says, 'Initiating landing sequence'.", "2W13CONT6CONT4CONT3DY11SHIA8SHIA8SHIA2DY", "", true, true));
                 }
 
                 else if(currentPhase == 2) {
@@ -160,5 +169,8 @@ public class Spaceship extends Entity {
                 }
             }
         }
+    }
+
+    public void updateOrbit() {
     }
 }

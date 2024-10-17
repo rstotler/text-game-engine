@@ -180,7 +180,7 @@ public class Emote extends Action {
                 sayAskString = "exclaim";
             }
 
-            String lineString = "You " + sayAskString + ", '" + targetEntityString + "'" + punctuation;
+            String lineString = "You " + sayAskString + ", '" + targetEntityString + punctuation + "'";
             String lineColorCode = "4CONT" + String.valueOf(sayAskString.length()) + "CONT3DY" + String.valueOf(targetEntityString.length()) + "SHIA" + "2DY";
 
             GameScreen.userInterface.console.writeToConsole(new Line(lineString, lineColorCode, "", true, true));
