@@ -78,6 +78,7 @@ public class Mob extends Entity {
         inventory.put("Gear", new ArrayList<Item>());
         inventory.put("Weapons", new ArrayList<Item>());
         inventory.put("Ammo", new ArrayList<Item>());
+        inventory.put("Food", new ArrayList<Item>());
 
         return inventory;
     }

@@ -169,6 +169,9 @@ public class Empty extends Action {
                 parentEntity.location.room.addItemToRoom(containerItem);
             }
             container.containerItemList.clear();
+            if(!container.status.equals("Open")) {
+                container.status = "Open";
+            }
         }
 
         // Message - You can't empty that. //
