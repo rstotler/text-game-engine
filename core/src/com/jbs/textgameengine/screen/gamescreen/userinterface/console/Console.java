@@ -93,5 +93,7 @@ public class Console extends UserInterfaceElement {
         } else {
             lineBufferList.add(line);
         }
+
+        scrollIndex = 0;
     }
 }

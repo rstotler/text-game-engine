@@ -444,6 +444,7 @@ public class Room {
     }
 
     public void addItemToRoom(Entity targetItem) {
+        targetItem.location = new Location(location);
 
         // Quantity Item Already In Room Check //
         boolean quantityItemInRoom = false;

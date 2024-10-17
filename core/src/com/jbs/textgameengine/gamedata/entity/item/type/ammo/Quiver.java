@@ -12,6 +12,9 @@ public class Quiver extends Item {
         super(id, startLocation);
         type = "Quiver";
         pocket = "Ammo";
+
+        status = "Open";
+        containerItemList = new ArrayList<>();
     }
 
     public static Quiver load(int id, Location startLocation) {
@@ -20,7 +23,6 @@ public class Quiver extends Item {
         // 001 - A Quiver //
         if(id == 1) {
             quiverItem.name = new Line("Quiver", "6CONT", "", true, true);
-            quiverItem.containerItemList = new ArrayList<>();
             quiverItem.containerItemTypeList = new ArrayList<>(Arrays.asList("Arrow", "Bolt"));
         }
 

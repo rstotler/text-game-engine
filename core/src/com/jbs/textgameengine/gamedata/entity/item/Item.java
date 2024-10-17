@@ -211,7 +211,8 @@ public class Item extends Entity {
             item.quantity = 1;
         }
 
-        if(item.containerItemList != null) {
+        if(item.containerItemList != null
+        && !(item.type.equals("Magazine") || item.type.equals("Quiver"))) {
             item.status = "Closed";
         }
 

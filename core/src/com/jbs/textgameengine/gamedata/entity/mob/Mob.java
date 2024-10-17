@@ -102,41 +102,41 @@ public class Mob extends Entity {
     public static HashMap<String, ArrayList<Skill>> loadSkillMap() {
         HashMap<String, ArrayList<Skill>> newSkillMap = new HashMap<>();
 
-        ArrayList<Skill> combatSkillList = new ArrayList<>();
-
         // Debug Skills //
+        ArrayList<Skill> debugSkillList = new ArrayList<>();
         if(true) {
-            combatSkillList.add(new SpinPunch());
-            combatSkillList.add(new WindSlash());
-            combatSkillList.add(new Fireball());
-            combatSkillList.add(new Firestorm());
-            combatSkillList.add(new Ice());
-            combatSkillList.add(new Touch());
-            combatSkillList.add(new Smooches());
-            combatSkillList.add(new Heal());
-            combatSkillList.add(new ForceTouch());
-            combatSkillList.add(new WhiteWind());
-            combatSkillList.add(new FullLife());
+            debugSkillList.add(new SpinPunch());
+            debugSkillList.add(new WindSlash());
+            debugSkillList.add(new Fireball());
+            debugSkillList.add(new Firestorm());
+            debugSkillList.add(new Ice());
+            debugSkillList.add(new Touch());
+            debugSkillList.add(new Smooches());
+            debugSkillList.add(new Heal());
+            debugSkillList.add(new ForceTouch());
+            debugSkillList.add(new WhiteWind());
+            debugSkillList.add(new FullLife());
+            newSkillMap.put("Debug", debugSkillList);
         }
 
         // Basic Combat Skills //
+        ArrayList<Skill> basicCombatSkillList = new ArrayList<>();
         if(true) {
-            combatSkillList.add(new Block());
-            combatSkillList.add(new Dodge());
-            combatSkillList.add(new Sweep());
-            combatSkillList.add(new Punch());
-            combatSkillList.add(new Jab());
-            combatSkillList.add(new Kick());
-            combatSkillList.add(new Bash());
-            combatSkillList.add(new Smash());
-            combatSkillList.add(new Slash());
-            combatSkillList.add(new Stab());
-            combatSkillList.add(new Shoot());
-            combatSkillList.add(new Snipe());
-            combatSkillList.add(new Throw());
+            basicCombatSkillList.add(new Dodge());
+            basicCombatSkillList.add(new Block());
+            basicCombatSkillList.add(new Sweep());
+            basicCombatSkillList.add(new Punch());
+            basicCombatSkillList.add(new Jab());
+            basicCombatSkillList.add(new Kick());
+            basicCombatSkillList.add(new Slash());
+            basicCombatSkillList.add(new Stab());
+            basicCombatSkillList.add(new Bash());
+            basicCombatSkillList.add(new Smash());
+            basicCombatSkillList.add(new Shoot());
+            basicCombatSkillList.add(new Snipe());
+            basicCombatSkillList.add(new Throw());
+            newSkillMap.put("Basic Combat", basicCombatSkillList);
         }
-
-        newSkillMap.put("Combat", combatSkillList);
 
         return newSkillMap;
     }
@@ -199,6 +199,14 @@ public class Mob extends Entity {
 
     public int getMaxViewDistance() {
         return 5;
+    }
+
+    public ArrayList<Skill> getCombatSkills() {
+        ArrayList<Skill> combatSkillList = new ArrayList<>();
+        combatSkillList.addAll(skillMap.get("Debug"));
+        combatSkillList.addAll(skillMap.get("Basic Combat"));
+
+        return combatSkillList;
     }
 
     public void addItemToInventory(Item targetItem) {

@@ -42,7 +42,7 @@ public class CombatAction extends Action {
 
         // Get CombatAction & Remove Name Key From Front Of InputList //
         CombatAction targetCombatAction = null;
-        for(Skill skill : parentEntity.skillMap.get("Combat")) {
+        for(Skill skill : parentEntity.getCombatSkills()) {
             if(!twoWordKey.isEmpty() && skill.nameKeyList.contains(twoWordKey)) {
                 targetCombatAction = new CombatAction(parentEntity, skill);
                 inputList = new ArrayList<>(inputList.subList(2, inputList.size()));
