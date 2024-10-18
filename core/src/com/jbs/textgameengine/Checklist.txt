@@ -1,0 +1,46 @@
+Action Checklist:
+ [ ] - Look
+ [ ] - Move
+ [ ] - Search
+ [ ] - Recruit
+ [ ] - Disband
+ [ ] - Get
+ [ ] - Drop
+ [ ] - Put
+ [ ] - Loot
+ [ ] - Empty
+ [ ] - OCLU
+ [ ] - Eat
+ [ ] - Wear
+ [ ] - Remove
+ [ ] - Switch
+ [ ] - Board
+ [ ] - Launch
+ [ ] - Land
+ [ ] - Radar
+ [ ] - Scan
+ [ ] - Course
+ [ ] - Throttle
+ [ ] - Target
+ [ ] - CombatAction
+ [ ] - Attack
+ [ ] - Reload
+ [ ] - Inventory
+ [ ] - Equipment
+ [ ] - Skills
+ [ ] - Group
+ [ ] - Time
+ [ ] - Emote
+ [ ] - Manifest
+ [ ] - Stop
+ [ ] - Config
+
+Other Checklist:
+ [ ] - Max Container Capacity
+ [ ] - Consider Magazines (Containers) With Commands
+ [ ] - Finish Writing All Basic Actions
+ [ ] - Review All Functions For MultipleEntityTypes
+ [ ] - Consider Differentiating Between Interrupting With Movement Vs. With Action
+ [ ] - Review All Functions For Interrupt Action Check
+ [ ] - Review All Functions For Night/Darkness Check (Night Messages, Etc.)
+ [ ] - Review All Functions For Fighting Check

@@ -109,6 +109,13 @@ public class Recruit extends Action {
             }
         }
 
+        // Message - Try moving a little closer. //
+        else if(false) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("", "", "", true, true));
+            }
+        }
+
         // Message - They have already been recruited. //
         else if(false) {
             if(parentEntity.isPlayer) {

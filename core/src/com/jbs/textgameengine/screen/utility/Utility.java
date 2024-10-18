@@ -28,6 +28,8 @@ public class Utility {
     public static Line insertCommas(int targetNum) {
         String targetNumString = "";
         String targetNumColorCode = "";
+        boolean negativeCheck = targetNum < 0;
+        targetNum = Math.abs(targetNum);
 
         for(int i = String.valueOf(targetNum).length() - 1; i >= 0; i--) {
             targetNumString = String.valueOf(targetNum).charAt(i) + targetNumString;
@@ -36,10 +38,32 @@ public class Utility {
             if((String.valueOf(targetNum).length() - i) % 3 == 0
             && i > 0) {
                 targetNumString = "," + targetNumString;
-                targetNumColorCode = "1DDGR" + targetNumColorCode;
+                targetNumColorCode = "1DY" + targetNumColorCode;
             }
         }
 
+        if(negativeCheck) {
+            targetNumString = "-" + targetNumString;
+            targetNumColorCode = "1DY" + targetNumColorCode;
+        }
+
         return new Line(targetNumString, targetNumColorCode, "", true, true);
+    }
+
+    public static Line insertCommas(float targetNum) {
+        Line targetNumLine = insertCommas((int) targetNum);
+
+        if(String.valueOf(targetNum).contains(".")) {
+            int pointIndex = String.valueOf(targetNum).indexOf('.');
+            int endIndex = pointIndex + 3;
+            if(endIndex > String.valueOf(targetNum).length()) {
+                endIndex = String.valueOf(targetNum).length();
+            }
+            String pointString = String.valueOf(targetNum).substring(pointIndex, endIndex);
+            targetNumLine.label += pointString;
+            targetNumLine.colorCode += "1DY" + String.valueOf(pointString.length() - 1) + "DDW";
+        }
+
+        return targetNumLine;
     }
 }

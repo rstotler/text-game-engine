@@ -72,6 +72,11 @@ public class Emote extends Action {
             return new Emote(parentEntity, "Cheer");
         }
 
+        else if(Arrays.asList("sigh").contains(inputList.get(0))
+        && inputList.size() == 1) {
+            return new Emote(parentEntity, "Sigh");
+        }
+
         else if(Arrays.asList("say").contains(inputList.get(0))) {
             if(inputList.size() == 1) {
                 GameScreen.userInterface.console.writeToConsole(new Line("Say what?", "4CONT4CONT1DY", "", true, true));
@@ -153,6 +158,12 @@ public class Emote extends Action {
         else if(actionType.equals("Cheer")) {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("And the peasants rejoiced.", "4CONT4CONT9CONT8CONT1DY", "", true, true));
+            }
+        }
+
+        else if(actionType.equals("Sigh")) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("You sigh..", "4CONT4CONT2DY", "", true, true));
             }
         }
 

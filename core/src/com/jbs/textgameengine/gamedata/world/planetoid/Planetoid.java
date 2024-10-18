@@ -88,4 +88,8 @@ public class Planetoid {
     public boolean isDay() {
         return false;
     }
+
+    public String toString() {
+        return getClass().toString().substring(getClass().toString().lastIndexOf(".") + 1);
+    }
 }

@@ -25,6 +25,8 @@ public class Eat extends Action {
 
         if(Arrays.asList("eat", "drink", "drin", "dri").contains(inputList.get(0))) {
             Eat eatAction = new Eat(parentEntity);
+            eatAction.actionType = "Eat";
+            if(inputList.get(0).startsWith("d")) {eatAction.actionType = "Drink";}
 
             // Eat/Drink TargetItem //
             if(inputList.size() >= 2) {
