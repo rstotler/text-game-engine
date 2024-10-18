@@ -144,7 +144,7 @@ public class Spaceship extends Entity {
 
             if(GameScreen.player.location.spaceship == this) {
                 if(currentPhase == 1) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("A computerized voice says, 'Commencing launch'.", "2W13CONT6CONT4CONT3DY11SHIA6SHIA2DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("A computerized voice says, \"Commencing launch\".", "2W13CONT6CONT4CONT3DY11SHIA6SHIA2DY", "", true, true));
                 }
 
                 else if(currentPhase == 2) {
@@ -177,7 +177,7 @@ public class Spaceship extends Entity {
 
             if(GameScreen.player.location.spaceship == this) {
                 if(currentPhase == 1) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("A computerized voice says, 'Initiating landing sequence'.", "2W13CONT6CONT4CONT3DY11SHIA8SHIA8SHIA2DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("A computerized voice says, \"Initiating landing sequence\".", "2W13CONT6CONT4CONT3DY11SHIA8SHIA8SHIA2DY", "", true, true));
                 }
 
                 else if(currentPhase == 2) {
@@ -279,7 +279,7 @@ public class Spaceship extends Entity {
                     GameScreen.userInterface.console.writeToConsole(new Line("The electronic hum stops as the ships engines power down.", "4CONT11CONT4CONT6CONT3CONT4CONT6CONT8CONT6CONT4CONT1DY", "", true, true));
                 }
                 else if(speedPercent == targetSpeedPercent) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("The engine sounds normalize as the ship reaches its top speed.", "4CONT7CONT7CONT10CONT3CONT4CONT5CONT8CONT4CONT4CONT5CONT1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("The engine sounds normalize as the ship reaches its target speed.", "4CONT7CONT7CONT10CONT3CONT4CONT5CONT8CONT4CONT7CONT5CONT1DY", "", true, true));
                 }
             }
         }

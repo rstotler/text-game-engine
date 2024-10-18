@@ -164,7 +164,7 @@ public class Course extends Action {
         && targetX == -1
         && targetY == -1) {
             if(parentEntity.isPlayer) {
-                String noInputString = "A computerized voice says, \"Set your course with 'Course Planet/X Y'\".";
+                String noInputString = "A computerized voice says, \"Set your course with 'Course Planet/X Y'.\"";
                 String noInputColorCode = "2W13CONT6CONT4CONT2DY1DY4SHIA5SHIA7SHIA5SHIA1DY7CONT6CONT1DR2W1W1DY2DY";
                 GameScreen.userInterface.console.writeToConsole(new Line(noInputString, noInputColorCode, "", true, true));
             }
