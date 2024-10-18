@@ -109,10 +109,10 @@ public class Land extends Action {
                 }
             }
 
-            // Message - You don't detect anywhere to land. //
+            // Message - The ship's radar doesn't detect any landing zones. //
             if(targetLandingRoom == null) {
                 if(parentEntity.isPlayer) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("You don't detect anywhere to land.", "4CONT3CONT1DY2DDW7CONT9CONT3CONT4CONT1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("The ship's radar doesn't detect any landing zones.", "4CONT4CONT1DY2DDW6CONT5CONT1DY2DDW7CONT4CONT8CONT5CONT1DY", "", true, true));
                 }
             }
 

@@ -100,8 +100,8 @@ public class Radar extends Action {
                         if(spaceshipPoint != null) {
                             int distance = (int) Utility.distanceBetweenPoints(spaceshipPoint, targetPoint);
                             Line distanceLine = Utility.insertCommas(distance);
-                            headingString += " (Distance: " + distanceLine.label + ")";
-                            headingColorCode += "2DR8CONT2DY" + distanceLine.colorCode + "1DR";
+                            headingString += " (Distance: " + distanceLine.label + " Miles)";
+                            headingColorCode += "2DR8CONT2DY" + distanceLine.colorCode + "1W5CONT1DR";
                         }
                     }
 

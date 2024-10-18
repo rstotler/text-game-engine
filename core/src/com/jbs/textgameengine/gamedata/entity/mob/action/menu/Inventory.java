@@ -19,6 +19,7 @@ public class Inventory extends Action {
         inventoryNameKeyMap.put("Gear", new ArrayList<>(Arrays.asList("gear", "gea")));
         inventoryNameKeyMap.put("Weapons", new ArrayList<>(Arrays.asList("weapons", "weapon", "weapo", "weap")));
         inventoryNameKeyMap.put("Ammo", new ArrayList<>(Arrays.asList("ammo", "amm")));
+        inventoryNameKeyMap.put("Food", new ArrayList<>(Arrays.asList("food", "foo")));
 
         return inventoryNameKeyMap;
     }

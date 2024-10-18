@@ -111,7 +111,6 @@ public class Action {
         actionList.add(new CombatAction());
         actionList.add(new Attack());
         actionList.add(new Reload());
-        actionList.add(new Unload());
 
         actionList.add(new Time());
         actionList.add(new Weather());

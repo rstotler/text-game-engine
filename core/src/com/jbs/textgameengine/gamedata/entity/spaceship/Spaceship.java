@@ -339,6 +339,6 @@ public class Spaceship extends Entity {
     }
 
     public float getTopSpeed() {
-        return 2500000.0f;
+        return 5000000.0f;
     }
 }

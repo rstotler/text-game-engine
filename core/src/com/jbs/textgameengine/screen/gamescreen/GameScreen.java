@@ -24,8 +24,8 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.prompt.InputBar;
 import java.util.HashMap;
 import java.util.Random;
 
-/* Final Early-Point Checklist:
- * [ ] - Finish Coding All Sections
+/* Project Checkpoint Checklist:
+ * [ ] - Finish Writing All Basic Actions
  * [ ] - Review All Functions For Interrupt Action Check
  * [ ] - Review All Functions For Night/Darkness Check
  * [ ] - Syntax Check All Functions

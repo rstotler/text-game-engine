@@ -27,7 +27,7 @@ public class Manifest extends Action {
 
     public Action getActionFromInput(String input, Mob parentEntity) {
         ArrayList<String> inputList = new ArrayList<>(Arrays.asList(input.split(" ")));
-        ArrayList<String> entityTypeList = new ArrayList<>(Arrays.asList("mob", "item", "general", "gear", "weapon", "firearm", "throwable", "ammo", "magazine", "quiver", "food"));
+        ArrayList<String> entityTypeList = new ArrayList<>(Arrays.asList("mob", "item", "general", "gear", "weapon", "firearm", "throwable", "ammo", "magazine", "quiver", "food", "drink"));
 
         if(Arrays.asList("manifest", "manifes", "manife", "manif", "mani", "man").contains(inputList.get(0))) {
             Manifest lookAction = new Manifest(parentEntity);
