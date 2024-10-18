@@ -4,7 +4,6 @@ import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 
 import java.util.*;
-import java.util.Arrays;
 
 public class Reload extends Action {
     public Reload(Mob parentEntity) {
@@ -21,11 +20,11 @@ public class Reload extends Action {
         if(Arrays.asList("reload", "reloa", "relo", "rel").contains(inputList.get(0))) {
             Reload reloadAction = new Reload(parentEntity);
 
-            // Reload Left/Right Ammo //
+            // Reload Main/Off Ammo //
             // Reload All Ammo //
             // Reload Weapon Ammo //
             // Reload All //
-            // Reload Left/Right //
+            // Reload Main/Off //
             // Reload Weapon/Ammo //
             // Reload //
 

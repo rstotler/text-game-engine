@@ -25,9 +25,14 @@ import java.util.HashMap;
 import java.util.Random;
 
 /* Project Checkpoint Checklist:
+ * [ ] - Max Container Capacity
+ * [ ] - Consider Magazines (Containers) With Commands
  * [ ] - Finish Writing All Basic Actions
+ * [ ] - Review All Functions For MultipleEntityTypes
+ * [ ] - Consider Differentiating Between Interrupting With Movement Vs. With Action
  * [ ] - Review All Functions For Interrupt Action Check
- * [ ] - Review All Functions For Night/Darkness Check
+ * [ ] - Review All Functions For Night/Darkness Check (Night Messages, Etc.)
+ * [ ] - Review All Functions For Fighting Check
  * [ ] - Syntax Check All Functions
  */
 
