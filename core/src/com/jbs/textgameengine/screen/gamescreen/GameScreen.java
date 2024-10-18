@@ -24,6 +24,13 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.prompt.InputBar;
 import java.util.HashMap;
 import java.util.Random;
 
+/* Final Early-Point Checklist:
+ * [ ] - Finish Coding All Sections
+ * [ ] - Review All Functions For Interrupt Action Check
+ * [ ] - Review All Functions For Night/Darkness Check
+ * [ ] - Syntax Check All Functions
+ */
+
 public class GameScreen extends Screen {
     public static UserInterface userInterface;
     public static HashMap<String, Galaxy> galaxyList;

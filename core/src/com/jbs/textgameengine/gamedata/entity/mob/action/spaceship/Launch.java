@@ -63,8 +63,8 @@ public class Launch extends Action {
             parentEntity.location.spaceship.status = "Launch";
             parentEntity.location.spaceship.currentPhase = 0;
             parentEntity.location.spaceship.phaseTimer = 3;
-            parentEntity.location.spaceship.location.area = null;
             parentEntity.location.spaceship.location.room = null;
+            parentEntity.location.spaceship.location.area = null;
 
             if(parentEntity.location.spaceship.hatchStatus.equals("Open")) {
                 parentEntity.location.spaceship.hatchStatus = "Closed";

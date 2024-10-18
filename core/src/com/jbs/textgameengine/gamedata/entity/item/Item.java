@@ -157,13 +157,11 @@ public class Item extends Entity {
                 item.keyList.add(1234);
             }
 
-            // 002 - The Key To Starship Heart of Gold //
+            // 002 - Generic Ship Key //
             else if(id == 2) {
-                item.prefix = "The ";
-                item.name = new Line("Key to Starship Heart of Gold", "4CONT3CONT9CONT6SHIAR3CONT4SHIAY", "", true, true);
+                item.name = new Line("Generic Ship Key", "8CONT5CONT3CONT", "", true, true);
                 item.weight = 0;
                 item.keyList = new ArrayList<>();
-                item.keyList.add(7777);
             }
 
             // 003 - A piece of Gold //

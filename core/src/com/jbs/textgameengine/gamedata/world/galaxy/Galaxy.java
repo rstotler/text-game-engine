@@ -133,7 +133,6 @@ public class Galaxy {
         areaCOTU.roomList.get(0).createEntity("Item", "General", 1);
 
         areaCOTU.roomList.get(6).createEntity("Spaceship", null, 1);
-        areaCOTU.roomList.get(6).createEntity("Item", "General", 2);
 
         Room roomWoodenCabin = areaCOTU.roomList.get(3);
         Item ornateChest = Item.load("General", 4, roomWoodenCabin.location);

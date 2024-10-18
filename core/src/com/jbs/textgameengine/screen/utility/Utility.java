@@ -16,6 +16,15 @@ public class Utility {
         return isInteger(String.valueOf(c));
     }
 
+    public static float distanceBetweenPoints(Point p1, Point p2) {
+        float xDiff = p2.x - p1.x;
+        float yDiff = p2.y - p1.y;
+        float xx = (float) Math.pow(xDiff, 2);
+        float yy = (float) Math.pow(yDiff, 2);
+
+        return (float) Math.sqrt(xx + yy);
+    }
+
     public static Line insertCommas(int targetNum) {
         String targetNumString = "";
         String targetNumColorCode = "";

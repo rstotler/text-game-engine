@@ -65,43 +65,68 @@ public class Course extends Action {
         Planetoid targetPlanetoid = null;
         boolean alreadyOrbitingCheck = false;
         boolean alreadyClearCheck = false;
+        boolean alreadyHeadingCheck = false;
+        boolean updateCourseCheck = false;
         Spaceship targetSpaceship = parentEntity.location.spaceship;
 
-        // Set Planetoid Heading //
-        if(!targetEntityString.isEmpty()) {
-            for(Planetoid planetoid : targetSpaceship.location.solarSystem.planetoidList) {
-                if(planetoid.nameKeyList.contains(targetEntityString)) {
-                    targetPlanetoid = planetoid;
+        if((targetSpaceship.status.equals("Orbit") || targetSpaceship.status.equals("Flight"))
+        && (targetSpaceship != null && parentEntity.location.room == targetSpaceship.cockpitRoom)) {
 
-                    if(targetSpaceship.status.equals("Orbit")
-                    && targetSpaceship.location.planetoid == planetoid) {
-                        alreadyOrbitingCheck = true;
-                    } else {
-                        targetSpaceship.headingPlanetoid = planetoid;
+            // Set Planetoid Heading //
+            if(!targetEntityString.isEmpty()) {
+                for(Planetoid planetoid : targetSpaceship.location.solarSystem.planetoidList) {
+                    if(planetoid.nameKeyList.contains(targetEntityString)) {
+                        targetPlanetoid = planetoid;
+
+                        if(targetSpaceship.headingPlanetoid == planetoid) {
+                            alreadyHeadingCheck = true;
+                        }
+                        else if(targetSpaceship.status.equals("Orbit")
+                        && targetSpaceship.location.planetoid == planetoid) {
+                            alreadyOrbitingCheck = true;
+                        }
+                        else {
+                            targetSpaceship.headingPlanetoid = planetoid;
+                            updateCourseCheck = true;
+                        }
+
+                        break;
                     }
-
-                    break;
                 }
             }
-        }
 
-        // Set X Y Heading //
-        else if(targetX != -1 && targetY != -1) {
-            if(targetX < -999999999999999L) {targetX = -999999999999999L;}
-            else if(targetX > 999999999999999L) {targetX = 999999999999999L;}
-            if(targetY < -999999999999999L) {targetY = -999999999999999L;}
-            else if(targetY > 999999999999999L) {targetY = 999999999999999L;}
+            // Set X Y Heading //
+            else if(targetX != -1 && targetY != -1) {
+                if(targetX < -999999999999999999L) {targetX = -999999999999999999L;}
+                else if(targetX > 999999999999999999L) {targetX = 999999999999999999L;}
+                if(targetY < -999999999999999999L) {targetY = -999999999999999999L;}
+                else if(targetY > 999999999999999999L) {targetY = 999999999999999999L;}
 
-            targetSpaceship.headingXY = new Point(targetX, targetY);
-        }
+                targetSpaceship.headingXY = new Point(targetX, targetY);
+                updateCourseCheck = true;
+            }
 
-        // Clear Course //
-        else if(clearCheck) {
-            if(targetSpaceship.headingPlanetoid == null && targetSpaceship.headingXY == null) {
-                alreadyClearCheck = true;
-            } else {
-                targetSpaceship.headingPlanetoid = null;
-                targetSpaceship.headingXY = null;
+            // Clear Course //
+            else if(clearCheck) {
+                if(targetSpaceship.headingPlanetoid == null && targetSpaceship.headingXY == null) {
+                    alreadyClearCheck = true;
+                } else {
+                    targetSpaceship.headingPlanetoid = null;
+                    targetSpaceship.headingXY = null;
+
+                    targetSpaceship.targetSpeedPercent = 0;
+                    targetSpaceship.displaySpeedDownMessage = 1;
+                    targetSpaceship.displaySpeedUpMessage = -1;
+                }
+            }
+
+            // Update Ship Speed & Speed Messages //
+            if(updateCourseCheck) {
+                targetSpaceship.targetSpeedPercent = 1.0f;
+                if(targetSpaceship.speedPercent != 1.0) {
+                    targetSpaceship.displaySpeedUpMessage = 1;
+                }
+                targetSpaceship.displaySpeedDownMessage = -1;
             }
         }
 
@@ -142,6 +167,15 @@ public class Course extends Action {
                 String noInputString = "A computerized voice says, \"Set your course with 'Course Planet/X Y'\".";
                 String noInputColorCode = "2W13CONT6CONT4CONT2DY1DY4SHIA5SHIA7SHIA5SHIA1DY7CONT6CONT1DR2W1W1DY2DY";
                 GameScreen.userInterface.console.writeToConsole(new Line(noInputString, noInputColorCode, "", true, true));
+            }
+        }
+
+        // Message - You are already heading to Planet. //
+        else if(alreadyHeadingCheck) {
+            if(parentEntity.isPlayer) {
+                String courseString = "You are already heading to " + targetPlanetoid.name.label + ".";
+                String courseColorCode = "4CONT4CONT8CONT8CONT3CONT" + targetPlanetoid.name.colorCode + "1DY";
+                GameScreen.userInterface.console.writeToConsole(new Line(courseString, courseColorCode, "", true, true));
             }
         }
 

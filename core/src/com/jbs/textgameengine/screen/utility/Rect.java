@@ -26,6 +26,10 @@ public class Rect {
                               new Random().nextInt(256)/255f, 1);
     }
 
+    public Rect(int width, int height) {
+        this(0, 0, width, height);
+    }
+
     public void renderShape(OrthographicCamera camera) {
         if(camera != null) {
             Screen.shapeRenderer.setProjectionMatrix(camera.combined);

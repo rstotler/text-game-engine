@@ -82,12 +82,12 @@ public class Land extends Action {
             Room targetLandingRoom = null;
 
             if(actionType.equals("Land #")) {
-                if(parentEntity.location.planetoid.isPlanet
-                        && !((Planet) parentEntity.location.planetoid).landingPadList.isEmpty()
-                        && targetCount <= ((Planet) parentEntity.location.planetoid).landingPadList.size()) {
+                if(parentEntity.location.spaceship.location.planetoid.isPlanet
+                && !((Planet) parentEntity.location.spaceship.location.planetoid).landingPadList.isEmpty()
+                && targetCount <= ((Planet) parentEntity.location.spaceship.location.planetoid).landingPadList.size()) {
                     int targetLandingRoomIndex = targetCount;
                     if(targetCount > 0) {targetLandingRoomIndex -= 1;}
-                    targetLandingRoom = ((Planet) parentEntity.location.planetoid).landingPadList.get(targetLandingRoomIndex);
+                    targetLandingRoom = ((Planet) parentEntity.location.spaceship.location.planetoid).landingPadList.get(targetLandingRoomIndex);
                 }
             }
 
@@ -103,16 +103,16 @@ public class Land extends Action {
             }
 
             else if(actionType.equals("Land")) {
-                if(parentEntity.location.planetoid.isPlanet
-                && !((Planet) parentEntity.location.planetoid).landingPadList.isEmpty()) {
-                    targetLandingRoom = ((Planet) parentEntity.location.planetoid).landingPadList.get(0);
+                if(parentEntity.location.spaceship.location.planetoid.isPlanet
+                && !((Planet) parentEntity.location.spaceship.location.planetoid).landingPadList.isEmpty()) {
+                    targetLandingRoom = ((Planet) parentEntity.location.spaceship.location.planetoid).landingPadList.get(0);
                 }
             }
 
-            // Message - You see no such landing pad. //
+            // Message - You don't detect anywhere to land. //
             if(targetLandingRoom == null) {
                 if(parentEntity.isPlayer) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("You see no such landing pad.", "4CONT4CONT3CONT5CONT8CONT3CONT1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("You don't detect anywhere to land.", "4CONT3CONT1DY2DDW7CONT9CONT3CONT4CONT1DY", "", true, true));
                 }
             }
 

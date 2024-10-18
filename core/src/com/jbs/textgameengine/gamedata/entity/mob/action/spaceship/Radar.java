@@ -7,11 +7,10 @@ import com.jbs.textgameengine.gamedata.world.planetoid.Planetoid;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
+import com.jbs.textgameengine.screen.utility.Point;
+import com.jbs.textgameengine.screen.utility.Utility;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class Radar extends Action {
     public Radar(Mob parentEntity) {
@@ -49,22 +48,73 @@ public class Radar extends Action {
                 GameScreen.userInterface.console.writeToConsole(new Line("You look at the ship's radar screen.", "4CONT5CONT3CONT4CONT4CONT1DY2DW6CONT6CONT1DY", "", true, true));
 
                 // Display Ship Status //
-                String statusString = parentEntity.location.spaceship.status + "ing";
-                String statusColorCode = String.valueOf(parentEntity.location.spaceship.status.length() + 3) + "CONT";
-                if(parentEntity.location.spaceship.status.equals("Landed")
-                || parentEntity.location.spaceship.status.equals("Flight")) {
-                    statusString = parentEntity.location.spaceship.status;
-                    statusColorCode = String.valueOf(parentEntity.location.spaceship.status.length()) + "CONT";
+                if(true) {
+                    String statusString = "Ship Status: " + parentEntity.location.spaceship.status + "ing";
+                    String statusColorCode = "5CONT6CONT2DY" + String.valueOf(parentEntity.location.spaceship.status.length() + 3) + "CONT";
+                    if(parentEntity.location.spaceship.status.equals("Landed")) {
+                        statusString = "Ship Status: Landed";
+                        statusColorCode = "5CONT6CONT2DY6CONT";
+                    }
+                    else if(parentEntity.location.spaceship.status.equals("Flight")) {
+                        statusString = "Ship Status: In Flight";
+                        statusColorCode = "5CONT6CONT2DY3CONT6CONT";
+                    }
+
+                    String planetStatusString = "";
+                    String planetStatusColorCode = "";
+                    if(!parentEntity.location.spaceship.status.equals("Flight")
+                    && parentEntity.location.spaceship.location.planetoid != null) {
+                        planetStatusString = " [Planet " + parentEntity.location.spaceship.location.planetoid.name.label + "]";
+                        planetStatusColorCode = "2DR7CONT" + parentEntity.location.spaceship.location.planetoid.name.colorCode + "1DR";
+                    }
+
+                    GameScreen.userInterface.console.writeToConsole(new Line(statusString + planetStatusString, statusColorCode + planetStatusColorCode, "", false, true));
                 }
 
-                String planetStatusString = "";
-                String planetStatusColorCode = "";
-                if(!parentEntity.location.spaceship.status.equals("Flight")
-                && parentEntity.location.spaceship.location.planetoid != null) {
-                    planetStatusString = " [Planet " + parentEntity.location.spaceship.location.planetoid.name.label + "]";
-                    planetStatusColorCode = "2DR7CONT" + parentEntity.location.spaceship.location.planetoid.name.colorCode + "1DR";
+                // Display Spaceship Heading String //
+                if(true) {
+                    Point targetPoint = null;
+                    String headingString = "Ship Heading: [None]";
+                    String headingColorCode = "5CONT7CONT2DY1DR4CONT1DR";
+                    if(parentEntity.location.spaceship.headingPlanetoid != null) {
+                        targetPoint = parentEntity.location.spaceship.headingPlanetoid.coordinates;
+                        headingString = "Ship Heading: " + parentEntity.location.spaceship.headingPlanetoid.name.label;
+                        headingColorCode = "5CONT7CONT2DY" + parentEntity.location.spaceship.headingPlanetoid.name.colorCode;
+                    }
+                    else if(parentEntity.location.spaceship.headingXY != null) {
+                        targetPoint = parentEntity.location.spaceship.headingXY;
+                        Line headingXLine = Utility.insertCommas((int) parentEntity.location.spaceship.headingXY.x);
+                        Line headingYLine = Utility.insertCommas((int) parentEntity.location.spaceship.headingXY.y);
+                        headingString = "Ship Heading: X: " + headingXLine.label + ", Y: " + headingYLine.label;
+                        headingColorCode = "5CONT7CONT2DY1W2DY" + headingXLine.colorCode + "2DY1W2DY" + headingYLine.colorCode;
+                    }
+
+                    if(parentEntity.location.spaceship.headingPlanetoid != null
+                    || parentEntity.location.spaceship.headingXY != null) {
+                        Point spaceshipPoint = null;
+                        if(parentEntity.location.spaceship.location.planetoid != null) {
+                            spaceshipPoint = parentEntity.location.spaceship.location.planetoid.coordinates;
+                        } else if(parentEntity.location.spaceship.coordinates != null) {
+                            spaceshipPoint = parentEntity.location.spaceship.coordinates;
+                        }
+                        if(spaceshipPoint != null) {
+                            int distance = (int) Utility.distanceBetweenPoints(spaceshipPoint, targetPoint);
+                            Line distanceLine = Utility.insertCommas(distance);
+                            headingString += " (Distance: " + distanceLine.label + ")";
+                            headingColorCode += "2DR8CONT2DY" + distanceLine.colorCode + "1DR";
+                        }
+                    }
+
+                    GameScreen.userInterface.console.writeToConsole(new Line(headingString, headingColorCode, "", false, true));
                 }
-                GameScreen.userInterface.console.writeToConsole(new Line("Ship Status: " + statusString + planetStatusString, "5CONT6CONT2DY" + statusColorCode + planetStatusColorCode, "", true, true));
+
+                // Display Speed String //
+                if(true) {
+                    String speedPercentString = String.valueOf((int) (parentEntity.location.spaceship.speedPercent * 100));
+                    String speedString = "Ship Speed: " + speedPercentString + "%";
+                    String speedColorCode = "5CONT5CONT2DY" + String.valueOf(speedPercentString).length() + "CONT1DY";
+                    GameScreen.userInterface.console.writeToConsole(new Line(speedString, speedColorCode, "", true, true));
+                }
 
                 // Display Solar System Planetoids //
                 GameScreen.userInterface.console.writeToConsole(new Line("Detected Planets:", "9CONT7CONT1DY", "", false, true));
