@@ -36,8 +36,7 @@ public class Planet extends Planetoid {
         if(minutesInDay > 0) {dayPercent = (minuteCountDay + 0.0f) / minutesInDay;}
 
         // Time Of Day Messages //
-        if(GameScreen.player.location != null
-        && GameScreen.player.location.planetoid == this) {
+        if(GameScreen.player.location.planetoid == this) {
             if(GameScreen.player.location.room != null
             && !(GameScreen.player.location.spaceship != null && !GameScreen.player.location.spaceship.status.equals("Landed"))) {
                 if(!dawnMessage && dayPercent >= dawnPercent) {
@@ -87,11 +86,13 @@ public class Planet extends Planetoid {
         duskPercent = ((nightMinutes / 1.94f) + (minutesInDay - nightMinutes)) / minutesInDay;
         sunsetPercent = ((nightMinutes / 1.64f) + (minutesInDay - nightMinutes)) / minutesInDay;
 
-        dawnMessage = ((minuteCountDay + 0.0f) / minuteCountDay) >= dawnPercent;
-        sunriseMessage = ((minuteCountDay + 0.0f) / minutesInDay) >= sunrisePercent;
-        noonMessage = ((minuteCountDay + 0.0f) / minutesInDay) >= noonPercent;
-        duskMessage = ((minuteCountDay + 0.0f) / minutesInDay) >= duskPercent;
-        sunsetMessage = ((minuteCountDay + 0.0f) / minutesInDay) >= sunsetPercent;
+        if(GameScreen.player.location.planetoid == this) {
+            dawnMessage = ((minuteCountDay + 0.0f) / minuteCountDay) >= dawnPercent;
+            sunriseMessage = ((minuteCountDay + 0.0f) / minutesInDay) >= sunrisePercent;
+            noonMessage = ((minuteCountDay + 0.0f) / minutesInDay) >= noonPercent;
+            duskMessage = ((minuteCountDay + 0.0f) / minutesInDay) >= duskPercent;
+            sunsetMessage = ((minuteCountDay + 0.0f) / minutesInDay) >= sunsetPercent;
+        }
     }
 
     public boolean isDay() {
