@@ -14,6 +14,7 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import java.util.*;
 
 public class Mob extends Entity {
+    public String type;
     public static ArrayList<String> gearSlotList = new ArrayList<>(Arrays.asList("Head", "Face", "Body", "About", "Hands", "Legs", "Feet", "Boots", "Neck", "Ring", "Main", "Off"));
 
     public HashMap<String, ArrayList<Item>> inventory;
@@ -29,6 +30,7 @@ public class Mob extends Entity {
 
     public Mob(int id, Location startLocation) {
         super(id, startLocation);
+        type = "Mob";
         isMob = true;
 
         inventory = loadInventory();
