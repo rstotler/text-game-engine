@@ -33,7 +33,9 @@ public class Item extends Entity {
 
     public ArrayList<Integer> keyList;
     public ArrayList<Item> containerItemList;
-    public ArrayList<String> containerItemTypeList;
+    public ArrayList<String> ammoTypeList;
+    public int containerCapacity;
+    public float containerMaxWeight;
 
     public Item(int id, Location startLocation) {
         super(id, startLocation);
@@ -54,7 +56,9 @@ public class Item extends Entity {
 
         keyList = null;
         containerItemList = null;
-        containerItemTypeList = null;
+        ammoTypeList = null;
+        containerCapacity = -1;
+        containerMaxWeight = -1.0f;
     }
 
     public float getWeight() {
@@ -69,6 +73,17 @@ public class Item extends Entity {
             return containerWeight;
         }
         return weight;
+    }
+
+    public float getWeightInContainer() {
+        float weightInContainer = 0.0f;
+        if(containerItemList != null) {
+            for(Item item : containerItemList) {
+                weightInContainer += item.getWeight();
+            }
+        }
+
+        return weightInContainer;
     }
 
     public void displayLookDescription(int lookFromDistance) {

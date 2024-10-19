@@ -23,7 +23,7 @@ public class Quiver extends Item {
         // 001 - A Quiver //
         if(id == 1) {
             quiverItem.name = new Line("Quiver", "6CONT", "", true, true);
-            quiverItem.containerItemTypeList = new ArrayList<>(Arrays.asList("Arrow", "Bolt"));
+            quiverItem.ammoTypeList = new ArrayList<>(Arrays.asList("Arrow", "Bolt"));
         }
 
         // Default Quiver Item //

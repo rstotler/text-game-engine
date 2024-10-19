@@ -22,31 +22,31 @@ public class Magazine extends Item {
         // 001 - A 9mm 8-Round Magazine //
         if(id == 1) {
             magazineItem.name = new Line("9mm 8-Round Magazine", "4CONT1W1DY6CONT8CONT", "", true, true);
-            magazineItem.containerItemTypeList = new ArrayList<>(Arrays.asList("9mm"));
+            magazineItem.ammoTypeList = new ArrayList<>(Arrays.asList("9mm"));
         }
 
         // 002 - A 9mm 12-Round Magazine //
         else if(id == 2) {
             magazineItem.name = new Line("9mm 12-Round Magazine", "4CONT2W1DY6CONT8CONT", "", true, true);
-            magazineItem.containerItemTypeList = new ArrayList<>(Arrays.asList("9mm"));
+            magazineItem.ammoTypeList = new ArrayList<>(Arrays.asList("9mm"));
         }
 
         // 003 - A .45 8-Round Magazine //
         else if(id == 3) {
             magazineItem.name = new Line(".45 8-Round Magazine", "1DY3W1W1DY6CONT8CONT", "", true, true);
-            magazineItem.containerItemTypeList = new ArrayList<>(Arrays.asList(".45"));
+            magazineItem.ammoTypeList = new ArrayList<>(Arrays.asList(".45"));
         }
 
         // 004 - A .45 12-Round Magazine //
         else if(id == 4) {
             magazineItem.name = new Line(".45 12-Round Magazine", "1DY3W2W1DY6CONT8CONT", "", true, true);
-            magazineItem.containerItemTypeList = new ArrayList<>(Arrays.asList(".45"));
+            magazineItem.ammoTypeList = new ArrayList<>(Arrays.asList(".45"));
         }
 
         // 005 - A 5.56 6-Round Magazine //
         else if(id == 5) {
             magazineItem.name = new Line("5.56 6-Round Magazine", "1W1DY3W1W1DY6CONT8CONT", "", true, true);
-            magazineItem.containerItemTypeList = new ArrayList<>(Arrays.asList("5.56"));
+            magazineItem.ammoTypeList = new ArrayList<>(Arrays.asList("5.56"));
         }
 
         // Default Magazine Item //
