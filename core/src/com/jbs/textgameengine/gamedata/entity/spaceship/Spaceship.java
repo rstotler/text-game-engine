@@ -4,6 +4,7 @@ import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.area.Area;
+import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
 import com.jbs.textgameengine.gamedata.world.planetoid.Planetoid;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
@@ -326,6 +327,10 @@ public class Spaceship extends Entity {
                         location.planetoid = planet;
                         headingPlanetoid = null;
                         headingXY = null;
+
+                        if(planet.isPlanet) {
+                            ((Planet) planet).updateDayNightTimers();
+                        }
 
                         if(GameScreen.player.location.spaceship == this) {
                             GameScreen.userInterface.console.writeToConsole(new Line("You begin orbiting " + planet.name.label + ".", "4CONT6CONT9CONT" + planet.name.colorCode + "1DY", "", true, true));
