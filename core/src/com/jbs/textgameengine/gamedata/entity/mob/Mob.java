@@ -3,11 +3,13 @@ package com.jbs.textgameengine.gamedata.entity.mob;
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
+import com.jbs.textgameengine.gamedata.entity.mob.dialogue.Dialogue;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.basic.*;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.debug.*;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.statuseffect.StatusEffect;
 import com.jbs.textgameengine.gamedata.world.Location;
+import com.jbs.textgameengine.gamedata.world.utility.TargetRoomData;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
@@ -28,6 +30,8 @@ public class Mob extends Entity {
     public ArrayList<Mob> groupList;
     public ArrayList<Mob> combatList;
 
+    public Dialogue dialogue;
+
     public Mob(int id, Location startLocation) {
         super(id, startLocation);
         type = "Mob";
@@ -43,6 +47,8 @@ public class Mob extends Entity {
         targetList = new ArrayList<>();
         groupList = new ArrayList<>();
         combatList = new ArrayList<>();
+
+        dialogue = null;
     }
 
     public static Mob load(int id, Location startLocation) {
@@ -52,15 +58,32 @@ public class Mob extends Entity {
         if(id == 1) {
             mob.name = new Line("Greeter Droid", "8CONT5CONT", "", true, true);
             mob.roomDescription = new Line("is here, greeting visitors.", "3CONT4CONT2DY9CONT8CONT1DY", "", true, true);
+
+            HashMap<String, ArrayList<String>> dialogueMap = new HashMap<>();
+            dialogueMap.put("Default", new ArrayList<String>());
+            dialogueMap.get("Default").add("Welcome to COTU Spaceport. Please enjoy your stay!");
+            mob.dialogue = new Dialogue(mob, dialogueMap);
         }
 
-        // 002 - A Sasquatch //
+        // 002 - A Shopkeeper Droid //
         else if(id == 2) {
+            mob.name = new Line("Shopkeeper Droid", "11CONT5CONT", "", true, true);
+            mob.roomDescription = new Line("is here, helping customers.", "3CONT4CONT2DY8CONT9CONT1DY", "", true, true);
+
+            HashMap<String, ArrayList<String>> dialogueMap = new HashMap<>();
+            dialogueMap.put("Default", new ArrayList<String>());
+            dialogueMap.get("Default").add("Welcome to the gift shop. Please 'List' if you need assistance.");
+            mob.dialogue = new Dialogue(mob, dialogueMap);
+            mob.dialogue.resetOnPlayerEntrance = true;
+        }
+
+        // 003 - A Sasquatch //
+        else if(id == 3) {
             mob.name = new Line("Sasquatch", "9CONT", "", true, true);
         }
 
-        // 003 - A Skinny Alien Dude //
-        else if(id == 3) {
+        // 004 - A Skinny Alien Dude //
+        else if(id == 4) {
             mob.name = new Line("Skinny Alien Dude", "7CONT6CONT4CONT", "", true, true);
         }
 
@@ -146,7 +169,7 @@ public class Mob extends Entity {
 
     public void update() {
 
-        // Darkness Check //
+        // Darkness (Lose Sight Of Targets) Check //
         if(!location.room.isLit() && !targetList.isEmpty()) {
             if(isPlayer) {
                 String targetString = "target";
@@ -155,6 +178,12 @@ public class Mob extends Entity {
             }
 
             targetList.clear();
+        }
+
+        // Dialogue Check //
+        if(dialogue != null
+        && location.room == GameScreen.player.location.room) {
+            dialogue.update();
         }
 
         // Current Action Check //
@@ -169,13 +198,27 @@ public class Mob extends Entity {
 
     public boolean interruptAction() {
         if(currentAction != null
-        && !currentAction.noInterrupt) {
-            GameScreen.userInterface.console.writeToConsole(new Line("You stop what you are doing.", "4CONT5CONT5CONT4CONT4CONT5CONT1DY", "", true, true));
+        && !currentAction.isCombatAction) {
+            GameScreen.userInterface.console.writeToConsole(new Line("You stop " + currentAction.toString().toLowerCase() + "ing.", "4CONT5CONT" + String.valueOf(currentAction.toString().length()) + "CONT3DDW1DY", "", true, true));
             currentAction = null;
             return true;
         }
 
         return false;
+    }
+
+    public void combatActionDistanceCancelCheck() {
+        if(currentAction != null
+        && currentAction.isCombatAction) {
+            TargetRoomData targetRoomData = TargetRoomData.getTargetRoomFromStartRoom(location.room, currentAction.movementList, false, false);
+            if(targetRoomData.distance > currentAction.skill.getMaxDistance(this)
+            || !targetRoomData.message.isEmpty()) {
+                if(isPlayer) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("You stop " + currentAction.skill.name.label.toLowerCase() + "ing.", "4CONT5CONT" + String.valueOf(currentAction.skill.name.label.length()) + "CONT3DDW1DY", "", true, true));
+                }
+                currentAction = null;
+            }
+        }
     }
 
     public float getWeight() {

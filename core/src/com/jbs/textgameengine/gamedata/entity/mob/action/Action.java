@@ -12,6 +12,7 @@ import com.jbs.textgameengine.gamedata.entity.mob.action.other.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.*;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
+import com.jbs.textgameengine.gamedata.world.Location;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,7 @@ public class Action {
     public static ArrayList<Action> actionList = loadActionList();
 
     public String actionType;
+    public boolean isCombatAction;
 
     public String targetEntityString;
     public String targetDirection;
@@ -31,12 +33,13 @@ public class Action {
 
     public Mob parentEntity;
     public Skill skill;
+    public ArrayList<String> movementList;
 
-    public boolean noInterrupt;
     public int performActionTimer;
 
     public Action(Mob parentEntity, Skill skill) {
         actionType = "";
+        isCombatAction = false;
 
         targetEntityString = "";
         targetDirection = "";
@@ -49,8 +52,8 @@ public class Action {
 
         this.parentEntity = parentEntity;
         this.skill = skill;
+        movementList = new ArrayList<>();
 
-        noInterrupt = false;
         performActionTimer = 1;
     }
 
@@ -114,6 +117,7 @@ public class Action {
 
         actionList.add(new Time());
         actionList.add(new Weather());
+        actionList.add(new Say());
         actionList.add(new Emote());
 
         actionList.add(new Manifest());

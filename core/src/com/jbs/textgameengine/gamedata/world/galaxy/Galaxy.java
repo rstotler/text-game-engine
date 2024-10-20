@@ -48,7 +48,7 @@ public class Galaxy {
         // Planet - Lapine (365 Days In Year, 1440 Minutes In Day) //
         Line lapineName = new Line("Lapine", "6CONT", "", true, true);
         Location lapineLocation = new Location(galaxyCottonTail, systemLagoMorpha);
-        Planet planetLapine = new Planet(lapineName, lapineLocation, 93000000, -1, 23.45f, 1440, 525600);
+        Planet planetLapine = new Planet(lapineName, lapineLocation, 92598974, -1, 23.45f, 1440, 525600);
         systemLagoMorpha.planetoidList.add(planetLapine);
 
         // Area - Center Of The Universe //
@@ -116,10 +116,18 @@ public class Galaxy {
         cotuRoom07.createHiddenExit("West", cotuRoom02);
         areaCOTU.roomList.add(cotuRoom07);
 
+        // Room 08 - Spaceport Gift Shop //
+        Line cotuRoom08Name = new Line("Spaceport Gift Shop", "10CONT5CONT4CONT", "", true, true);
+        Location cotuRoom08Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
+        Room cotuRoom08 = new Room(cotuRoom08Name, null, cotuRoom08Location);
+        cotuRoom08.inside = true;
+        cotuRoom08.createExit("West", cotuRoom04, "Automatic");
+        areaCOTU.roomList.add(cotuRoom08);
+
         // Planet - Seres (670 Days In Year, 1480 Minutes In Day) //
         Line seresName = new Line("Seres", "5CONT", "", true, true);
         Location seresLocation = new Location(galaxyCottonTail, systemLagoMorpha);
-        Planet planetSeres = new Planet(seresName, seresLocation, 142500000, -1, 25.20f, 1480, 991600);
+        Planet planetSeres = new Planet(seresName, seresLocation, 142753817, -1, 25.20f, 1480, 991600);
         systemLagoMorpha.planetoidList.add(planetSeres);
 
         loadDebugEntities(debugGalaxy);
@@ -133,6 +141,7 @@ public class Galaxy {
         areaCOTU.roomList.get(0).createEntity("Item", "General", 1);
 
         areaCOTU.roomList.get(6).createEntity("Spaceship", null, 1);
+        areaCOTU.roomList.get(8).createEntity("Mob", null, 2);
 
         Room roomWoodenCabin = areaCOTU.roomList.get(3);
         Item ornateChest = Item.load("General", 4, roomWoodenCabin.location);

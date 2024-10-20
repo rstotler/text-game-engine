@@ -22,9 +22,9 @@ public class CombatAction extends Action {
 
     public CombatAction(Mob parentEntity, Skill combatSkill) {
         super(parentEntity, combatSkill);
+        isCombatAction = true;
 
         targetRoomData = null;
-        noInterrupt = true;
     }
 
     public CombatAction() {
@@ -253,6 +253,14 @@ public class CombatAction extends Action {
                 this.targetRoomData.distance = 0;
             } else {
                 this.targetRoomData = targetRoomData;
+            }
+
+            // Set Movement List (If Distance > 0) //
+            if(targetRoomData != null
+            && !targetRoomData.targetDirection.isEmpty()) {
+                ArrayList<String> directionList = new ArrayList<>();
+                for(int i = 0; i < targetCount; i++) {directionList.add(targetDirection);}
+                movementList = new ArrayList<>(directionList);
             }
 
             // Group Entity In Target Room & Combat Target In Target Room Checks //

@@ -36,11 +36,11 @@ Action Checklist:
  [ ] - Config
 
 Other Checklist:
- [ ] - Max Container Capacity
+ [ ] - Finish Proto Combat
+ [ ] - Skill Weapon Check & Ammo Check
  [ ] - Consider Magazines (Containers) With Commands
- [ ] - Finish Writing All Basic Actions
  [ ] - Review All Functions For MultipleEntityTypes
  [ ] - Consider Differentiating Between Interrupting With Movement Vs. With Action
  [ ] - Review All Functions For Interrupt Action Check
  [ ] - Review All Functions For Night/Darkness Check (Night Messages, Etc.)
- [ ] - Review All Functions For Fighting Check
+ [ ] - Review All Functions For Fighting & CombatList Check

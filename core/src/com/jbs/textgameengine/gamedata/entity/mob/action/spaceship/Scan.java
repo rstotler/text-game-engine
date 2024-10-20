@@ -75,9 +75,9 @@ public class Scan extends Action {
                     int dayCount = targetPlanetoid.minuteCountYear / targetPlanetoid.minutesInDay;
                     int daysInYear = targetPlanetoid.minutesInYear / targetPlanetoid.minutesInDay;
                     String dayString = dayCount + "/" + daysInYear;
-                    String dayColorCode = String.valueOf(dayCount).length() + "CONT1DY" + String.valueOf(daysInYear).length() + "CONT";
+                    String dayColorCode = String.valueOf(dayCount).length() + "DDW1DY" + String.valueOf(daysInYear).length() + "DDW";
                     int yearPercent = (int) (((targetPlanetoid.minuteCountYear + 0.0f) / targetPlanetoid.minutesInYear) * 100);
-                    GameScreen.userInterface.console.writeToConsole(new Line("Day: " + dayString + ", Year: " + String.valueOf(yearPercent) + "%", "3CONT2DY" + dayColorCode + "2DY4CONT2DY" + String.valueOf(yearPercent).length() + "DDW1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("Day: " + dayString + " (Year: " + String.valueOf(yearPercent) + "%)", "3CONT2DY" + dayColorCode + "2DY4CONT2DY" + String.valueOf(yearPercent).length() + "DDW2DY", "", true, true));
                 }
             }
         }

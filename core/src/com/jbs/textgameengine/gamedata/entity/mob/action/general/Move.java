@@ -1,5 +1,6 @@
 package com.jbs.textgameengine.gamedata.entity.mob.action.general;
 
+import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.world.Location;
@@ -105,7 +106,36 @@ public class Move extends Action {
                 }
 
                 if(newRoom != null) {
+                    if(parentEntity.currentAction != null
+                    && !parentEntity.currentAction.isCombatAction) {
+                        parentEntity.interruptAction();
+                    }
+
                     parentEntity.location = new Location(newRoom.location);
+
+                    // Update Current Action Movement List //
+                    if(parentEntity.currentAction != null) {
+                        if(!parentEntity.currentAction.movementList.isEmpty()
+                        && parentEntity.currentAction.movementList.get(0).equals(targetDirection)) {
+                            parentEntity.currentAction.movementList.remove(0);
+                        } else {
+                            parentEntity.currentAction.movementList.add(0, Location.getOppositeDirection(targetDirection));
+                        }
+                    }
+
+                    // Combat Action Distance Cancel Check //
+                    if(parentEntity.currentAction != null
+                    && parentEntity.currentAction.isCombatAction) {
+                        parentEntity.combatActionDistanceCancelCheck();
+                    }
+
+                    // Reset Mob Dialogue Timers //
+                    for(Entity mob : newRoom.mobList) {
+                        if(((Mob) mob).dialogue != null
+                        && ((Mob) mob).dialogue.resetOnPlayerEntrance) {
+                            ((Mob) mob).dialogue.speakTimer = ((Mob) mob).dialogue.speakTimerMax - 5;
+                        }
+                    }
 
                     boolean closedCheck = false;
                     boolean lockedCheck = false;

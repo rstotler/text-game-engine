@@ -77,18 +77,6 @@ public class Emote extends Action {
             return new Emote(parentEntity, "Sigh");
         }
 
-        else if(Arrays.asList("say").contains(inputList.get(0))) {
-            if(inputList.size() == 1) {
-                GameScreen.userInterface.console.writeToConsole(new Line("Say what?", "4CONT4CONT1DY", "", true, true));
-                return new Emote(parentEntity, "");
-            } else {
-                Emote emoteAction = new Emote(parentEntity, "Say");
-                List<String> targetEntityStringList = inputList.subList(1, inputList.size());
-                emoteAction.targetEntityString = targetEntityStringList.stream().collect(Collectors.joining(" "));
-                return emoteAction;
-            }
-        }
-
         return null;
     }
 
@@ -165,36 +153,6 @@ public class Emote extends Action {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("You sigh..", "4CONT4CONT2DY", "", true, true));
             }
-        }
-
-        else if(actionType.equals("Say")) {
-            String sayAskString = "say";
-            String punctuation = ".";
-
-            // Capitalize First Letter //
-            if(targetEntityString.length() > 1) {
-                targetEntityString = targetEntityString.substring(0, 1).toUpperCase() + targetEntityString.substring(1);
-            }
-
-            if(targetEntityString.charAt(targetEntityString.length() - 1) == '?') {
-                punctuation = "?";
-                targetEntityString = targetEntityString.replace("?", "");
-                sayAskString = "ask";
-            }
-            else if(targetEntityString.charAt(targetEntityString.length() - 1) == '.' && !(targetEntityString.length() >= 2 && targetEntityString.charAt(targetEntityString.length() - 2) == '.')) {
-                punctuation = ".";
-                targetEntityString = targetEntityString.substring(0, targetEntityString.length() - 1);
-            }
-            else if(targetEntityString.charAt(targetEntityString.length() - 1) == '!') {
-                punctuation = "!";
-                targetEntityString = targetEntityString.replace("!", "");
-                sayAskString = "exclaim";
-            }
-
-            String lineString = "You " + sayAskString + ", '" + targetEntityString + punctuation + "'";
-            String lineColorCode = "4CONT" + String.valueOf(sayAskString.length()) + "CONT3DY" + String.valueOf(targetEntityString.length()) + "SHIA" + "2DY";
-
-            GameScreen.userInterface.console.writeToConsole(new Line(lineString, lineColorCode, "", true, true));
         }
     }
 }

@@ -516,7 +516,12 @@ public class Room {
                 return true;
             }
 
-            return location.planetoid.isDay();
+            if(inside) {
+                return false;
+            }
+            else {
+                return location.planetoid.isDay();
+            }
         }
 
         else if(location.spaceship != null) {
