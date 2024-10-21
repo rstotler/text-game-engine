@@ -4,6 +4,7 @@ import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.CombatAction;
+import com.jbs.textgameengine.gamedata.entity.mob.action.combat.combateffect.Cooldown;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.Move;
 import com.jbs.textgameengine.gamedata.entity.mob.dialogue.Dialogue;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
@@ -190,6 +191,7 @@ public class Mob extends Entity {
         }
 
         // Combat Check (Mob) //
+        boolean initiateAttackCheck = false;
         if(!isPlayer
         && !combatList.isEmpty()) {
 
@@ -205,22 +207,32 @@ public class Mob extends Entity {
             }
 
             // Combat Target Is In Same Room //
-            else {
+            else if(currentAction == null) {
                 Skill randomSkill = getRandomCombatSkill();
                 if(randomSkill != null) {
                     Action combatAction = new CombatAction(this, randomSkill);
                     combatAction = combatAction.getActionFromInput(randomSkill.name.label.toLowerCase() + " player", this);
                     combatAction.initiate();
+                    initiateAttackCheck = true;
                 }
             }
         }
 
         // Current Action Check //
-        if(currentAction != null) {
+        if(!initiateAttackCheck
+        && currentAction != null) {
             currentAction.performActionTimer -= 1;
             if(currentAction.performActionTimer <= 0) {
+                Action previousAction = currentAction;
+
                 currentAction.performAction();
                 currentAction = null;
+
+                // Cooldown, Pause After Attack (Mob Only) //
+                if(!isPlayer
+                && previousAction.isCombatAction) {
+                    currentAction = new Cooldown(3);
+                }
             }
         }
     }
@@ -287,10 +299,10 @@ public class Mob extends Entity {
     public Skill getRandomCombatSkill() {
         Skill skill = null;
 
-        if(skillMap.containsKey("Basic Combat")
-        && !skillMap.get("Basic Combat").isEmpty()) {
-            int randomIndex = new Random().nextInt(skillMap.get("Basic Combat").size());
-            skill = skillMap.get("Basic Combat").get(randomIndex);
+        if(skillMap.containsKey("Debug")
+        && !skillMap.get("Debug").isEmpty()) {
+            int randomIndex = new Random().nextInt(skillMap.get("Debug").size());
+            skill = skillMap.get("Debug").get(randomIndex);
         }
 
         return skill;

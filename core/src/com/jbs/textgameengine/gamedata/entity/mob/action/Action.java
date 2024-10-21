@@ -53,7 +53,7 @@ public class Action {
         this.skill = skill;
         movementList = new ArrayList<>();
 
-        performActionTimer = 1;
+        performActionTimer = 2;
     }
 
     public Action(Mob parentEntity) {

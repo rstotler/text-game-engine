@@ -4,6 +4,7 @@ import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.combat.CombatAction;
 import com.jbs.textgameengine.gamedata.world.room.Room;
+import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
 import java.util.ArrayList;
@@ -146,11 +147,15 @@ public class Skill {
         // Mobs In Room Check //
         ArrayList<Entity> combinedMobList = new ArrayList<>();
         ArrayList<Entity> checkedList = new ArrayList<>();
+        if(!combatAction.parentEntity.isPlayer) {
+            combinedMobList.add(GameScreen.player);
+        }
         combinedMobList.addAll(combatAction.parentEntity.groupList);
         combinedMobList.addAll(targetRoom.mobList);
 
         for(Entity mob : combinedMobList) {
-            if(mob.location.room == targetRoom && !checkedList.contains(mob)) {
+            if(mob.location.room == targetRoom && !checkedList.contains(mob)
+            && !(!combatAction.parentEntity.isPlayer && mob == combatAction.parentEntity)) {
                 checkedList.add(mob);
                 int currentSize = targetList.size();
 

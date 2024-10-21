@@ -409,22 +409,39 @@ public class CombatAction extends Action {
     public void performAction() {
 
         // Message - You CombatAction to the Direction! //
-        if(parentEntity.isPlayer) {
-            String actionString = "You";
-            String actionColorCode = "3CONT";
+        if(true) {
 
-            actionString += " " + skill.name.label.toLowerCase();
-            actionColorCode += "1W" + skill.name.colorCode;
+            // Player Message //
+            if(parentEntity.isPlayer) {
+                String actionString = "You " + skill.name.label.toLowerCase();
+                String actionColorCode = "4CONT" + skill.name.colorCode;
 
-            if(!targetRoomData.targetDirection.isEmpty()) {
-                actionString += " to the " + targetRoomData.targetDirection.toLowerCase();
-                actionColorCode += "1W3CONT4CONT" + String.valueOf(targetRoomData.targetDirection.length()) + "CONT";
+                if(!targetRoomData.targetDirection.isEmpty()) {
+                    actionString += " to the " + targetRoomData.targetDirection.toLowerCase();
+                    actionColorCode += "1W3CONT4CONT" + String.valueOf(targetRoomData.targetDirection.length()) + "CONT";
+                }
+
+                actionString += "!";
+                actionColorCode += "1DY";
+
+                GameScreen.userInterface.console.writeToConsole(new Line(actionString, actionColorCode, "", false, true));
             }
 
-            actionString += "!";
-            actionColorCode += "1DY";
+            // Mob Message //
+            else if(parentEntity.location.room == GameScreen.player.location.room) {
+                String actionString = parentEntity.prefix + parentEntity.name.label + " uses " + skill.name.label.toLowerCase();
+                String actionColorCode = String.valueOf(parentEntity.prefix.length()) + "CONT" + parentEntity.name.colorCode + "CONT1W5CONT" + String.valueOf(skill.name.label.length()) + "CONT";
 
-            GameScreen.userInterface.console.writeToConsole(new Line(actionString, actionColorCode, "", false, true));
+                if(!targetRoomData.targetDirection.isEmpty()) {
+                    actionString += " to the " + targetRoomData.targetDirection.toLowerCase();
+                    actionColorCode += "1W3CONT4CONT" + String.valueOf(targetRoomData.targetDirection.length()) + "CONT";
+                }
+
+                actionString += "!";
+                actionColorCode += "1DY";
+
+                GameScreen.userInterface.console.writeToConsole(new Line(actionString, actionColorCode, "", false, true));
+            }
         }
 
         // Perform CombatAction On Target Mob List //
@@ -437,19 +454,43 @@ public class CombatAction extends Action {
             if(i == targetMobList.size() - 1) {isLastLine = true;}
 
             // Message - Hit Mob Message //
-            if(parentEntity.isPlayer) {
-                String hitHealString = "hit ";
-                if(skill.isHealing) {hitHealString = "heal ";}
-                String entitySelfString = mob.prefix.toLowerCase() + mob.name.label;
-                String entitySelfColorCode = String.valueOf(mob.prefix.length()) + "CONT" + mob.name.colorCode;
-                if(mob.isPlayer) {
-                    entitySelfString = "yourself";
-                    entitySelfColorCode = "8CONT";
+            if(true) {
+
+                // Player Message //
+                if(parentEntity.isPlayer) {
+                    String hitHealString = "hit ";
+                    if(skill.isHealing) {hitHealString = "heal ";}
+                    String entitySelfString = mob.prefix.toLowerCase() + mob.name.label;
+                    String entitySelfColorCode = String.valueOf(mob.prefix.length()) + "CONT" + mob.name.colorCode;
+                    if(mob.isPlayer) {
+                        entitySelfString = "yourself";
+                        entitySelfColorCode = "8CONT";
+                    }
+
+                    String actionString = "You " + hitHealString + entitySelfString + ".";
+                    String actionColorCode = "4CONT" + String.valueOf(hitHealString.length()) + "CONT" + entitySelfColorCode + "1DY";
+                    GameScreen.userInterface.console.writeToConsole(new Line(actionString, actionColorCode, "", isLastLine, true));
                 }
 
-                String actionString = "You " + hitHealString + entitySelfString + ".";
-                String actionColorCode = "4CONT" + String.valueOf(hitHealString.length()) + "CONT" + entitySelfColorCode + "1DY";
-                GameScreen.userInterface.console.writeToConsole(new Line(actionString, actionColorCode, "", isLastLine, true));
+                // Mob Message //
+                else if(parentEntity.location.room == GameScreen.player.location.room) {
+                    String hitHealString = "hits ";
+                    if(skill.isHealing) {hitHealString = "heals ";}
+                    String entitySelfString = mob.prefix.toLowerCase() + mob.name.label;
+                    String entitySelfColorCode = String.valueOf(mob.prefix.length()) + "CONT" + mob.name.colorCode;
+                    if(mob.isPlayer) {
+                        entitySelfString = "you";
+                        entitySelfColorCode = "3CONT";
+                    }
+                    if(mob == parentEntity) {
+                        entitySelfString = "themself";
+                        entitySelfColorCode = "8CONT";
+                    }
+
+                    String actionString = parentEntity.prefix + parentEntity.name.label + " " + hitHealString + entitySelfString + ".";
+                    String actionColorCode = String.valueOf(parentEntity.prefix.length()) + "CONT" + parentEntity.name.colorCode + "1W" + String.valueOf(hitHealString.length()) + "CONT" + entitySelfColorCode + "1DY";
+                    GameScreen.userInterface.console.writeToConsole(new Line(actionString, actionColorCode, "", isLastLine, true));
+                }
             }
 
             // Add Combat Target To Combat List & Target's Combat List (If Non-Healing Skill) //
