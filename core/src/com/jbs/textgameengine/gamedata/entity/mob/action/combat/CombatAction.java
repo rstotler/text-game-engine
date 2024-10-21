@@ -392,8 +392,14 @@ public class CombatAction extends Action {
                         targetDirectionColorCode = "1W3CONT4CONT" + String.valueOf(targetDirection.length()) + "CONT";
                     }
 
-                    if(parentEntity.isPlayer) {
-                        GameScreen.userInterface.console.writeToConsole(new Line("You prepare to " + skill.name.label.toLowerCase() + targetDirectionString + "..", "4CONT8CONT3CONT" + skill.name.colorCode + targetDirectionColorCode + "2DY", "", true, true));
+                    // Display Message //
+                    if(true) {
+                        if(parentEntity.isPlayer) {
+                            GameScreen.userInterface.console.writeToConsole(new Line("You prepare to " + skill.name.label.toLowerCase() + targetDirectionString + "..", "4CONT8CONT3CONT" + skill.name.colorCode + targetDirectionColorCode + "2DY", "", true, true));
+                        }
+                        else if(parentEntity.location.room == GameScreen.player.location.room) {
+                            GameScreen.userInterface.console.writeToConsole(new Line(parentEntity.prefix + parentEntity.name.label + " prepares to " + skill.name.label.toLowerCase() + "..", String.valueOf(parentEntity.prefix.length()) + "CONT" + parentEntity.name.colorCode + "1W9CONT3CONT" + skill.name.colorCode + "2DY", "", true, true));
+                        }
                     }
                 }
             }
@@ -432,9 +438,34 @@ public class CombatAction extends Action {
 
             // Message - Hit Mob Message //
             if(parentEntity.isPlayer) {
-                String actionString = "You hit " + mob.prefix.toLowerCase() + mob.name.label + ".";
-                String actionColorCode = "4CONT4CONT" + String.valueOf(mob.prefix.length()) + "CONT" + mob.name.colorCode + "1DY";
+                String hitHealString = "hit ";
+                if(skill.isHealing) {hitHealString = "heal ";}
+                String entitySelfString = mob.prefix.toLowerCase() + mob.name.label;
+                String entitySelfColorCode = String.valueOf(mob.prefix.length()) + "CONT" + mob.name.colorCode;
+                if(mob.isPlayer) {
+                    entitySelfString = "yourself";
+                    entitySelfColorCode = "8CONT";
+                }
+
+                String actionString = "You " + hitHealString + entitySelfString + ".";
+                String actionColorCode = "4CONT" + String.valueOf(hitHealString.length()) + "CONT" + entitySelfColorCode + "1DY";
                 GameScreen.userInterface.console.writeToConsole(new Line(actionString, actionColorCode, "", isLastLine, true));
+            }
+
+            // Add Combat Target To Combat List & Target's Combat List (If Non-Healing Skill) //
+            if(!skill.isHealing && mob != parentEntity) {
+                if(!parentEntity.combatList.contains(mob)) {
+                    parentEntity.combatList.add((Mob) mob);
+                    if(parentEntity.groupList.contains((Mob) mob)) {
+                        parentEntity.groupList.remove((Mob) mob);
+                    }
+                }
+                if(!((Mob) mob).combatList.contains(parentEntity)) {
+                    ((Mob) mob).combatList.add(parentEntity);
+                    if(((Mob) mob).groupList.contains(parentEntity)) {
+                        ((Mob) mob).groupList.remove(parentEntity);
+                    }
+                }
             }
         }
 

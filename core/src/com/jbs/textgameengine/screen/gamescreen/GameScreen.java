@@ -29,7 +29,7 @@ public class GameScreen extends Screen {
     public static HashMap<String, Galaxy> galaxyList;
     public static Player player;
 
-    public long gameTimer;
+    public static long gameTimer;
     public int frameTimer;
     public boolean fastMode;
 

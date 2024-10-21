@@ -1,8 +1,9 @@
 package com.jbs.textgameengine.gamedata.world.utility;
 
 import com.jbs.textgameengine.gamedata.entity.Entity;
-import com.jbs.textgameengine.gamedata.world.area.Area;
+import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.room.Room;
+import com.jbs.textgameengine.screen.utility.Point;
 
 import java.util.*;
 
@@ -14,11 +15,17 @@ public class TargetRoomData {
     public int distance;
     public String message;
 
+    public ArrayList<String> directionList;
+    public boolean breakCheck;
+
     public TargetRoomData() {
         targetRoom = null;
         targetDirection = "";
         distance = -1;
         message = "";
+
+        directionList = new ArrayList<>();
+        breakCheck = false;
     }
 
     public static TargetRoomData getTargetRoomFromStartRoom(Room startRoom, ArrayList<String> directionList, boolean ignoreDoors, boolean ignoreHiddenExits) {
@@ -186,6 +193,81 @@ public class TargetRoomData {
             targetRoomData.message = message;
             return targetRoomData;
         }
+    }
+
+    public static TargetRoomData findTargetRoomFromStartRoom(Room startRoom, Room targetRoom, int maxDistance) {
+        return examineRoomData(startRoom, targetRoom, maxDistance, "", new ArrayList<String>(), new ArrayList<Room>(), new Point(0, 0, 0), "");
+    }
+
+    public static TargetRoomData examineRoomData(Room currentRoom, Room targetRoom, int maxDistance, String targetDirection, ArrayList<String> directionList, ArrayList<Room> examinedRoomList, Point currentLocationPoint, String masterMessage) {
+        // Helper Function For FindTargetRoomFromStartRoom()
+
+        TargetRoomData targetRoomData = new TargetRoomData();
+        targetRoomData.targetRoom = currentRoom;
+
+        if(!examinedRoomList.contains(currentRoom)) {
+            examinedRoomList.add(currentRoom);
+        }
+
+        String masterMessageCopy = masterMessage;
+        ArrayList<String> lastDirectionList = new ArrayList<>(directionList);
+
+        if(currentLocationPoint.x + currentLocationPoint.y + currentLocationPoint.z < maxDistance) {
+            Point lastLocationPoint = new Point(currentLocationPoint);
+            ArrayList<String> potentialDirectionList = new ArrayList<>(Arrays.asList("North", "East", "South", "West", "Up", "Down"));
+            if(!targetDirection.isEmpty() && potentialDirectionList.contains(Location.getOppositeDirection(targetDirection))) {
+                potentialDirectionList.remove(Location.getOppositeDirection(targetDirection));
+            }
+
+            for(String direction : potentialDirectionList) {
+                if(!direction.equals("North")) {
+                    currentLocationPoint = new Point(lastLocationPoint);
+                    masterMessage = masterMessageCopy;
+                    directionList = new ArrayList<>(lastDirectionList);
+                }
+                if(currentRoom.exitMap.containsKey(direction)) {
+                    TargetRoomData targetRoomSubData = TargetRoomData.getTargetRoomFromStartRoom(currentRoom, new ArrayList<>(Arrays.asList(direction)), false, false);
+
+                    if(!targetRoomSubData.message.isEmpty()
+                    && masterMessage.isEmpty()) {
+                        masterMessage = targetRoomSubData.message;
+                    }
+                    if(!examinedRoomList.contains(targetRoomSubData.targetRoom)) {
+                        targetRoomData.targetRoom = targetRoomSubData.targetRoom;
+                        targetRoomData.targetDirection = direction;
+
+                        directionList.add(direction);
+                        targetRoomData.directionList = directionList;
+
+                        if(Arrays.asList("East", "West").contains(direction)) {
+                            currentLocationPoint.x += 1;
+                        }
+                        else if(Arrays.asList("North", "South").contains(direction)) {
+                            currentLocationPoint.y += 1;
+                        }
+                        else if(Arrays.asList("Up", "Down").contains(direction)) {
+                            currentLocationPoint.z += 1;
+                        }
+
+                        targetRoomData.distance = (int) currentLocationPoint.x + (int) currentLocationPoint.y + (int) currentLocationPoint.z;
+
+                        if(targetRoomData.targetRoom == targetRoom) {
+                            targetRoomData.breakCheck = true;
+                            return targetRoomData;
+                        }
+                        else {
+                            ArrayList<String> directionListCopy = new ArrayList<>(directionList);
+                            targetRoomData = examineRoomData(targetRoomData.targetRoom, targetRoom, maxDistance, direction, directionListCopy, examinedRoomList, currentLocationPoint, masterMessage);
+                            if(targetRoomData.breakCheck) {
+                                return targetRoomData;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return targetRoomData;
     }
 
     public static HashMap<String, ArrayList<String>> loadSideDirectionMap() {

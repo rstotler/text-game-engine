@@ -16,11 +16,11 @@ public class AreaAndRoomData {
         this.roomList = roomList;
     }
 
-    public static AreaAndRoomData getSurroundingAreaAndRoomData(Room targetRoom, int targetRange) {
-        return examineRoomData(targetRoom.location.area, targetRoom, targetRange, "", new ArrayList<Area>(), new ArrayList<Room>(), new Point(0, 0, 0));
+    public static AreaAndRoomData getSurroundingAreaAndRoomData(Room targetRoom, int maxDistance) {
+        return examineRoomData(targetRoom.location.area, targetRoom, maxDistance, "", new ArrayList<Area>(), new ArrayList<Room>(), new Point(0, 0, 0));
     }
 
-    public static AreaAndRoomData examineRoomData(Area targetArea, Room targetRoom, int targetRange, String targetDirection, ArrayList<Area> examinedAreaList, ArrayList<Room> examinedRoomList, Point viewLocation) {
+    public static AreaAndRoomData examineRoomData(Area targetArea, Room targetRoom, int maxDistance, String targetDirection, ArrayList<Area> examinedAreaList, ArrayList<Room> examinedRoomList, Point currentLocationPoint) {
         // Helper Function For GetSurroundingAreaAndRoomData()
 
         if(!examinedAreaList.contains(targetArea)) {
@@ -30,32 +30,32 @@ public class AreaAndRoomData {
             examinedRoomList.add(targetRoom);
         }
 
-        if(viewLocation.x + viewLocation.y + viewLocation.z < targetRange) {
-            Point firstLocation = new Point(viewLocation);
-            ArrayList<String> directionList = new ArrayList<>(Arrays.asList("North", "East", "South", "West", "Up", "Down"));
-            if(!targetDirection.isEmpty() && directionList.contains(Location.getOppositeDirection(targetDirection))) {
-                directionList.remove(Location.getOppositeDirection(targetDirection));
+        if(currentLocationPoint.x + currentLocationPoint.y + currentLocationPoint.z < maxDistance) {
+            Point firstLocationPoint = new Point(currentLocationPoint);
+            ArrayList<String> potentialDirectionList = new ArrayList<>(Arrays.asList("North", "East", "South", "West", "Up", "Down"));
+            if(!targetDirection.isEmpty() && potentialDirectionList.contains(Location.getOppositeDirection(targetDirection))) {
+                potentialDirectionList.remove(Location.getOppositeDirection(targetDirection));
             }
 
-            for(String direction : directionList) {
+            for(String direction : potentialDirectionList) {
                 if(!direction.equals("North")) {
-                    viewLocation = new Point(firstLocation);
+                    currentLocationPoint = new Point(firstLocationPoint);
                 }
                 if(targetRoom.exitMap.containsKey(direction)) {
                     TargetRoomData targetRoomData = TargetRoomData.getTargetRoomFromStartRoom(targetRoom, new ArrayList<>(Arrays.asList(direction)), true, true);
                     if(Arrays.asList("East", "West").contains(direction)) {
-                        viewLocation.x += 1;
+                        currentLocationPoint.x += 1;
                     }
                     else if(Arrays.asList("North", "South").contains(direction)) {
-                        viewLocation.y += 1;
+                        currentLocationPoint.y += 1;
                     }
                     else if(Arrays.asList("Up", "Down").contains(direction)) {
-                        viewLocation.z += 1;
+                        currentLocationPoint.z += 1;
                     }
 
                     if(!examinedRoomList.contains(targetRoomData.targetRoom)
                     && targetRoomData.targetRoom.location.area != null) {
-                        AreaAndRoomData targetAreaAndRoomData = examineRoomData(targetRoomData.targetRoom.location.area, targetRoomData.targetRoom, targetRange, direction, examinedAreaList, examinedRoomList, viewLocation);
+                        AreaAndRoomData targetAreaAndRoomData = examineRoomData(targetRoomData.targetRoom.location.area, targetRoomData.targetRoom, maxDistance, direction, examinedAreaList, examinedRoomList, currentLocationPoint);
                         examinedAreaList = targetAreaAndRoomData.areaList;
                         examinedRoomList = targetAreaAndRoomData.roomList;
                     }

@@ -11,8 +11,6 @@ import com.jbs.textgameengine.screen.utility.Utility;
 
 import java.util.*;
 
-import static com.jbs.textgameengine.screen.gamescreen.GameScreen.userInterface;
-
 public class Move extends Action {
     public Move(Mob parentEntity) {
         super(parentEntity);
@@ -111,7 +109,16 @@ public class Move extends Action {
                         parentEntity.interruptAction();
                     }
 
+                    Room previousRoom = parentEntity.location.room;
                     parentEntity.location = new Location(newRoom.location);
+
+                    // Move Mob To Other Room //
+                    if(!parentEntity.isPlayer) {
+                        if(!newRoom.mobList.contains(parentEntity)) {
+                            newRoom.mobList.add(parentEntity);
+                        }
+                        previousRoom.mobList.remove(parentEntity);
+                    }
 
                     // Update Current Action Movement List //
                     if(parentEntity.currentAction != null) {
@@ -161,18 +168,50 @@ public class Move extends Action {
                     }
 
                     // Display New Room //
-                    if(parentEntity.isPlayer) {
-                        if(closedCheck) {
-                            GameScreen.userInterface.console.writeToConsole(new Line("You open the door.", "4CONT5CONT4CONT4CONT1DY", "", true, true));
-                        } else if(lockedCheck) {
-                            GameScreen.userInterface.console.writeToConsole(new Line("You unlock and open the door.", "4CONT7CONT4CONT5CONT4CONT4CONT1DY", "", true, true));
-                        } else if(automaticCheck) {
-                            GameScreen.userInterface.console.writeToConsole(new Line("The door opens and closes as you walk through.", "4CONT5CONT6CONT4CONT7CONT3CONT4CONT5CONT7CONT1DY", "", true, true));
+                    if(true) {
+
+                        // Player Display Data //
+                        if(parentEntity.isPlayer) {
+                            if(closedCheck) {
+                                GameScreen.userInterface.console.writeToConsole(new Line("You open the door.", "4CONT5CONT4CONT4CONT1DY", "", true, true));
+                            } else if(lockedCheck) {
+                                GameScreen.userInterface.console.writeToConsole(new Line("You unlock and open the door.", "4CONT7CONT4CONT5CONT4CONT4CONT1DY", "", true, true));
+                            } else if(automaticCheck) {
+                                GameScreen.userInterface.console.writeToConsole(new Line("The door opens and closes as you walk through.", "4CONT5CONT6CONT4CONT7CONT3CONT4CONT5CONT7CONT1DY", "", true, true));
+                            }
+
+                            if(parentEntity.location != null
+                            && parentEntity.location.room != null) {
+                                parentEntity.location.room.display();
+                            }
                         }
 
-                        if(parentEntity.location != null
-                        && parentEntity.location.room != null) {
-                            parentEntity.location.room.display();
+                        // Mob Display Data (Leaving Room) //
+                        else if(previousRoom == GameScreen.player.location.room) {
+                            if(closedCheck) {
+                                GameScreen.userInterface.console.writeToConsole(new Line(parentEntity.prefix + parentEntity.name.label + " opens the door to the " + targetDirection.toLowerCase() + ".", String.valueOf(parentEntity.prefix.length()) + "CONT" + parentEntity.name.colorCode + "1W6CONT4CONT5CONT3CONT4CONT" + String.valueOf(targetDirection.length()) + "CONT1DY", "", false, true));
+                            } else if(lockedCheck) {
+                                GameScreen.userInterface.console.writeToConsole(new Line(parentEntity.prefix + parentEntity.name.label + " opens and unlocks the door to the " + targetDirection.toLowerCase() + ".", String.valueOf(parentEntity.prefix.length()) + "CONT" + parentEntity.name.colorCode + "1W6CONT4CONT8CONT4CONT5CONT3CONT5CONT" + String.valueOf(targetDirection.length()) + "CONT1DY", "", false, true));
+                            } else if(automaticCheck) {
+                                GameScreen.userInterface.console.writeToConsole(new Line("The door to the " + targetDirection.toLowerCase() + " opens and closes as " + parentEntity.prefix.toLowerCase() + parentEntity.name.label + " walks through.", "4CONT5CONT3CONT4CONT" + String.valueOf(targetDirection.length()) + "CONT1W6CONT4CONT7CONT3CONT" + String.valueOf(parentEntity.prefix.length()) + "CONT" + parentEntity.name.colorCode + "1W6CONT7CONT1DY", "", false, true));
+                            }
+
+                            GameScreen.userInterface.console.writeToConsole(new Line(parentEntity.prefix + parentEntity.name.label + " leaves to the " + targetDirection.toLowerCase() + ".", String.valueOf(parentEntity.prefix.length()) + "CONT" + parentEntity.name.colorCode + "1W7CONT3CONT4CONT" + String.valueOf(targetDirection.length()) + "CONT1DY", "", true, true));
+                        }
+
+                        // Mob Display Data (Entering Room) //
+                        else if(parentEntity.location.room == GameScreen.player.location.room) {
+                            String displayDirection = Location.getOppositeDirection(targetDirection);
+
+                            if(closedCheck) {
+                                GameScreen.userInterface.console.writeToConsole(new Line("The door to the " + displayDirection.toLowerCase() + " opens.", "4CONT5CONT3CONT4CONT" + String.valueOf(displayDirection.length()) + "CONT1W5CONT1DY", "", false, true));
+                            } else if(lockedCheck) {
+                                GameScreen.userInterface.console.writeToConsole(new Line("The door to the " + displayDirection.toLowerCase() + " unlocks and opens.", "4CONT5CONT3CONT4CONT" + String.valueOf(displayDirection.length()) + "CONT1W8CONT4CONT5CONT1DY", "", false, true));
+                            } else if(automaticCheck) {
+                                GameScreen.userInterface.console.writeToConsole(new Line("The door to the " + displayDirection.toLowerCase() + " opens and closes as " + parentEntity.prefix.toLowerCase() + parentEntity.name.label + " walks through.", "4CONT5CONT3CONT4CONT" + String.valueOf(displayDirection.length()) + "CONT1W6CONT4CONT7CONT3CONT" + String.valueOf(parentEntity.prefix.length()) + "CONT" + parentEntity.name.colorCode + "1W6CONT7CONT1DY", "", false, true));
+                            }
+
+                            GameScreen.userInterface.console.writeToConsole(new Line(parentEntity.prefix + parentEntity.name.label + " arrives from the " + displayDirection.toLowerCase() + ".", String.valueOf(parentEntity.prefix.length()) + "CONT" + parentEntity.name.colorCode + "1W8CONT5CONT4CONT" + String.valueOf(displayDirection.length()) + "CONT1DY", "", true, true));
                         }
                     }
                 }

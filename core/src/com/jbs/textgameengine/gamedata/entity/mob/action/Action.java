@@ -12,7 +12,6 @@ import com.jbs.textgameengine.gamedata.entity.mob.action.other.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.general.*;
 import com.jbs.textgameengine.gamedata.entity.mob.action.spaceship.*;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
-import com.jbs.textgameengine.gamedata.world.Location;
 
 import java.util.ArrayList;
 

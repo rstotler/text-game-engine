@@ -51,8 +51,9 @@ public class Room {
     }
 
     public void update() {
-        for(Entity mob : mobList) {
-            ((Mob) mob).update();
+        for(int i = mobList.size() - 1; i >= 0; i--) {
+            Mob mob = (Mob) mobList.get(i);
+            mob.update();
         }
     }
 

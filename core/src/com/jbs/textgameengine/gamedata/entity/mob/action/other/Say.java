@@ -57,23 +57,23 @@ public class Say extends Action {
         String sayAskWord = "say";
         if(sayStringRaw.charAt(sayStringRaw.length() - 1) == '?') {
             punctuation = "?";
-            sayStringRaw = sayStringRaw.replace("?", "");
+            sayStringRaw = sayStringRaw.substring(0, sayStringRaw.length() - 1);
             sayAskWord = "ask";
         }
         else if(sayStringRaw.charAt(sayStringRaw.length() - 1) == '!') {
             punctuation = "!";
-            sayStringRaw = sayStringRaw.replace("!", "");
+            sayStringRaw = sayStringRaw.substring(0, sayStringRaw.length() - 1);
             sayAskWord = "exclaim";
         }
         else if(sayStringRaw.charAt(sayStringRaw.length() - 1) == '.'
         && sayStringRaw.length() >= 2
         && sayStringRaw.charAt(sayStringRaw.length() - 2) == '.') {
             punctuation = "..";
-            sayStringRaw = sayStringRaw.replace(".", "");
+            sayStringRaw = sayStringRaw.substring(0, sayStringRaw.length() - 2);
         }
         else if(sayStringRaw.charAt(sayStringRaw.length() - 1) == '.') {
             punctuation = ".";
-            sayStringRaw = sayStringRaw.replace(".", "");
+            sayStringRaw = sayStringRaw.substring(0, sayStringRaw.length() - 1);
         }
 
         String sayAskString = "";

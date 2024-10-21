@@ -3,6 +3,8 @@ package com.jbs.textgameengine.gamedata.entity.mob;
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
+import com.jbs.textgameengine.gamedata.entity.mob.action.combat.CombatAction;
+import com.jbs.textgameengine.gamedata.entity.mob.action.general.Move;
 import com.jbs.textgameengine.gamedata.entity.mob.dialogue.Dialogue;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.Skill;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.basic.*;
@@ -16,9 +18,9 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import java.util.*;
 
 public class Mob extends Entity {
-    public String type;
     public static ArrayList<String> gearSlotList = new ArrayList<>(Arrays.asList("Head", "Face", "Body", "About", "Hands", "Legs", "Feet", "Boots", "Neck", "Ring", "Main", "Off"));
 
+    public String type;
     public HashMap<String, ArrayList<Item>> inventory;
     public HashMap<String, Item> gear;
 
@@ -34,8 +36,8 @@ public class Mob extends Entity {
 
     public Mob(int id, Location startLocation) {
         super(id, startLocation);
-        type = "Mob";
         isMob = true;
+        type = "Mob";
 
         inventory = loadInventory();
         gear = loadGear();
@@ -181,9 +183,36 @@ public class Mob extends Entity {
         }
 
         // Dialogue Check //
-        if(dialogue != null
+        if(!isPlayer
+        && dialogue != null
         && location.room == GameScreen.player.location.room) {
             dialogue.update();
+        }
+
+        // Combat Check (Mob) //
+        if(!isPlayer
+        && !combatList.isEmpty()) {
+
+            // Combat Target Is In Different Room //
+            if(location.room != combatList.get(0).location.room) {
+                TargetRoomData targetRoomData = TargetRoomData.findTargetRoomFromStartRoom(location.room, combatList.get(0).location.room, getMaxViewDistance());
+                if(targetRoomData.targetRoom != null
+                && !targetRoomData.directionList.isEmpty()) {
+                    Action moveAction = new Move(this);
+                    moveAction = moveAction.getActionFromInput(targetRoomData.directionList.get(0).toLowerCase(), this);
+                    moveAction.initiate();
+                }
+            }
+
+            // Combat Target Is In Same Room //
+            else {
+                Skill randomSkill = getRandomCombatSkill();
+                if(randomSkill != null) {
+                    Action combatAction = new CombatAction(this, randomSkill);
+                    combatAction = combatAction.getActionFromInput(randomSkill.name.label.toLowerCase() + " player", this);
+                    combatAction.initiate();
+                }
+            }
         }
 
         // Current Action Check //
@@ -253,6 +282,18 @@ public class Mob extends Entity {
         combatSkillList.addAll(skillMap.get("Basic Combat"));
 
         return combatSkillList;
+    }
+
+    public Skill getRandomCombatSkill() {
+        Skill skill = null;
+
+        if(skillMap.containsKey("Basic Combat")
+        && !skillMap.get("Basic Combat").isEmpty()) {
+            int randomIndex = new Random().nextInt(skillMap.get("Basic Combat").size());
+            skill = skillMap.get("Basic Combat").get(randomIndex);
+        }
+
+        return skill;
     }
 
     public void addItemToInventory(Item targetItem) {
