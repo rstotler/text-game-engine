@@ -5,6 +5,7 @@ import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.room.Room;
+import com.jbs.textgameengine.gamedata.world.utility.AreaAndRoomData;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import com.jbs.textgameengine.screen.utility.Utility;
@@ -92,6 +93,7 @@ public class Move extends Action {
             else {
                 parentEntity.interruptAction();
 
+                // Get New Room Data //
                 Room newRoom = null;
                 if(parentRoom.location.spaceship != null
                 && parentRoom.location.spaceship.boardingRoom == parentRoom
@@ -103,6 +105,7 @@ public class Move extends Action {
                     newRoom = parentRoom.exitMap.get(targetDirection);
                 }
 
+                // Move //
                 if(newRoom != null) {
                     if(parentEntity.currentAction != null
                     && !parentEntity.currentAction.isCombatAction) {
@@ -134,6 +137,12 @@ public class Move extends Action {
                     if(parentEntity.currentAction != null
                     && parentEntity.currentAction.isCombatAction) {
                         parentEntity.combatActionDistanceCancelCheck();
+                    }
+
+                    // Lose Sight Of Target(s) Check (Player Only) //
+                    ArrayList<Mob> loseSightOfTargetList = null;
+                    if(parentEntity.isPlayer) {
+                        loseSightOfTargetList = parentEntity.loseSightOfTargetsCheck();
                     }
 
                     // Reset Mob Dialogue Timers //
@@ -172,17 +181,37 @@ public class Move extends Action {
 
                         // Player Display Data //
                         if(parentEntity.isPlayer) {
+
+                            // Open Door Message //
                             if(closedCheck) {
                                 GameScreen.userInterface.console.writeToConsole(new Line("You open the door.", "4CONT5CONT4CONT4CONT1DY", "", true, true));
-                            } else if(lockedCheck) {
+                            }
+                            else if(lockedCheck) {
                                 GameScreen.userInterface.console.writeToConsole(new Line("You unlock and open the door.", "4CONT7CONT4CONT5CONT4CONT4CONT1DY", "", true, true));
-                            } else if(automaticCheck) {
+                            }
+                            else if(automaticCheck) {
                                 GameScreen.userInterface.console.writeToConsole(new Line("The door opens and closes as you walk through.", "4CONT5CONT6CONT4CONT7CONT3CONT4CONT5CONT7CONT1DY", "", true, true));
                             }
 
+                            // Display Room //
                             if(parentEntity.location != null
                             && parentEntity.location.room != null) {
                                 parentEntity.location.room.display();
+                            }
+
+                            // Message - Lose Sight Of Target(s) //
+                            if(loseSightOfTargetList != null
+                            && !loseSightOfTargetList.isEmpty()) {
+                                if(loseSightOfTargetList.size() == 1) {
+                                    Mob targetMob = loseSightOfTargetList.get(0);
+                                    GameScreen.userInterface.console.writeToConsole(new Line("You lose sight of " + targetMob.prefix.toLowerCase() + targetMob.name.label + ".", "4CONT5CONT6CONT3CONT" + String.valueOf(targetMob.prefix.length()) + "CONT" + targetMob.name.colorCode + "1DY", "", true, true));
+                                }
+                                else if(!parentEntity.targetList.isEmpty()) {
+                                    GameScreen.userInterface.console.writeToConsole(new Line("You lose sight of some of your targets.", "4CONT5CONT6CONT3CONT5CONT3CONT5CONT7CONT1DY", "", true, true));
+                                }
+                                else if(parentEntity.targetList.isEmpty()) {
+                                    GameScreen.userInterface.console.writeToConsole(new Line("You lose sight of your targets.", "4CONT5CONT6CONT3CONT5CONT7CONT1DY", "", true, true));
+                                }
                             }
                         }
 

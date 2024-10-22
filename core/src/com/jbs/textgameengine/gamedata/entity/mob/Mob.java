@@ -12,6 +12,8 @@ import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.b
 import com.jbs.textgameengine.gamedata.entity.mob.properties.skill.combatskill.debug.*;
 import com.jbs.textgameengine.gamedata.entity.mob.properties.statuseffect.StatusEffect;
 import com.jbs.textgameengine.gamedata.world.Location;
+import com.jbs.textgameengine.gamedata.world.room.Room;
+import com.jbs.textgameengine.gamedata.world.utility.AreaAndRoomData;
 import com.jbs.textgameengine.gamedata.world.utility.TargetRoomData;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
@@ -172,15 +174,30 @@ public class Mob extends Entity {
 
     public void update() {
 
-        // Darkness (Lose Sight Of Targets) Check //
-        if(!location.room.isLit() && !targetList.isEmpty()) {
-            if(isPlayer) {
-                String targetString = "target";
-                if(targetList.size() > 1) {targetString = "targets";}
-                GameScreen.userInterface.console.writeToConsole(new Line("You lose sight of your " + targetString + ".", "4CONT5CONT6CONT3CONT5CONT" + String.valueOf(targetString.length()) + "CONT1DY", "", true, true));
+        // Lose Sight Of Targets Check (Via Room Darkness) //
+        if(true) {
+            ArrayList<Mob> removeTargetList = new ArrayList<>();
+            for(int i = targetList.size() - 1; i >= 0; i--) {
+                Mob targetMob = targetList.get(i);
+                if(!targetMob.location.room.isLit()) {
+                    targetList.remove(i);
+                    removeTargetList.add(targetMob);
+                }
             }
 
-            targetList.clear();
+            if(!removeTargetList.isEmpty()
+            && isPlayer) {
+                if(removeTargetList.size() == 1) {
+                    Mob targetMob = removeTargetList.get(0);
+                    GameScreen.userInterface.console.writeToConsole(new Line("You lose sight of " + targetMob.prefix.toLowerCase() + targetMob.name.label + ".", "4CONT5CONT6CONT3CONT" + String.valueOf(targetMob.prefix.length()) + "CONT" + targetMob.name.colorCode + "1DY", "", true, true));
+                }
+                else if(!targetList.isEmpty()) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("You lose sight of some of your targets.", "4CONT5CONT6CONT3CONT5CONT3CONT5CONT7CONT1DY", "", true, true));
+                }
+                else if(targetList.isEmpty()) {
+                    GameScreen.userInterface.console.writeToConsole(new Line("You lose sight of your targets.", "4CONT5CONT6CONT3CONT5CONT7CONT1DY", "", true, true));
+                }
+            }
         }
 
         // Dialogue Check //
@@ -195,7 +212,7 @@ public class Mob extends Entity {
         if(!isPlayer
         && !combatList.isEmpty()) {
 
-            // Combat Target Is In Different Room //
+            // Combat Target Is In Different Room (Move Toward Target) //
             if(location.room != combatList.get(0).location.room) {
                 TargetRoomData targetRoomData = TargetRoomData.findTargetRoomFromStartRoom(location.room, combatList.get(0).location.room, getMaxViewDistance());
                 if(targetRoomData.targetRoom != null
@@ -206,7 +223,7 @@ public class Mob extends Entity {
                 }
             }
 
-            // Combat Target Is In Same Room //
+            // Combat Target Is In Same Room (Attack Target) //
             else if(currentAction == null) {
                 Skill randomSkill = getRandomCombatSkill();
                 if(randomSkill != null) {
@@ -262,6 +279,28 @@ public class Mob extends Entity {
         }
     }
 
+    public ArrayList<Mob> loseSightOfTargetsCheck() {
+        ArrayList<Mob> loseSightOfTargetList = new ArrayList<>(targetList);
+
+        if(!targetList.isEmpty()) {
+            AreaAndRoomData surroundingRoomData = AreaAndRoomData.getSurroundingAreaAndRoomData(location.room, getMaxViewDistance(), false, false);
+            for(Room room : surroundingRoomData.roomList) {
+                for(int i = loseSightOfTargetList.size() - 1; i >= 0; i--) {
+                    if(room.mobList.contains(loseSightOfTargetList.get(i))) {
+                        loseSightOfTargetList.remove(i);
+                    }
+                }
+            }
+            for(int i = targetList.size() - 1; i >= 0; i--) {
+                if(loseSightOfTargetList.contains(targetList.get(i))) {
+                    targetList.remove(i);
+                }
+            }
+        }
+
+        return loseSightOfTargetList;
+    }
+
     public float getWeight() {
         float currentWeight = 0.0f;
 
@@ -297,15 +336,23 @@ public class Mob extends Entity {
     }
 
     public Skill getRandomCombatSkill() {
-        Skill skill = null;
+        Skill targetSkill = null;
 
-        if(skillMap.containsKey("Debug")
-        && !skillMap.get("Debug").isEmpty()) {
-            int randomIndex = new Random().nextInt(skillMap.get("Debug").size());
-            skill = skillMap.get("Debug").get(randomIndex);
+        ArrayList<Skill> skillList = new ArrayList<>();
+        if(skillMap.containsKey("Debug")) {
+            for(Skill skill : skillMap.get("Debug")) {
+                if(!skill.isHealing) {
+                    skillList.add(skill);
+                }
+            }
         }
 
-        return skill;
+        if(!skillList.isEmpty()) {
+            int randomIndex = new Random().nextInt(skillList.size());
+            targetSkill = skillList.get(randomIndex);
+        }
+
+        return targetSkill;
     }
 
     public void addItemToInventory(Item targetItem) {

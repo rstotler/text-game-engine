@@ -131,33 +131,55 @@ public class OCLU extends Action {
             }
         }
 
-        // Initiate Action & Message - You TargetAction the door to the Direction. //
+        // Initiate Action & Message //
         else {
-            if(parentEntity.isPlayer) {
-                String actionString = actionType.toLowerCase();
-                String actionColorCode = String.valueOf(actionType.length()) + "CONT";
-                if(actionType.equals("Open")
-                && targetDoor.status.equals("Locked")) {
-                    actionString = "unlock and open";
-                    actionColorCode = "7CONT4CONT4CONT";
-                }
-                else if(actionType.equals("Lock")
-                && targetDoor.status.equals("Open")) {
-                    actionString = "close and lock";
-                    actionColorCode = "6CONT4CONT4CONT";
-                }
 
-                String ocluString = "You " + actionString + " the door to the " + targetDirection.toLowerCase() + ".";
-                String ocluColorCode = "4CONT" + actionColorCode + "CONT1W4CONT5CONT3CONT4CONT" + String.valueOf(targetDirection.length()) + "CONT1DY";
-                GameScreen.userInterface.console.writeToConsole(new Line(ocluString, ocluColorCode, "", true, true));
-            }
-
-            // Set New Door Status //
+            // Set Door Status //
             String newDoorStatus = actionType;
+            String oldDoorStatus = targetDoor.status;
             if(newDoorStatus.equals("Close")) {newDoorStatus = "Closed";}
             else if(newDoorStatus.equals("Lock")) {newDoorStatus = "Locked";}
             else if(newDoorStatus.equals("Unlock")) {newDoorStatus = "Closed";}
             targetDoor.status = newDoorStatus;
+
+            // Lose Sight Of Target(s) Check (Player's Targets Only) //
+            ArrayList<Mob> playerLoseSightOfTargetList = GameScreen.player.loseSightOfTargetsCheck();
+
+            // Player Message //
+            if(parentEntity.isPlayer) {
+                String actionString = actionType.toLowerCase();
+                String actionColorCode = String.valueOf(actionType.length()) + "CONT";
+                if(actionType.equals("Open")
+                && oldDoorStatus.equals("Locked")) {
+                    actionString = "unlock and open";
+                    actionColorCode = "7CONT4CONT4CONT";
+                }
+                else if(actionType.equals("Lock")
+                && oldDoorStatus.equals("Open")) {
+                    actionString = "close and lock";
+                    actionColorCode = "6CONT4CONT4CONT";
+                }
+
+                boolean isLastLine = playerLoseSightOfTargetList.isEmpty();
+                String ocluString = "You " + actionString + " the door to the " + targetDirection.toLowerCase() + ".";
+                String ocluColorCode = "4CONT" + actionColorCode + "CONT1W4CONT5CONT3CONT4CONT" + String.valueOf(targetDirection.length()) + "CONT1DY";
+                GameScreen.userInterface.console.writeToConsole(new Line(ocluString, ocluColorCode, "", isLastLine, true));
+
+                // Message - Lose Sight Of Target(s) //
+                if(playerLoseSightOfTargetList != null
+                && !playerLoseSightOfTargetList.isEmpty()) {
+                    if(playerLoseSightOfTargetList.size() == 1) {
+                        Mob targetMob = playerLoseSightOfTargetList.get(0);
+                        GameScreen.userInterface.console.writeToConsole(new Line("You lose sight of " + targetMob.prefix.toLowerCase() + targetMob.name.label + ".", "4CONT5CONT6CONT3CONT" + String.valueOf(targetMob.prefix.length()) + "CONT" + targetMob.name.colorCode + "1DY", "", true, true));
+                    }
+                    else if(!parentEntity.targetList.isEmpty()) {
+                        GameScreen.userInterface.console.writeToConsole(new Line("You lose sight of some of your targets.", "4CONT5CONT6CONT3CONT5CONT3CONT5CONT7CONT1DY", "", true, true));
+                    }
+                    else if(parentEntity.targetList.isEmpty()) {
+                        GameScreen.userInterface.console.writeToConsole(new Line("You lose sight of your targets.", "4CONT5CONT6CONT3CONT5CONT7CONT1DY", "", true, true));
+                    }
+                }
+            }
         }
     }
 

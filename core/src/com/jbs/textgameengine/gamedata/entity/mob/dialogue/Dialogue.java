@@ -35,22 +35,20 @@ public class Dialogue {
         if(speakTimer >= speakTimerMax) {
             speakTimer = 0;
 
-            if(GameScreen.player.location.room == parentEntity.location.room) {
-                String currentDialogueString = null;
-                if(dialogueMap.containsKey(dialogueSection)
-                && dialogueIndex < dialogueMap.get(dialogueSection).size()) {
-                    currentDialogueString = dialogueMap.get(dialogueSection).get(dialogueIndex);
-                }
+            String currentDialogueString = null;
+            if(dialogueMap.containsKey(dialogueSection)
+            && dialogueIndex < dialogueMap.get(dialogueSection).size()) {
+                currentDialogueString = dialogueMap.get(dialogueSection).get(dialogueIndex);
+            }
 
-                if(currentDialogueString != null) {
-                    Action sayAction = new Say(parentEntity);
-                    sayAction = sayAction.getActionFromInput("say " + currentDialogueString, parentEntity);
-                    sayAction.initiate();
+            if(currentDialogueString != null) {
+                Action sayAction = new Say(parentEntity);
+                sayAction = sayAction.getActionFromInput("say " + currentDialogueString, parentEntity);
+                sayAction.initiate();
 
-                    dialogueIndex += 1;
-                    if(dialogueIndex >= dialogueMap.get(dialogueSection).size()) {
-                        dialogueIndex = 0;
-                    }
+                dialogueIndex += 1;
+                if(dialogueIndex >= dialogueMap.get(dialogueSection).size()) {
+                    dialogueIndex = 0;
                 }
             }
         }

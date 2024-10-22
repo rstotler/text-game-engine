@@ -153,12 +153,12 @@ public class GameScreen extends Screen {
         // Update Player //
         player.update();
 
-        // Update Area & Surrounding Rooms //
+        // Update Player, Area & Surrounding Rooms //
         if((frameTimer == 0 || frameTimer == 30)
         && player.location != null
         && player.location.area != null
         && player.location.room != null) {
-            AreaAndRoomData surroundingAreaAndRoomData = AreaAndRoomData.getSurroundingAreaAndRoomData(player.location.room, player.getMaxViewDistance());
+            AreaAndRoomData surroundingAreaAndRoomData = AreaAndRoomData.getSurroundingAreaAndRoomData(player.location.room, player.getMaxViewDistance(), true, true);
             for(Area area : surroundingAreaAndRoomData.areaList) {area.update();}
             for(Room room : surroundingAreaAndRoomData.roomList) {room.update();}
         }
