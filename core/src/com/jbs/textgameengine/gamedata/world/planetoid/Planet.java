@@ -6,8 +6,7 @@ import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public class Planet extends Planetoid {
     public static boolean dawnMessage = true;
@@ -16,6 +15,7 @@ public class Planet extends Planetoid {
     public static boolean duskMessage = true;
     public static boolean sunsetMessage = true;
 
+    public HashMap<String, Moon> moonMap;
     public HashMap<String, Area> areaMap;
     public ArrayList<Room> landingPadList;
 
@@ -25,8 +25,89 @@ public class Planet extends Planetoid {
 
         this.location.planetoid = this;
 
+        moonMap = new HashMap<>();
         areaMap = new HashMap<>();
         landingPadList = new ArrayList<>();
+    }
+
+    public void generateAreas() {
+        // Debug Areas Created In A CW Circle Starting At The Top-Left Quadrant
+
+        // Create Areas & Rooms //
+        int areaSize = 4;
+        for(int aNum = 0; aNum < 4; aNum++) {
+            Line newAreaName = new Line("Area " + String.valueOf(aNum + 1), "6CONT", "", true, true);
+            Location newAreaLocation = new Location(location.galaxy, location.solarSystem, this);
+            Area newArea = new Area(newAreaName, newAreaLocation);
+            areaMap.put(newAreaName.label, newArea);
+
+            for(int rNum = 0; rNum < (areaSize * areaSize); rNum++) {
+                int xLoc = rNum % areaSize;
+                int yLoc = rNum / areaSize;
+                String roomString = "Room X:" + xLoc + ", Y:" + yLoc + " Area:" + (aNum + 1);
+                String roomColorCode = "5CONT1W1DY" + String.valueOf(xLoc).length() + "CONT2DY1W1DY" + String.valueOf(yLoc).length() + "CONT1W4CONT1DY" + String.valueOf(aNum + 1) + "CONT";
+                Line newRoomName = new Line(roomString, roomColorCode, "", true, true);
+                Location newRoomLocation = new Location(location.galaxy, location.solarSystem, this, newArea);
+                Room newRoom = new Room(newRoomName, null, newRoomLocation);
+                newArea.roomList.add(newRoom);
+            }
+        }
+
+        // Connect Room Exits //
+        for(int aNum = 0; aNum < 4; aNum++) {
+            if(areaMap.containsKey("Area " + String.valueOf(aNum + 1))) {
+                Area currentArea = areaMap.get("Area " + String.valueOf(aNum + 1));
+                for(int rNum = 0; rNum < (areaSize * areaSize); rNum++) {
+                    if(rNum < currentArea.roomList.size()) {
+                        Room currentRoom = currentArea.roomList.get(rNum);
+                        int xLoc = rNum % areaSize;
+                        int yLoc = rNum / areaSize;
+
+                        // North & South Exits //
+                        if(yLoc > 0 || aNum > 1) {
+                            Room targetRoom = null;
+                            if(yLoc > 0) {
+                                if((rNum - areaSize) < currentArea.roomList.size()) {
+                                    targetRoom = currentArea.roomList.get(rNum - areaSize);
+                                }
+                            } else {
+                                if(areaMap.containsKey("Area " + String.valueOf(aNum - 1))) {
+                                    Area targetArea = areaMap.get("Area " + String.valueOf(aNum - 1));
+                                    if(((areaSize * areaSize) - areaSize + rNum) < targetArea.roomList.size()) {
+                                        targetRoom = targetArea.roomList.get((areaSize * areaSize) - areaSize + rNum);
+                                    }
+                                }
+                            }
+
+                            if(targetRoom != null) {
+                                currentRoom.createExit("North", targetRoom);
+                            }
+                        }
+
+                        // East & West Exits //
+                        if(xLoc < (areaSize - 1) || (aNum == 0 || aNum == 2)) {
+                            Room targetRoom = null;
+                            if(xLoc < (areaSize - 1)) {
+                                if((rNum + 1) < currentArea.roomList.size()) {
+                                    targetRoom = currentArea.roomList.get(rNum + 1);
+                                }
+                            } else {
+                                if(areaMap.containsKey("Area " + String.valueOf(aNum + 2))) {
+                                    Area targetArea = areaMap.get("Area " + String.valueOf(aNum + 2));
+                                    if((yLoc * areaSize) < targetArea.roomList.size()) {
+                                        targetRoom = targetArea.roomList.get(yLoc * areaSize);
+                                    }
+                                }
+                            }
+
+                            if(targetRoom != null) {
+                                currentRoom.createExit("East", targetRoom);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void update() {

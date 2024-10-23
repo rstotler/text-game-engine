@@ -9,12 +9,16 @@ import java.util.*;
 
 public class TargetRoomData {
     public static HashMap<String, ArrayList<String>> sideDirectionMap = loadSideDirectionMap();
+    public static Point lowestPoint = new Point(0, 0);  // Use With Caution: Variable Updates Automatically
+    public static Point highestPoint = new Point(0, 0); // Use With Caution: Variable Updates Automatically
 
     public Room targetRoom;
     public String targetDirection;
     public int distance;
     public String message;
 
+    public Point coordinates;
+    public Point farthestPoint;
     public ArrayList<String> directionList;
     public boolean breakCheck;
 
@@ -24,8 +28,89 @@ public class TargetRoomData {
         distance = -1;
         message = "";
 
+        coordinates = null;
+        farthestPoint = null;
         directionList = new ArrayList<>();
         breakCheck = false;
+    }
+
+    public static ArrayList<TargetRoomData> examineAreaAndRoomData(Room currentRoom, int maxDistance, String targetDirection, ArrayList<TargetRoomData> examinedAreaAndRoomDataList, ArrayList<Room> examinedRoomList, Point currentLocationPoint) {
+        // Helper Function For GetSurroundingAreaAndRoomData()
+
+        if(!examinedRoomList.contains(currentRoom)) {
+            examinedRoomList.add(currentRoom);
+
+            TargetRoomData targetRoomData = new TargetRoomData();
+            targetRoomData.targetRoom = currentRoom;
+            targetRoomData.coordinates = new Point(currentLocationPoint);
+            examinedAreaAndRoomDataList.add(targetRoomData);
+
+            if(currentLocationPoint.x < lowestPoint.x) {
+                lowestPoint.x = currentLocationPoint.x;
+            }
+            else if(currentLocationPoint.x > highestPoint.x) {
+                highestPoint.x = currentLocationPoint.x;
+            }
+            if(currentLocationPoint.y < lowestPoint.y) {
+                lowestPoint.y = currentLocationPoint.y;
+            }
+            else if(currentLocationPoint.y > highestPoint.y) {
+                highestPoint.y = currentLocationPoint.y;
+            }
+        }
+
+        if(maxDistance == -1 || currentLocationPoint.x + currentLocationPoint.y < maxDistance) {
+            ArrayList<String> potentialDirectionList = new ArrayList<>(Arrays.asList("North", "East", "South", "West", "Northeast", "Southeast", "Southwest", "Northwest"));
+            if(!targetDirection.isEmpty() && potentialDirectionList.contains(Location.getOppositeDirection(targetDirection))) {
+                potentialDirectionList.remove(Location.getOppositeDirection(targetDirection));
+            }
+            Point lastLocationPoint = new Point(currentLocationPoint);
+
+            for(String direction : potentialDirectionList) {
+                if(!direction.equals("North")) {
+                    currentLocationPoint = new Point(lastLocationPoint);
+                }
+                if(currentRoom.exitMap.containsKey(direction)
+                && currentRoom.exitMap.get(direction) != null) {
+                    TargetRoomData targetRoomData = TargetRoomData.getTargetRoomFromStartRoom(currentRoom, new ArrayList<>(Arrays.asList(direction)), true, true);
+
+                    if(!examinedRoomList.contains(targetRoomData.targetRoom)) {
+                        if(Arrays.asList("East").contains(direction)) {
+                            currentLocationPoint.x += 1;
+                        }
+                        else if(Arrays.asList("West").contains(direction)) {
+                            currentLocationPoint.x -= 1;
+                        }
+                        else if(Arrays.asList("North").contains(direction)) {
+                            currentLocationPoint.y += 1;
+                        }
+                        else if(Arrays.asList("South").contains(direction)) {
+                            currentLocationPoint.y -= 1;
+                        }
+                        else if(Arrays.asList("Northeast").contains(direction)) {
+                            currentLocationPoint.x += 1;
+                            currentLocationPoint.y += 1;
+                        }
+                        else if(Arrays.asList("Southeast").contains(direction)) {
+                            currentLocationPoint.x += 1;
+                            currentLocationPoint.y -= 1;
+                        }
+                        else if(Arrays.asList("Southwest").contains(direction)) {
+                            currentLocationPoint.x -= 1;
+                            currentLocationPoint.y -= 1;
+                        }
+                        else if(Arrays.asList("Northwest").contains(direction)) {
+                            currentLocationPoint.x -= 1;
+                            currentLocationPoint.y += 1;
+                        }
+
+                        examinedAreaAndRoomDataList = examineAreaAndRoomData(targetRoomData.targetRoom, maxDistance, direction, examinedAreaAndRoomDataList, examinedRoomList, currentLocationPoint);
+                    }
+                }
+            }
+        }
+
+        return examinedAreaAndRoomDataList;
     }
 
     public static TargetRoomData getTargetRoomFromStartRoom(Room startRoom, ArrayList<String> directionList, boolean ignoreDoors, boolean ignoreHiddenExits) {
@@ -280,5 +365,12 @@ public class TargetRoomData {
         sideDirectionMap.put("Down", new ArrayList<String>(Arrays.asList("North", "East", "South", "West")));
 
         return sideDirectionMap;
+    }
+
+    public static void normalizeCoordinates(ArrayList<TargetRoomData> targetRoomDataList, Point coordinateOffset) {
+        for(TargetRoomData targetRoomData : targetRoomDataList) {
+            targetRoomData.coordinates.x -= coordinateOffset.x;
+            targetRoomData.coordinates.y -= coordinateOffset.y;
+        }
     }
 }

@@ -20,4 +20,8 @@ public class Point {
     public Point(float x, float y) {
         this(x, y, 0);
     }
+
+    public String toString() {
+        return "[" + x + ", " + y + ", " + z + "]";
+    }
 }

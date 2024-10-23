@@ -3,6 +3,7 @@ package com.jbs.textgameengine.gamedata.world.galaxy;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.area.Area;
+import com.jbs.textgameengine.gamedata.world.planetoid.Moon;
 import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
 import com.jbs.textgameengine.gamedata.world.planetoid.Star;
 import com.jbs.textgameengine.gamedata.world.room.Room;
@@ -49,6 +50,7 @@ public class Galaxy {
         Line lapineName = new Line("Lapine", "6CONT", "", true, true);
         Location lapineLocation = new Location(galaxyCottonTail, systemLagoMorpha);
         Planet planetLapine = new Planet(lapineName, lapineLocation, 92598974, -1, 23.45f, 1440, 525600);
+        planetLapine.generateAreas();
         systemLagoMorpha.planetoidList.add(planetLapine);
 
         // Area - Center Of The Universe //
@@ -123,6 +125,12 @@ public class Galaxy {
         cotuRoom08.inside = true;
         cotuRoom08.createExit("West", cotuRoom04, "Automatic");
         areaCOTU.roomList.add(cotuRoom08);
+
+        // Moon - Luna //
+        Line lunaName = new Line("Luna", "4CONT", "", true, true);
+        Location lunaLocation = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine);
+        Moon moonLuna = new Moon(lunaName, lunaLocation, 233738, -1, 5.15f, 43200, 518400);
+        planetLapine.moonMap.put(lunaName.label, moonLuna);
 
         // Planet - Seres (670 Days In Year, 1480 Minutes In Day) //
         Line seresName = new Line("Seres", "5CONT", "", true, true);

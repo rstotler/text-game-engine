@@ -30,5 +30,6 @@ public class UserInterface {
     public void dispose() {
         inputBar.font.dispose();
         console.font.dispose();
+        map.frameBuffer.dispose();
     }
 }
