@@ -73,14 +73,14 @@ public class Spaceship extends Entity {
         // Room 00 - A Ship Hallway //
         Line room00Line = new Line("A Ship Hallway", "2CONT5CONT7CONT", "", true, true);
         Location room00Location = new Location(startLocation.galaxy, startLocation.solarSystem, startLocation.planetoid, areaMainCabin, null, this);
-        Room room00 = new Room(room00Line, null, room00Location);
+        Room room00 = new Room(areaMainCabin.roomList.size(), room00Line, null, room00Location);
         room00.createDoor(boardingRoomExitDirection, null, "Automatic");
         areaMainCabin.roomList.add(room00);
 
         // Room 01 - Sitting In A Cockpit //
         Line room01Line = new Line("Sitting In A Cockpit", "8CONT3CONT2W7CONT", "", true, true);
         Location room01Location = new Location(startLocation.galaxy, startLocation.solarSystem, startLocation.planetoid, areaMainCabin, null, this);
-        Room room01 = new Room(room01Line, null, room01Location);
+        Room room01 = new Room(areaMainCabin.roomList.size(), room01Line, null, room01Location);
         room01.createExit("South", room00, "Automatic");
         areaMainCabin.roomList.add(room01);
 

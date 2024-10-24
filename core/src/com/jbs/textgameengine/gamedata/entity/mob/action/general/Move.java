@@ -153,6 +153,11 @@ public class Move extends Action {
                         }
                     }
 
+                    // Update Map (Player Only) //
+                    if(parentEntity.isPlayer) {
+                        GameScreen.userInterface.map.updateOffset(newRoom);
+                    }
+
                     boolean closedCheck = false;
                     boolean lockedCheck = false;
                     boolean automaticCheck = false;

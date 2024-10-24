@@ -9,15 +9,22 @@ import com.jbs.textgameengine.gamedata.world.room.door.Door;
 import com.jbs.textgameengine.gamedata.world.room.hiddenexit.HiddenExit;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
+import com.jbs.textgameengine.screen.utility.Point;
 import com.jbs.textgameengine.screen.utility.Utility;
 
 import java.util.*;
 
 public class Room {
+    public int index;
+    public Point coordinates;
+
     public Line name;
     public Line description;
     public Location location;
     public ArrayList<String> nameKeyList;
+
+    public String mapColorTargetColor;
+    public float mapColorMod;
 
     public boolean inside;
     public HashMap<String, Room> exitMap;
@@ -28,12 +35,18 @@ public class Room {
     public ArrayList<Entity> spaceshipList;
     public ArrayList<Entity> itemList;
 
-    public Room(Line name, Line description, Location location) {
+    public Room(int index, Line name, Line description, Location location) {
+        this.index = index;
+        coordinates = new Point(0, 0);
+
         this.name = name;
         this.description = description;
         this.location = new Location(location.galaxy, location.solarSystem, location.planetoid, location.area, null, location.spaceship);
         this.location.room = this;
         nameKeyList = Entity.createNameKeyList(name.label.toLowerCase());
+
+        mapColorTargetColor = Arrays.asList("R", "G", "B").get(new Random().nextInt(3));
+        mapColorMod = (new Random().nextFloat() * .25f);
 
         inside = false;
         exitMap = new HashMap<>();

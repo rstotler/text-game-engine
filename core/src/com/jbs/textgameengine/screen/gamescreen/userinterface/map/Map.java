@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.jbs.textgameengine.Settings;
@@ -18,11 +17,14 @@ import com.jbs.textgameengine.screen.utility.Point;
 import com.jbs.textgameengine.screen.utility.Rect;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Map extends UserInterfaceElement {
-    public DebugMouse dm = new DebugMouse();
+    public Point frameBufferOffset = new Point(0, 0);
     public Point mapOffset = new Point(0,0);
+
+    public int tileSize;
+    public int tileCountWidth;
+    public int tileCountHeight;
 
     public Map() {
         int mapX = Settings.INPUT_BAR_WIDTH;
@@ -32,25 +34,29 @@ public class Map extends UserInterfaceElement {
         rect = new Rect(mapX, mapY, mapWidth, mapHeight);
 
         rect.fillColor = new Color(0/255f, 0/255f, 14/255f, 1);
+
+        tileSize = 20;
+        tileCountWidth = 0;
+        tileCountHeight = 0;
     }
 
     public void buffer(Location startLocation) {
 
         // Get Area & Room Data //
         SurroundingAreaAndRoomData surroundingAreaAndRoomData = SurroundingAreaAndRoomData.getSurroundingAreaAndRoomData(startLocation.room);
-        int tileCountWidth = (int) TargetRoomData.highestPoint.x - (int) TargetRoomData.lowestPoint.x;
-        int tileCountHeight = (int) TargetRoomData.highestPoint.y - (int) TargetRoomData.lowestPoint.y;
+        TargetRoomData.normalizeRoomCoordinates(surroundingAreaAndRoomData.targetRoomDataList, TargetRoomData.lowestPoint);
+        tileCountWidth = (int) TargetRoomData.highestPoint.x - (int) TargetRoomData.lowestPoint.x + 1;
+        tileCountHeight = (int) TargetRoomData.highestPoint.y - (int) TargetRoomData.lowestPoint.y + 1;
 
         // Load FrameBuffer //
-        int tileSize = 20;
-        int frameBufferWidth = Settings.WINDOW_WIDTH;
-        int frameBufferHeight = Settings.WINDOW_HEIGHT;
-//        if(tileCountWidth * tileSize > frameBufferWidth) {
-//            frameBufferWidth = tileCountWidth * tileSize;
-//        }
-//        if(tileCountHeight * tileSize > frameBufferHeight) {
-//            frameBufferHeight = tileCountHeight * tileSize;
-//        }
+        int frameBufferWidth = Gdx.graphics.getWidth();
+        int frameBufferHeight = Gdx.graphics.getHeight();
+        if(tileCountWidth * tileSize > frameBufferWidth) {
+            frameBufferWidth = tileCountWidth * tileSize;
+        }
+        if(tileCountHeight * tileSize > frameBufferHeight) {
+            frameBufferHeight = tileCountHeight * tileSize;
+        }
         frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, frameBufferWidth, frameBufferHeight, false);
         GameScreen.spriteBatch.setProjectionMatrix(GameScreen.camera.combined);
         frameBuffer.begin();
@@ -61,9 +67,19 @@ public class Map extends UserInterfaceElement {
         // Draw Tiles //
         Screen.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for(TargetRoomData targetRoomData : surroundingAreaAndRoomData.targetRoomDataList) {
-            int drawX = (int) targetRoomData.coordinates.x * tileSize;
-            int drawY = (int) targetRoomData.coordinates.y * tileSize;
-            Screen.shapeRenderer.setColor(new Color(new Random().nextFloat() - .2f, 222/255f, 122/255f, 1));
+            int drawX = (int) targetRoomData.targetRoom.coordinates.x * tileSize;
+            int drawY = (int) targetRoomData.targetRoom.coordinates.y * tileSize;
+            Color targetColor = new Color(targetRoomData.targetRoom.location.area.mapColor);
+            if(targetRoomData.targetRoom.mapColorTargetColor.equals("R")) {
+                targetColor.r += targetRoomData.targetRoom.mapColorMod;
+            }
+            if(targetRoomData.targetRoom.mapColorTargetColor.equals("G")) {
+                targetColor.g += targetRoomData.targetRoom.mapColorMod;
+            }
+            if(targetRoomData.targetRoom.mapColorTargetColor.equals("B")) {
+                targetColor.b += targetRoomData.targetRoom.mapColorMod;
+            }
+            Screen.shapeRenderer.setColor(targetColor);
             Screen.shapeRenderer.rect(drawX, drawY, tileSize, tileSize);
         }
         Screen.shapeRenderer.end();
@@ -82,19 +98,30 @@ public class Map extends UserInterfaceElement {
         GameScreen.spriteBatch.setProjectionMatrix(GameScreen.camera.combined);
         GameScreen.spriteBatch.begin();
 
-        float lastLocationX = Gdx.input.getX();
-        float lastLocationY = Gdx.graphics.getHeight() - Gdx.input.getY();
-        int xDiff = (int) lastLocationX - (int) dm.lastLocation.x;
-        int yDiff = (int) lastLocationY - (int) dm.lastLocation.y;
-
-        if(Math.abs(xDiff) < 10 && Math.abs(yDiff) < 10) {
-            mapOffset.x += xDiff;
-            mapOffset.y += yDiff;
-        }
-        dm.update();
-
-        GameScreen.spriteBatch.draw(frameBuffer.getColorBufferTexture(), rect.x, rect.y, frameBuffer.getWidth(), frameBuffer.getHeight(), (int) mapOffset.x, (int) mapOffset.y, frameBuffer.getWidth(), frameBuffer.getHeight(), false, true);
+        GameScreen.spriteBatch.draw(frameBuffer.getColorBufferTexture(), rect.x + frameBufferOffset.x, rect.y + frameBufferOffset.y, frameBuffer.getWidth(), frameBuffer.getHeight(), (int) mapOffset.x, (int) mapOffset.y, frameBuffer.getWidth(), frameBuffer.getHeight(), false, true);
         GameScreen.spriteBatch.end();
+    }
+
+    public void updateOffset(Room targetRoom) {
+        frameBufferOffset.x = 0;
+        frameBufferOffset.y = 0;
+
+        int mapX = ((int) targetRoom.coordinates.x * tileSize) + (tileSize / 2);
+        int mapY = ((int) targetRoom.coordinates.y * tileSize) + (tileSize / 2);
+        mapOffset.x = mapX - (rect.width / 2);
+        mapOffset.y = mapY - (rect.height / 2);
+
+        int diffX = (rect.width / 2) - (tileSize / 2) - ((int) targetRoom.coordinates.x * tileSize);
+        int diffY = (rect.height / 2) - (tileSize / 2) - ((int) targetRoom.coordinates.y * tileSize);
+
+        if(diffX > 0) {
+            mapOffset.x += diffX;
+            frameBufferOffset.x += diffX;
+        }
+        if(diffY > 0) {
+            mapOffset.y += diffY;
+            frameBufferOffset.y += diffY;
+        }
     }
 }
 
@@ -112,18 +139,6 @@ class SurroundingAreaAndRoomData {
         TargetRoomData.highestPoint = new Point(0, 0);
 
         ArrayList<TargetRoomData> targetRoomDataList = TargetRoomData.examineAreaAndRoomData(startRoom, -1, "", new ArrayList<TargetRoomData>(), new ArrayList<Room>(), new Point(0, 0));
-        TargetRoomData.normalizeCoordinates(targetRoomDataList, TargetRoomData.lowestPoint);
         return new SurroundingAreaAndRoomData(targetRoomDataList, new Point(TargetRoomData.lowestPoint));
-    }
-}
-
-class DebugMouse {
-    public Point lastLocation;
-    public DebugMouse() {
-        lastLocation = new Point(0, 0);
-    }
-    public void update() {
-        lastLocation.x = Gdx.input.getX();
-        lastLocation.y = Gdx.graphics.getHeight() - Gdx.input.getY();
     }
 }

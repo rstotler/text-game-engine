@@ -34,7 +34,7 @@ public class Planet extends Planetoid {
         // Debug Areas Created In A CW Circle Starting At The Top-Left Quadrant
 
         // Create Areas & Rooms //
-        int areaSize = 4;
+        int areaSize = 16;
         for(int aNum = 0; aNum < 4; aNum++) {
             Line newAreaName = new Line("Area " + String.valueOf(aNum + 1), "6CONT", "", true, true);
             Location newAreaLocation = new Location(location.galaxy, location.solarSystem, this);
@@ -48,7 +48,7 @@ public class Planet extends Planetoid {
                 String roomColorCode = "5CONT1W1DY" + String.valueOf(xLoc).length() + "CONT2DY1W1DY" + String.valueOf(yLoc).length() + "CONT1W4CONT1DY" + String.valueOf(aNum + 1) + "CONT";
                 Line newRoomName = new Line(roomString, roomColorCode, "", true, true);
                 Location newRoomLocation = new Location(location.galaxy, location.solarSystem, this, newArea);
-                Room newRoom = new Room(newRoomName, null, newRoomLocation);
+                Room newRoom = new Room(newArea.roomList.size(), newRoomName, null, newRoomLocation);
                 newArea.roomList.add(newRoom);
             }
         }

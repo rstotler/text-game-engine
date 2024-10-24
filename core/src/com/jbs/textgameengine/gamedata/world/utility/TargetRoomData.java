@@ -35,7 +35,7 @@ public class TargetRoomData {
     }
 
     public static ArrayList<TargetRoomData> examineAreaAndRoomData(Room currentRoom, int maxDistance, String targetDirection, ArrayList<TargetRoomData> examinedAreaAndRoomDataList, ArrayList<Room> examinedRoomList, Point currentLocationPoint) {
-        // Helper Function For GetSurroundingAreaAndRoomData()
+        // Helper Function For SurroundingAreaAndRoomData.GetSurroundingAreaAndRoomData()
 
         if(!examinedRoomList.contains(currentRoom)) {
             examinedRoomList.add(currentRoom);
@@ -367,10 +367,10 @@ public class TargetRoomData {
         return sideDirectionMap;
     }
 
-    public static void normalizeCoordinates(ArrayList<TargetRoomData> targetRoomDataList, Point coordinateOffset) {
+    public static void normalizeRoomCoordinates(ArrayList<TargetRoomData> targetRoomDataList, Point coordinateOffset) {
         for(TargetRoomData targetRoomData : targetRoomDataList) {
-            targetRoomData.coordinates.x -= coordinateOffset.x;
-            targetRoomData.coordinates.y -= coordinateOffset.y;
+            targetRoomData.targetRoom.coordinates.x = targetRoomData.coordinates.x - coordinateOffset.x;
+            targetRoomData.targetRoom.coordinates.y = targetRoomData.coordinates.y - coordinateOffset.y;
         }
     }
 }

@@ -43,6 +43,7 @@ public class GameScreen extends Screen {
         startLocation = Galaxy.getRoom("Cotton Tail Nebula", "Lago Morpha", 1, "Area 1", 0).location;
         player = new Player(startLocation);
         userInterface.map.buffer(startLocation);
+        userInterface.map.updateOffset(player.location.room);
 
         // Start Game Time At Noon //
         if(true) {
