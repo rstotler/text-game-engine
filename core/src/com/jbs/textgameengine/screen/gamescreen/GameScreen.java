@@ -42,8 +42,11 @@ public class GameScreen extends Screen {
         userInterface = new UserInterface();
         galaxyList = Galaxy.loadDebugGalaxy();
 
-        Location startLocation = Galaxy.getRoom("Cotton Tail Nebula", "Lago Morpha", 1, "Center Of The Universe", 0).location;
-        startLocation = Galaxy.getRoom("Cotton Tail Nebula", "Lago Morpha", 1, "Overworld Area 1", 0).location;
+        Planet startPlanet = (Planet) galaxyList.get("Cotton Tail Nebula").solarSystemMap.get("Lago Morpha").planetoidList.get(1);
+        startPlanet.generateOverworld();
+
+        Location startLocation = startPlanet.areaMap.get("Center Of The Universe").roomList.get(0).location;
+        startLocation = startPlanet.areaMap.get("Overworld Area 1").roomList.get(0).location;
         player = new Player(startLocation);
 
         // Start Game Time At Noon //

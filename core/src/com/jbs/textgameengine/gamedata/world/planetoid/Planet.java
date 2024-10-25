@@ -30,11 +30,11 @@ public class Planet extends Planetoid {
         landingPadList = new ArrayList<>();
     }
 
-    public void generateAreas() {
+    public void generateOverworld() {
         // Debug Areas Created In A CW Circle Starting At The Top-Left Quadrant
 
         // Create Areas & Rooms //
-        int areaSize = 16;
+        int areaSize = 50;
         for(int aNum = 0; aNum < 4; aNum++) {
             String areaNameString = "Overworld Area " + String.valueOf(aNum + 1);
             String areaNameColorCode = "10CONT5CONT" + String.valueOf(aNum + 1).length() + "CONT";

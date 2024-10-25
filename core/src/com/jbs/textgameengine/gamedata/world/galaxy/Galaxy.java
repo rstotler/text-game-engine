@@ -50,7 +50,6 @@ public class Galaxy {
         Line lapineName = new Line("Lapine", "6CONT", "", true, true);
         Location lapineLocation = new Location(galaxyCottonTail, systemLagoMorpha);
         Planet planetLapine = new Planet(lapineName, lapineLocation, 92598974, -1, 23.45f, 1440, 525600);
-        planetLapine.generateAreas();
         systemLagoMorpha.planetoidList.add(planetLapine);
 
         // Area - Center Of The Universe //

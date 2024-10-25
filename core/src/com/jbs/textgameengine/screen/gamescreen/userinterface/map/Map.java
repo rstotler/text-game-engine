@@ -17,6 +17,8 @@ import com.jbs.textgameengine.screen.utility.Point;
 import com.jbs.textgameengine.screen.utility.Rect;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class Map extends UserInterfaceElement {
     public FrameBuffer frameBufferOverworld;
@@ -53,10 +55,10 @@ public class Map extends UserInterfaceElement {
     public void buffer(Location startLocation) {
 
         // Get Area & Room Data //
-        SurroundingAreaAndRoomData surroundingAreaAndRoomData = SurroundingAreaAndRoomData.getSurroundingAreaAndRoomData(startLocation.room);
-        TargetRoomData.normalizeRoomCoordinates(surroundingAreaAndRoomData.targetRoomDataList, TargetRoomData.lowestPoint);
-        tileCountWidth = (int) TargetRoomData.highestPoint.x - (int) TargetRoomData.lowestPoint.x + 1;
-        tileCountHeight = (int) TargetRoomData.highestPoint.y - (int) TargetRoomData.lowestPoint.y + 1;
+        SurroundingAreaAndRoomData surroundingAreaAndRoomData = SurroundingAreaAndRoomData.getAreaAndRoomData(startLocation.room);
+        surroundingAreaAndRoomData.normalizeRoomCoordinates(surroundingAreaAndRoomData.targetRoomDataList, surroundingAreaAndRoomData.lowestPoint);
+        tileCountWidth = (int) surroundingAreaAndRoomData.highestPoint.x - (int) surroundingAreaAndRoomData.lowestPoint.x + 1;
+        tileCountHeight = (int) surroundingAreaAndRoomData.highestPoint.y - (int) surroundingAreaAndRoomData.lowestPoint.y + 1;
 
         // Load FrameBuffer //
         int frameBufferWidth = Settings.WINDOW_WIDTH;
@@ -165,17 +167,109 @@ public class Map extends UserInterfaceElement {
 class SurroundingAreaAndRoomData {
     public ArrayList<TargetRoomData> targetRoomDataList;
     public Point lowestPoint;
+    public Point highestPoint;
 
-    public SurroundingAreaAndRoomData(ArrayList<TargetRoomData> targetRoomDataList, Point lowestPoint) {
-        this.targetRoomDataList = targetRoomDataList;
-        this.lowestPoint = lowestPoint;
+    public SurroundingAreaAndRoomData() {
+        this.targetRoomDataList = new ArrayList<>();
+        lowestPoint = new Point(0, 0);
+        highestPoint = new Point(0, 0);
     }
 
-    public static SurroundingAreaAndRoomData getSurroundingAreaAndRoomData(Room startRoom) {
-        TargetRoomData.lowestPoint = new Point(0, 0);
-        TargetRoomData.highestPoint = new Point(0, 0);
+    public static SurroundingAreaAndRoomData getAreaAndRoomData(Room startRoom) {
+        SurroundingAreaAndRoomData surroundingAreaAndRoomData = new SurroundingAreaAndRoomData();
 
-        ArrayList<TargetRoomData> targetRoomDataList = TargetRoomData.examineAreaAndRoomData(startRoom, -1, "", new ArrayList<TargetRoomData>(), new ArrayList<Room>(), new Point(0, 0), startRoom.location.area.mapKey);
-        return new SurroundingAreaAndRoomData(targetRoomDataList, new Point(TargetRoomData.lowestPoint));
+        ArrayList<TargetRoomData> examinedAreaAndRoomDataList = new ArrayList<>();
+        ArrayList<Room> examinedRoomList = new ArrayList<>();
+        ArrayList<String> directionList = new ArrayList<>(Arrays.asList("North", "East", "South", "West"));
+        HashMap<Room, PreviousRoomData> previousRoomMap = new HashMap<>();
+        Point currentLocationPoint = new Point(0, 0);
+        String targetMapKey = startRoom.location.area.mapKey;
+
+        TargetRoomData startRoomData = new TargetRoomData();
+        startRoomData.targetRoom = startRoom;
+        startRoomData.coordinates = new Point(currentLocationPoint);
+        examinedAreaAndRoomDataList.add(startRoomData);
+        examinedRoomList.add(startRoom);
+
+        Room currentRoom = startRoom;
+
+        for(int i = 0; i < directionList.size(); i++) {
+            String targetDirection = directionList.get(i);
+
+            if(currentRoom.exitMap.containsKey(targetDirection)
+            && currentRoom.exitMap.get(targetDirection) != null
+            && !examinedRoomList.contains(currentRoom.exitMap.get(targetDirection))
+            && ((!targetMapKey.isEmpty() && currentRoom.exitMap.get(targetDirection).location.area.mapKey.equals(targetMapKey))
+            || (targetMapKey.isEmpty() && currentRoom.exitMap.get(targetDirection).location.area == currentRoom.location.area))) {
+                PreviousRoomData previousRoomData = new PreviousRoomData(currentRoom, new Point(currentLocationPoint), i);
+                previousRoomMap.put(currentRoom.exitMap.get(targetDirection), previousRoomData);
+
+                if(targetDirection.equals("East")) {
+                    currentLocationPoint.x += 1;
+                }
+                else if(targetDirection.equals("West")) {
+                    currentLocationPoint.x -= 1;
+                }
+                else if(targetDirection.equals("North")) {
+                    currentLocationPoint.y += 1;
+                }
+                else if(targetDirection.equals("South")) {
+                    currentLocationPoint.y -= 1;
+                }
+
+                if(currentLocationPoint.x < surroundingAreaAndRoomData.lowestPoint.x) {
+                    surroundingAreaAndRoomData.lowestPoint.x = currentLocationPoint.x;
+                }
+                else if(currentLocationPoint.x > surroundingAreaAndRoomData.highestPoint.x) {
+                    surroundingAreaAndRoomData.highestPoint.x = currentLocationPoint.x;
+                }
+                if(currentLocationPoint.y < surroundingAreaAndRoomData.lowestPoint.y) {
+                    surroundingAreaAndRoomData.lowestPoint.y = currentLocationPoint.y;
+                }
+                else if(currentLocationPoint.y > surroundingAreaAndRoomData.highestPoint.y) {
+                    surroundingAreaAndRoomData.highestPoint.y = currentLocationPoint.y;
+                }
+
+                TargetRoomData targetRoomData = new TargetRoomData();
+                targetRoomData.targetRoom = currentRoom.exitMap.get(targetDirection);
+                targetRoomData.coordinates = new Point(currentLocationPoint);
+                examinedAreaAndRoomDataList.add(targetRoomData);
+                examinedRoomList.add(currentRoom);
+
+                currentRoom = currentRoom.exitMap.get(targetDirection);
+                i = -1;
+            }
+
+            else if(i == directionList.size() - 1) {
+                if(previousRoomMap.containsKey(currentRoom)) {
+                    PreviousRoomData previousRoomData = previousRoomMap.get(currentRoom);
+                    currentRoom = previousRoomData.previousRoom;
+                    currentLocationPoint = previousRoomData.previousLocationPoint;
+                    i = previousRoomData.previousDirectionIndex;
+                }
+            }
+        }
+
+        surroundingAreaAndRoomData.targetRoomDataList = examinedAreaAndRoomDataList;
+        return surroundingAreaAndRoomData;
+    }
+
+    public static void normalizeRoomCoordinates(ArrayList<TargetRoomData> targetRoomDataList, Point coordinateOffset) {
+        for(TargetRoomData targetRoomData : targetRoomDataList) {
+            targetRoomData.targetRoom.coordinates.x = targetRoomData.coordinates.x - coordinateOffset.x;
+            targetRoomData.targetRoom.coordinates.y = targetRoomData.coordinates.y - coordinateOffset.y;
+        }
+    }
+}
+
+class PreviousRoomData {
+    public Room previousRoom;
+    public Point previousLocationPoint;
+    public int previousDirectionIndex;
+
+    public PreviousRoomData(Room previousRoom, Point previousLocationPoint, int previousDirectionIndex) {
+        this.previousRoom = previousRoom;
+        this.previousLocationPoint = previousLocationPoint;
+        this.previousDirectionIndex = previousDirectionIndex;
     }
 }
