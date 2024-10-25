@@ -20,12 +20,15 @@ import com.jbs.textgameengine.screen.Screen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.UserInterface;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.prompt.InputBar;
+import com.jbs.textgameengine.screen.utility.Mouse;
 
 import java.util.HashMap;
 import java.util.Random;
 
 public class GameScreen extends Screen {
     public static UserInterface userInterface;
+    public static Mouse mouse;
+
     public static HashMap<String, Galaxy> galaxyList;
     public static Player player;
 
@@ -37,14 +40,15 @@ public class GameScreen extends Screen {
         super();
 
         userInterface = new UserInterface();
+        mouse = new Mouse();
+
         galaxyList = Galaxy.loadDebugGalaxy();
 
         Planet startPlanet = (Planet) galaxyList.get("Cotton Tail Nebula").solarSystemMap.get("Lago Morpha").planetoidList.get(1);
         startPlanet.generateOverworld();
 
         Location startLocation = startPlanet.areaMap.get("Center Of The Universe").roomList.get(0).location;
-//        startLocation = startPlanet.areaMap.get("Overworld Area 1").roomList.get(3024).location;
-        startLocation = startPlanet.areaMap.get("Overworld Area 1").roomList.get(0).location;
+        startLocation = startPlanet.areaMap.get("Overworld Area 1").roomList.get(3024).location;
         player = new Player(startLocation);
 
         if(((Planet) player.location.planetoid).areaMap.containsKey("Overworld Area 1")) {
@@ -82,78 +86,94 @@ public class GameScreen extends Screen {
             // Keyboard Input //
             @Override
             public boolean keyDown(int keyCode) {
-            String key = Input.Keys.toString(keyCode);
+                String key = Input.Keys.toString(keyCode);
+                boolean shiftIsPressed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
+                boolean controlIsPressed = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT);
 
-            // Exit Game //
-            if(key.equals("Escape")) {
-                dispose();
-                System.exit(0);
-            }
-
-            // Toggle Full Screen //
-            else if(key.equals("F5")) {
-                if(Gdx.graphics.isFullscreen()) {
-                    Gdx.graphics.setWindowedMode(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
-                } else {
-                    Graphics.DisplayMode currentMode = Gdx.graphics.getDisplayMode();
-                    Gdx.graphics.setFullscreenMode(currentMode);
+                // Exit Game //
+                if(key.equals("Escape")) {
+                    dispose();
+                    System.exit(0);
                 }
-            }
 
-            // Toggle Fast Mode //
-            else if((Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
-            && key.equals("F")) {
-                fastMode = !fastMode;
-            }
-
-            // InputBar Input //
-            else if(InputBar.inputCharString.contains(key)) {
-                userInterface.inputBar.concatinateUserInput(key);
-            }
-
-            // Reset Backspace Timer //
-            else if(key.equals("Delete")) {
-                userInterface.inputBar.backspaceTimer = 0;
-            }
-
-            // Enter User Input //
-            else if(key.equals("Enter")) {
-                if(!userInterface.inputBar.userInput.isEmpty()) {
-                    processUserInput(userInterface.inputBar.userInput);
-                    userInterface.inputBar.enterUserInput();
+                // Toggle Full Screen //
+                else if(key.equals("F5")) {
+                    if(Gdx.graphics.isFullscreen()) {
+                        Gdx.graphics.setWindowedMode(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
+                    } else {
+                        Graphics.DisplayMode currentMode = Gdx.graphics.getDisplayMode();
+                        Gdx.graphics.setFullscreenMode(currentMode);
+                    }
                 }
-            }
 
-            // Alt. Movement (Control + Arrow Keys) //
-            else if((Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
-            && (key.equals("Up") || key.equals("Down") || key.equals("Left") || key.equals("Right"))) {
-                String targetDirection = "";
-                if(key.equals("Up")) {targetDirection = "North";}
-                else if(key.equals("Down")) {targetDirection = "South";}
-                else if(key.equals("Left")) {targetDirection = "West";}
-                else if(key.equals("Right")) {targetDirection = "East";}
+                // Toggle Fast Mode //
+                else if(controlIsPressed
+                && key.equals("F")) {
+                    fastMode = !fastMode;
+                }
 
-                Move moveAction = new Move(player);
-                player.interruptAction();
+                // InputBar Input //
+                else if(InputBar.inputCharString.contains(key)
+                && !controlIsPressed
+                && !shiftIsPressed) {
+                    userInterface.inputBar.concatinateUserInput(key);
+                }
 
-                moveAction.actionType = "Direction";
-                moveAction.targetDirection = targetDirection;
-                moveAction.initiate();
-            }
+                // Reset Backspace Timer //
+                else if(key.equals("Delete")
+                && !controlIsPressed) {
+                    userInterface.inputBar.backspaceTimer = 0;
+                }
 
-            // Scroll User Input //
-            else if(key.equals("Up") || key.equals("Down")) {
-                userInterface.inputBar.scrollUserInput(key);
-            }
+                // Enter User Input //
+                else if(key.equals("Enter")
+                && !controlIsPressed) {
+                    if(!userInterface.inputBar.userInput.isEmpty()) {
+                        processUserInput(userInterface.inputBar.userInput);
+                        userInterface.inputBar.enterUserInput();
+                    }
+                }
 
-            return true;
+                // Change Facing Direction //
+                else if(controlIsPressed
+                && shiftIsPressed
+                && (key.equals("Left") || key.equals("Right"))) {
+                    GameScreen.player.changeFacingDirection(key);
+                }
+
+                // Alt. Movement (Control + Arrow Keys) //
+                else if(controlIsPressed
+                && (key.equals("Up") || key.equals("Down") || key.equals("Left") || key.equals("Right"))) {
+                    String targetDirection = "";
+                    if(key.equals("Up")) {targetDirection = "North";}
+                    else if(key.equals("Down")) {targetDirection = "South";}
+                    else if(key.equals("Left")) {targetDirection = "West";}
+                    else if(key.equals("Right")) {targetDirection = "East";}
+
+                    Move moveAction = new Move(player);
+                    player.interruptAction();
+
+                    moveAction.actionType = "Direction";
+                    moveAction.targetDirection = targetDirection;
+                    moveAction.initiate();
+                }
+
+                // Scroll User Input //
+                else if(key.equals("Up") || key.equals("Down")) {
+                    userInterface.inputBar.scrollUserInput(key);
+                }
+
+                return true;
             }
         });
     }
 
     public String update() {
+        mouse.update();
         userInterface.inputBar.update();
         userInterface.console.update();
+
+        System.out.println(mouse.hoverUIElement.toString());
 
         // Update Solar System //
         if(frameTimer == 0

@@ -35,6 +35,7 @@ public class Mob extends Entity {
     public ArrayList<Mob> groupList;
     public ArrayList<Mob> combatList;
 
+    public String facingDirection;
     public Dialogue dialogue;
 
     public Mob(int id, Location startLocation) {
@@ -53,6 +54,7 @@ public class Mob extends Entity {
         groupList = new ArrayList<>();
         combatList = new ArrayList<>();
 
+        facingDirection = "North";
         dialogue = null;
     }
 
@@ -397,6 +399,21 @@ public class Mob extends Entity {
         }
 
         return null;
+    }
+
+    public void changeFacingDirection(String rotateDirection) {
+        ArrayList<String> directionList = new ArrayList<>(Arrays.asList("North", "East", "South", "West"));
+        int currentIndex = -1;
+        if(directionList.contains(facingDirection)) {
+            currentIndex = directionList.indexOf(facingDirection);
+            if(rotateDirection.equals("Left")) {currentIndex -= 1;}
+            else if(rotateDirection.equals("Right")) {currentIndex += 1;}
+
+            if(currentIndex >= directionList.size()) {currentIndex = 0;}
+            else if(currentIndex < 0) {currentIndex = directionList.size() - 1;}
+
+            facingDirection = directionList.get(currentIndex);
+        }
     }
 
     public boolean hasKey(int keyNum) {

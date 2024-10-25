@@ -7,6 +7,8 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.map.Map;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.prompt.InputBar;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.roomview.RoomView;
 
+import java.util.ArrayList;
+
 public class UserInterface {
     public InputBar inputBar;
     public Console console;
@@ -25,6 +27,17 @@ public class UserInterface {
         console.render();
         roomView.render();
         map.render();
+    }
+
+    public ArrayList<UserInterfaceElement> getAllElements() {
+        ArrayList<UserInterfaceElement> uiElementList = new ArrayList<>();
+
+        uiElementList.add(inputBar);
+        uiElementList.add(console);
+        uiElementList.add(roomView);
+        uiElementList.add(map);
+
+        return uiElementList;
     }
 
     public void dispose() {

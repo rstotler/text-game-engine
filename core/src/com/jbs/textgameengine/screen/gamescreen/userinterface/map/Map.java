@@ -1,10 +1,7 @@
 package com.jbs.textgameengine.screen.gamescreen.userinterface.map;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.jbs.textgameengine.Settings;
@@ -20,6 +17,9 @@ import com.jbs.textgameengine.screen.utility.Rect;
 import java.util.*;
 
 public class Map extends UserInterfaceElement {
+    public OrthographicCamera camera;
+    public FrameBuffer mapFrameBuffer;
+
     public Texture textureOverworld;
     public Texture textureMap;
     public Point mapTextureOffset;
@@ -40,11 +40,14 @@ public class Map extends UserInterfaceElement {
 
         frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, 1920, 1080);
+
         textureOverworld = null;
         textureMap = null;
         mapTextureOffset = new Point(0, 0);
 
-        tileSize = 20;
+        tileSize = 32;
         tileCountWidth = 0;
         tileCountHeight = 0;
 
@@ -66,26 +69,28 @@ public class Map extends UserInterfaceElement {
         int mapWidth = tileCountWidth * tileSize;
         int mapHeight = tileCountHeight * tileSize;
 
+
+
         // Draw Pixmap //
-        Pixmap mapPixmap = new Pixmap(mapWidth, mapHeight, Pixmap.Format.RGBA8888);
-
-        for(TargetRoomData targetRoomData : surroundingAreaAndRoomData.targetRoomDataList) {
-            int drawX = (int) targetRoomData.targetRoom.coordinates.x * tileSize;
-            int drawY = (int) (targetRoomData.targetRoom.coordinates.y + 1) * tileSize;
-            Color targetColor = new Color(targetRoomData.targetRoom.location.area.mapColor);
-            if(targetRoomData.targetRoom.mapColorTargetColor.equals("R")) {
-                targetColor.r += targetRoomData.targetRoom.mapColorMod;
-            }
-            if(targetRoomData.targetRoom.mapColorTargetColor.equals("G")) {
-                targetColor.g += targetRoomData.targetRoom.mapColorMod;
-            }
-            if(targetRoomData.targetRoom.mapColorTargetColor.equals("B")) {
-                targetColor.b += targetRoomData.targetRoom.mapColorMod;
-            }
-
-            mapPixmap.setColor(targetColor);
-            mapPixmap.fillRectangle(drawX, mapHeight - drawY, tileSize, tileSize);
-        }
+//        Pixmap mapPixmap = new Pixmap(mapWidth, mapHeight, Pixmap.Format.RGBA8888);
+//
+//        for(TargetRoomData targetRoomData : surroundingAreaAndRoomData.targetRoomDataList) {
+//            int drawX = (int) targetRoomData.targetRoom.coordinates.x * tileSize;
+//            int drawY = (int) (targetRoomData.targetRoom.coordinates.y + 1) * tileSize;
+//            Color targetColor = new Color(targetRoomData.targetRoom.location.area.mapColor);
+//            if(targetRoomData.targetRoom.mapColorTargetColor.equals("R")) {
+//                targetColor.r += targetRoomData.targetRoom.mapColorMod;
+//            }
+//            if(targetRoomData.targetRoom.mapColorTargetColor.equals("G")) {
+//                targetColor.g += targetRoomData.targetRoom.mapColorMod;
+//            }
+//            if(targetRoomData.targetRoom.mapColorTargetColor.equals("B")) {
+//                targetColor.b += targetRoomData.targetRoom.mapColorMod;
+//            }
+//
+//            mapPixmap.setColor(targetColor);
+//            mapPixmap.fillRectangle(drawX, mapHeight - drawY, tileSize, tileSize);
+//        }
 
         GameScreen.spriteBatch.begin();
         // Draw Textures Here
@@ -93,13 +98,13 @@ public class Map extends UserInterfaceElement {
 
         if(!startLocation.area.mapKey.equals("Overworld")) {
             if(textureMap != null) {textureMap.dispose();}
-            textureMap = new Texture(mapPixmap);
+            //textureMap = new Texture(mapPixmap);
         }
         else {
             if(textureOverworld != null) {textureOverworld.dispose();}
-            textureOverworld = new Texture(mapPixmap);
+            //textureOverworld = new Texture(mapPixmap);
         }
-        mapPixmap.dispose();
+        //mapPixmap.dispose();
     }
 
     public void render() {
@@ -114,6 +119,10 @@ public class Map extends UserInterfaceElement {
             frameBuffer.begin();
             Gdx.graphics.getGL20().glClearColor(0f, 0f, 0f, 0f);
             Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+            //camera.zoom -= .001f;
+            //camera.update();
+            GameScreen.spriteBatch.setProjectionMatrix(camera.combined);
 
             GameScreen.spriteBatch.begin();
             GameScreen.spriteBatch.draw(targetTexture, mapTextureOffset.x, mapTextureOffset.y);
@@ -136,8 +145,8 @@ public class Map extends UserInterfaceElement {
     public void updateOffset(Room targetRoom) {
         float heightPercent = Gdx.graphics.getWidth() / (Settings.WINDOW_WIDTH + 0.0f);
         float widthPercent = Gdx.graphics.getHeight() / (Settings.WINDOW_HEIGHT + 0.0f);
-        mapTextureOffset.x = ((rect.width * widthPercent) / 2) - ((tileSize - playerIcon.width) / 2) - (targetRoom.coordinates.x * tileSize);
-        mapTextureOffset.y = ((rect.height * heightPercent) / 2) - ((tileSize - playerIcon.height) / 2) - (targetRoom.coordinates.y * tileSize);
+        mapTextureOffset.x = ((rect.width * widthPercent) / 2) - ((tileSize - playerIcon.width) / 2) - 2 - (targetRoom.coordinates.x * tileSize);
+        mapTextureOffset.y = ((rect.height * heightPercent) / 2) - ((tileSize - playerIcon.height) / 2) - 2 - (targetRoom.coordinates.y * tileSize);
     }
 }
 

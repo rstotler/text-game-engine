@@ -16,12 +16,6 @@ public class Player extends Mob {
         nameKeyList = new ArrayList<>(Arrays.asList("player"));
 
         updateTimer = 0;
-
-        loadDebugPlayer();
-    }
-
-    public void loadDebugPlayer() {
-        // addItemToInventory(Item.load("General", 3, location, 3966252));
     }
 
     public void update() {

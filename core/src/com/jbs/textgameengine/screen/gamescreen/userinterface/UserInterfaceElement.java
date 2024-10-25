@@ -18,4 +18,8 @@ public class UserInterfaceElement {
             rect.renderShape(Screen.camera);
         }
     }
+
+    public String toString() {
+        return getClass().toString().substring(getClass().toString().lastIndexOf(".") + 1);
+    }
 }
