@@ -5,7 +5,6 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.jbs.textgameengine.Settings;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
@@ -34,8 +33,6 @@ public class GameScreen extends Screen {
     public int frameTimer;
     public boolean fastMode;
 
-    boolean gameDataInitialized;
-
     public GameScreen() {
         super();
 
@@ -46,8 +43,17 @@ public class GameScreen extends Screen {
         startPlanet.generateOverworld();
 
         Location startLocation = startPlanet.areaMap.get("Center Of The Universe").roomList.get(0).location;
+//        startLocation = startPlanet.areaMap.get("Overworld Area 1").roomList.get(3024).location;
         startLocation = startPlanet.areaMap.get("Overworld Area 1").roomList.get(0).location;
         player = new Player(startLocation);
+
+        if(((Planet) player.location.planetoid).areaMap.containsKey("Overworld Area 1")) {
+            userInterface.map.buffer(((Planet) player.location.planetoid).areaMap.get("Overworld Area 1").roomList.get(0).location);
+        }
+        if(!player.location.area.mapKey.equals("Overworld")) {
+            userInterface.map.buffer(player.location);
+        }
+        userInterface.map.updateOffset(player.location.room);
 
         // Start Game Time At Noon //
         if(true) {
@@ -59,8 +65,6 @@ public class GameScreen extends Screen {
         gameTimer = 0;
         frameTimer = 0;
         fastMode = false;
-
-        gameDataInitialized = false;
 
         initInputProcessor();
     }
@@ -147,27 +151,7 @@ public class GameScreen extends Screen {
         });
     }
 
-    public void initGameData() {
-
-        // Init Overworld FrameBuffer //
-        if(((Planet) player.location.planetoid).areaMap.containsKey("Overworld Area 1")) {
-            userInterface.map.buffer(((Planet) player.location.planetoid).areaMap.get("Overworld Area 1").roomList.get(0).location);
-        }
-
-        // Init Current Area Map FrameBuffer //
-        if(!player.location.area.mapKey.equals("Overworld")) {
-            userInterface.map.buffer(player.location);
-        }
-
-        userInterface.map.updateOffset(player.location.room);
-    }
-
     public String update() {
-        if(!gameDataInitialized && gameTimer == 1) {
-            gameDataInitialized = true;
-            initGameData();
-        }
-
         userInterface.inputBar.update();
         userInterface.console.update();
 

@@ -34,7 +34,7 @@ public class Planet extends Planetoid {
         // Debug Areas Created In A CW Circle Starting At The Top-Left Quadrant
 
         // Create Areas & Rooms //
-        int areaSize = 50;
+        int areaSize = 55;
         for(int aNum = 0; aNum < 4; aNum++) {
             String areaNameString = "Overworld Area " + String.valueOf(aNum + 1);
             String areaNameColorCode = "10CONT5CONT" + String.valueOf(aNum + 1).length() + "CONT";

@@ -30,7 +30,8 @@ public class UserInterface {
     public void dispose() {
         inputBar.font.dispose();
         console.font.dispose();
-        if(map.frameBuffer != null) {map.frameBuffer.dispose();}
-        if(map.frameBufferOverworld != null) {map.frameBufferOverworld.dispose();}
+        if(map.frameBuffer != null) {map.frameBuffer = null;}
+        if(map.textureOverworld != null) {map.textureOverworld.dispose();}
+        if(map.textureMap != null) {map.textureMap.dispose();}
     }
 }

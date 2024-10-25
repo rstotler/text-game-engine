@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.jbs.textgameengine.Settings;
@@ -16,14 +17,12 @@ import com.jbs.textgameengine.screen.gamescreen.userinterface.UserInterfaceEleme
 import com.jbs.textgameengine.screen.utility.Point;
 import com.jbs.textgameengine.screen.utility.Rect;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 
 public class Map extends UserInterfaceElement {
-    public FrameBuffer frameBufferOverworld;
-    public Point frameBufferOffset = new Point(0, 0);
-    public Point mapOffset = new Point(0,0);
+    public Texture textureOverworld;
+    public Texture textureMap;
+    public Point mapTextureOffset;
 
     public int tileSize;
     public int tileCountWidth;
@@ -34,13 +33,16 @@ public class Map extends UserInterfaceElement {
     public Map() {
         int mapX = Settings.INPUT_BAR_WIDTH;
         int mapY = Settings.WINDOW_HEIGHT - Settings.MAP_HEIGHT;
-        int mapWidth = Settings.WINDOW_WIDTH - Settings.INPUT_BAR_WIDTH;
-        int mapHeight = Settings.MAP_HEIGHT;
-        rect = new Rect(mapX, mapY, mapWidth, mapHeight);
-
+        int mapWindowWidth = Settings.WINDOW_WIDTH - Settings.INPUT_BAR_WIDTH;
+        int mapWindowHeight = Settings.MAP_HEIGHT;
+        rect = new Rect(mapX, mapY, mapWindowWidth, mapWindowHeight);
         rect.fillColor = new Color(0/255f, 0/255f, 14/255f, 1);
 
-        frameBufferOverworld = null;
+        frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+
+        textureOverworld = null;
+        textureMap = null;
+        mapTextureOffset = new Point(0, 0);
 
         tileSize = 20;
         tileCountWidth = 0;
@@ -60,38 +62,16 @@ public class Map extends UserInterfaceElement {
         tileCountWidth = (int) surroundingAreaAndRoomData.highestPoint.x - (int) surroundingAreaAndRoomData.lowestPoint.x + 1;
         tileCountHeight = (int) surroundingAreaAndRoomData.highestPoint.y - (int) surroundingAreaAndRoomData.lowestPoint.y + 1;
 
-        // Load FrameBuffer //
-        int frameBufferWidth = Settings.WINDOW_WIDTH;
-        int frameBufferHeight = Settings.WINDOW_HEIGHT;
-        if(tileCountWidth * tileSize > frameBufferWidth) {
-            frameBufferWidth = tileCountWidth * tileSize;
-        }
-        if(tileCountHeight * tileSize > frameBufferHeight) {
-            frameBufferHeight = tileCountHeight * tileSize;
-        }
+        // Get Map Size //
+        int mapWidth = tileCountWidth * tileSize;
+        int mapHeight = tileCountHeight * tileSize;
 
-        FrameBuffer targetFrameBuffer = null;
-        if(!startLocation.area.mapKey.equals("Overworld")) {
-            if(frameBuffer != null) {frameBuffer.dispose();}
-            frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, frameBufferWidth, frameBufferHeight, false);
-            targetFrameBuffer = frameBuffer;
-        } else {
-            if(frameBufferOverworld != null) {frameBufferOverworld.dispose();}
-            frameBufferOverworld = new FrameBuffer(Pixmap.Format.RGBA8888, frameBufferWidth, frameBufferHeight, false);
-            targetFrameBuffer = frameBufferOverworld;
-        }
+        // Draw Pixmap //
+        Pixmap mapPixmap = new Pixmap(mapWidth, mapHeight, Pixmap.Format.RGBA8888);
 
-        GameScreen.spriteBatch.setProjectionMatrix(GameScreen.camera.combined);
-        targetFrameBuffer.begin();
-
-        Gdx.graphics.getGL20().glClearColor(0f, 0f, 0f, 0f);
-        Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // Draw Tiles //
-        Screen.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for(TargetRoomData targetRoomData : surroundingAreaAndRoomData.targetRoomDataList) {
             int drawX = (int) targetRoomData.targetRoom.coordinates.x * tileSize;
-            int drawY = (int) targetRoomData.targetRoom.coordinates.y * tileSize;
+            int drawY = (int) (targetRoomData.targetRoom.coordinates.y + 1) * tileSize;
             Color targetColor = new Color(targetRoomData.targetRoom.location.area.mapColor);
             if(targetRoomData.targetRoom.mapColorTargetColor.equals("R")) {
                 targetColor.r += targetRoomData.targetRoom.mapColorMod;
@@ -102,36 +82,48 @@ public class Map extends UserInterfaceElement {
             if(targetRoomData.targetRoom.mapColorTargetColor.equals("B")) {
                 targetColor.b += targetRoomData.targetRoom.mapColorMod;
             }
-            Screen.shapeRenderer.setColor(targetColor);
-            Screen.shapeRenderer.rect(drawX, drawY, tileSize, tileSize);
+
+            mapPixmap.setColor(targetColor);
+            mapPixmap.fillRectangle(drawX, mapHeight - drawY, tileSize, tileSize);
         }
-        Screen.shapeRenderer.end();
 
         GameScreen.spriteBatch.begin();
-
-        // Draw Textures Here //
-
+        // Draw Textures Here
         GameScreen.spriteBatch.end();
-        targetFrameBuffer.end();
+
+        if(!startLocation.area.mapKey.equals("Overworld")) {
+            if(textureMap != null) {textureMap.dispose();}
+            textureMap = new Texture(mapPixmap);
+        }
+        else {
+            if(textureOverworld != null) {textureOverworld.dispose();}
+            textureOverworld = new Texture(mapPixmap);
+        }
+        mapPixmap.dispose();
     }
 
     public void render() {
         super.render();
 
-        // Map FrameBuffer //
-         GameScreen.spriteBatch.setProjectionMatrix(GameScreen.camera.combined);
-         GameScreen.spriteBatch.begin();
+        Texture targetTexture = textureMap;
+        if(GameScreen.player.location.area.mapKey.equals("Overworld")) {
+            targetTexture = textureOverworld;
+        }
 
-         String areaMapKey = GameScreen.player.location.area.mapKey;
-         FrameBuffer targetFrameBuffer = frameBuffer;
-         if(areaMapKey.equals("Overworld")) {
-             targetFrameBuffer = frameBufferOverworld;
-         }
-         if(targetFrameBuffer != null) {
-             GameScreen.spriteBatch.draw(targetFrameBuffer.getColorBufferTexture(), rect.x + frameBufferOffset.x, rect.y + frameBufferOffset.y, targetFrameBuffer.getWidth(), targetFrameBuffer.getHeight(), (int) mapOffset.x, (int) mapOffset.y, targetFrameBuffer.getWidth(), targetFrameBuffer.getHeight(), false, true);
-         }
+        if(targetTexture != null) {
+            frameBuffer.begin();
+            Gdx.graphics.getGL20().glClearColor(0f, 0f, 0f, 0f);
+            Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-         GameScreen.spriteBatch.end();
+            GameScreen.spriteBatch.begin();
+            GameScreen.spriteBatch.draw(targetTexture, mapTextureOffset.x, mapTextureOffset.y);
+            GameScreen.spriteBatch.end();
+            frameBuffer.end();
+
+            GameScreen.spriteBatch.begin();
+            GameScreen.spriteBatch.draw(frameBuffer.getColorBufferTexture(), rect.x, rect.y, frameBuffer.getWidth(), frameBuffer.getHeight(), 0, 0, 1, 1);
+            GameScreen.spriteBatch.end();
+        }
 
         // Player Icon //
         Screen.shapeRenderer.setProjectionMatrix(GameScreen.camera.combined);
@@ -142,25 +134,10 @@ public class Map extends UserInterfaceElement {
     }
 
     public void updateOffset(Room targetRoom) {
-        frameBufferOffset.x = 0;
-        frameBufferOffset.y = 0;
-
-        int mapX = ((int) targetRoom.coordinates.x * tileSize) + (tileSize / 2);
-        int mapY = ((int) targetRoom.coordinates.y * tileSize) + (tileSize / 2);
-        mapOffset.x = mapX - (rect.width / 2);
-        mapOffset.y = mapY - (rect.height / 2);
-
-        int diffX = (rect.width / 2) - (tileSize / 2) - ((int) targetRoom.coordinates.x * tileSize);
-        int diffY = (rect.height / 2) - (tileSize / 2) - ((int) targetRoom.coordinates.y * tileSize);
-
-        if(diffX > 0) {
-            mapOffset.x += diffX;
-            frameBufferOffset.x += diffX;
-        }
-        if(diffY > 0) {
-            mapOffset.y += diffY;
-            frameBufferOffset.y += diffY;
-        }
+        float heightPercent = Gdx.graphics.getWidth() / (Settings.WINDOW_WIDTH + 0.0f);
+        float widthPercent = Gdx.graphics.getHeight() / (Settings.WINDOW_HEIGHT + 0.0f);
+        mapTextureOffset.x = ((rect.width * widthPercent) / 2) - ((tileSize - playerIcon.width) / 2) - (targetRoom.coordinates.x * tileSize);
+        mapTextureOffset.y = ((rect.height * heightPercent) / 2) - ((tileSize - playerIcon.height) / 2) - (targetRoom.coordinates.y * tileSize);
     }
 }
 
