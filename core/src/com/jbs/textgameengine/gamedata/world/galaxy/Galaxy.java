@@ -100,7 +100,7 @@ public class Galaxy {
         Location cotuRoom05Location = new Location(galaxyCottonTail, systemLagoMorpha, planetLapine, areaCOTU);
         Room cotuRoom05 = new Room(areaCOTU.roomList.size(), cotuRoom05Name, null, cotuRoom05Location);
         cotuRoom05.inside = true;
-        cotuRoom05.createExit("North", cotuRoom04, "Automatic");
+        cotuRoom05.createExit("North", cotuRoom04);
         areaCOTU.roomList.add(cotuRoom05);
 
         // Room 06 - Landing Pad //

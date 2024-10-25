@@ -1,5 +1,6 @@
 package com.jbs.textgameengine.gamedata.entity.mob.action.general;
 
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
@@ -155,6 +156,12 @@ public class Move extends Action {
 
                     // Update Map (Player Only) //
                     if(parentEntity.isPlayer) {
+                        if((newRoom.location.area.mapKey.isEmpty() && newRoom.location.area != previousRoom.location.area)
+                        || (!newRoom.location.area.mapKey.isEmpty() && !newRoom.location.area.mapKey.equals(previousRoom.location.area.mapKey))) {
+                            if(!newRoom.location.area.mapKey.equals("Overworld")) {
+                                GameScreen.userInterface.map.buffer(newRoom.location);
+                            }
+                        }
                         GameScreen.userInterface.map.updateOffset(newRoom);
                     }
 

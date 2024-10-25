@@ -34,7 +34,7 @@ public class TargetRoomData {
         breakCheck = false;
     }
 
-    public static ArrayList<TargetRoomData> examineAreaAndRoomData(Room currentRoom, int maxDistance, String targetDirection, ArrayList<TargetRoomData> examinedAreaAndRoomDataList, ArrayList<Room> examinedRoomList, Point currentLocationPoint) {
+    public static ArrayList<TargetRoomData> examineAreaAndRoomData(Room currentRoom, int maxDistance, String targetDirection, ArrayList<TargetRoomData> examinedAreaAndRoomDataList, ArrayList<Room> examinedRoomList, Point currentLocationPoint, String targetMapKey) {
         // Helper Function For SurroundingAreaAndRoomData.GetSurroundingAreaAndRoomData()
 
         if(!examinedRoomList.contains(currentRoom)) {
@@ -74,7 +74,9 @@ public class TargetRoomData {
                 && currentRoom.exitMap.get(direction) != null) {
                     TargetRoomData targetRoomData = TargetRoomData.getTargetRoomFromStartRoom(currentRoom, new ArrayList<>(Arrays.asList(direction)), true, true);
 
-                    if(!examinedRoomList.contains(targetRoomData.targetRoom)) {
+                    if(!examinedRoomList.contains(targetRoomData.targetRoom)
+                    && ((!targetMapKey.isEmpty() && targetRoomData.targetRoom.location.area.mapKey.equals(targetMapKey))
+                    || (targetMapKey.isEmpty() && targetRoomData.targetRoom.location.area == currentRoom.location.area))) {
                         if(Arrays.asList("East").contains(direction)) {
                             currentLocationPoint.x += 1;
                         }
@@ -104,7 +106,7 @@ public class TargetRoomData {
                             currentLocationPoint.y += 1;
                         }
 
-                        examinedAreaAndRoomDataList = examineAreaAndRoomData(targetRoomData.targetRoom, maxDistance, direction, examinedAreaAndRoomDataList, examinedRoomList, currentLocationPoint);
+                        examinedAreaAndRoomDataList = examineAreaAndRoomData(targetRoomData.targetRoom, maxDistance, direction, examinedAreaAndRoomDataList, examinedRoomList, currentLocationPoint, targetMapKey);
                     }
                 }
             }

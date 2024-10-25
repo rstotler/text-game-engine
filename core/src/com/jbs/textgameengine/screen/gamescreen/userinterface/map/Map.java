@@ -19,12 +19,15 @@ import com.jbs.textgameengine.screen.utility.Rect;
 import java.util.ArrayList;
 
 public class Map extends UserInterfaceElement {
+    public FrameBuffer frameBufferOverworld;
     public Point frameBufferOffset = new Point(0, 0);
     public Point mapOffset = new Point(0,0);
 
     public int tileSize;
     public int tileCountWidth;
     public int tileCountHeight;
+
+    public Rect playerIcon;
 
     public Map() {
         int mapX = Settings.INPUT_BAR_WIDTH;
@@ -35,9 +38,16 @@ public class Map extends UserInterfaceElement {
 
         rect.fillColor = new Color(0/255f, 0/255f, 14/255f, 1);
 
+        frameBufferOverworld = null;
+
         tileSize = 20;
         tileCountWidth = 0;
         tileCountHeight = 0;
+
+        int playerIconSize = (int) (tileSize * .60f);
+        int playerIconX = (int) rect.x + (rect.width / 2) - (playerIconSize / 2);
+        int playerIconY = (int) rect.y + (rect.height / 2) - (playerIconSize / 2);
+        playerIcon = new Rect(playerIconX, playerIconY, playerIconSize, playerIconSize);
     }
 
     public void buffer(Location startLocation) {
@@ -49,17 +59,28 @@ public class Map extends UserInterfaceElement {
         tileCountHeight = (int) TargetRoomData.highestPoint.y - (int) TargetRoomData.lowestPoint.y + 1;
 
         // Load FrameBuffer //
-        int frameBufferWidth = Gdx.graphics.getWidth();
-        int frameBufferHeight = Gdx.graphics.getHeight();
+        int frameBufferWidth = Settings.WINDOW_WIDTH;
+        int frameBufferHeight = Settings.WINDOW_HEIGHT;
         if(tileCountWidth * tileSize > frameBufferWidth) {
             frameBufferWidth = tileCountWidth * tileSize;
         }
         if(tileCountHeight * tileSize > frameBufferHeight) {
             frameBufferHeight = tileCountHeight * tileSize;
         }
-        frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, frameBufferWidth, frameBufferHeight, false);
+
+        FrameBuffer targetFrameBuffer = null;
+        if(!startLocation.area.mapKey.equals("Overworld")) {
+            if(frameBuffer != null) {frameBuffer.dispose();}
+            frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, frameBufferWidth, frameBufferHeight, false);
+            targetFrameBuffer = frameBuffer;
+        } else {
+            if(frameBufferOverworld != null) {frameBufferOverworld.dispose();}
+            frameBufferOverworld = new FrameBuffer(Pixmap.Format.RGBA8888, frameBufferWidth, frameBufferHeight, false);
+            targetFrameBuffer = frameBufferOverworld;
+        }
+
         GameScreen.spriteBatch.setProjectionMatrix(GameScreen.camera.combined);
-        frameBuffer.begin();
+        targetFrameBuffer.begin();
 
         Gdx.graphics.getGL20().glClearColor(0f, 0f, 0f, 0f);
         Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -89,17 +110,33 @@ public class Map extends UserInterfaceElement {
         // Draw Textures Here //
 
         GameScreen.spriteBatch.end();
-        frameBuffer.end();
+        targetFrameBuffer.end();
     }
 
     public void render() {
         super.render();
 
-        GameScreen.spriteBatch.setProjectionMatrix(GameScreen.camera.combined);
-        GameScreen.spriteBatch.begin();
+        // Map FrameBuffer //
+         GameScreen.spriteBatch.setProjectionMatrix(GameScreen.camera.combined);
+         GameScreen.spriteBatch.begin();
 
-        GameScreen.spriteBatch.draw(frameBuffer.getColorBufferTexture(), rect.x + frameBufferOffset.x, rect.y + frameBufferOffset.y, frameBuffer.getWidth(), frameBuffer.getHeight(), (int) mapOffset.x, (int) mapOffset.y, frameBuffer.getWidth(), frameBuffer.getHeight(), false, true);
-        GameScreen.spriteBatch.end();
+         String areaMapKey = GameScreen.player.location.area.mapKey;
+         FrameBuffer targetFrameBuffer = frameBuffer;
+         if(areaMapKey.equals("Overworld")) {
+             targetFrameBuffer = frameBufferOverworld;
+         }
+         if(targetFrameBuffer != null) {
+             GameScreen.spriteBatch.draw(targetFrameBuffer.getColorBufferTexture(), rect.x + frameBufferOffset.x, rect.y + frameBufferOffset.y, targetFrameBuffer.getWidth(), targetFrameBuffer.getHeight(), (int) mapOffset.x, (int) mapOffset.y, targetFrameBuffer.getWidth(), targetFrameBuffer.getHeight(), false, true);
+         }
+
+         GameScreen.spriteBatch.end();
+
+        // Player Icon //
+        Screen.shapeRenderer.setProjectionMatrix(GameScreen.camera.combined);
+        Screen.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        Screen.shapeRenderer.setColor(Color.RED);
+        Screen.shapeRenderer.rect(playerIcon.x, playerIcon.y, playerIcon.width, playerIcon.height);
+        Screen.shapeRenderer.end();
     }
 
     public void updateOffset(Room targetRoom) {
@@ -138,7 +175,7 @@ class SurroundingAreaAndRoomData {
         TargetRoomData.lowestPoint = new Point(0, 0);
         TargetRoomData.highestPoint = new Point(0, 0);
 
-        ArrayList<TargetRoomData> targetRoomDataList = TargetRoomData.examineAreaAndRoomData(startRoom, -1, "", new ArrayList<TargetRoomData>(), new ArrayList<Room>(), new Point(0, 0));
+        ArrayList<TargetRoomData> targetRoomDataList = TargetRoomData.examineAreaAndRoomData(startRoom, -1, "", new ArrayList<TargetRoomData>(), new ArrayList<Room>(), new Point(0, 0), startRoom.location.area.mapKey);
         return new SurroundingAreaAndRoomData(targetRoomDataList, new Point(TargetRoomData.lowestPoint));
     }
 }

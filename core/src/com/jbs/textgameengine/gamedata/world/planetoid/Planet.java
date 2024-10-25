@@ -36,9 +36,12 @@ public class Planet extends Planetoid {
         // Create Areas & Rooms //
         int areaSize = 16;
         for(int aNum = 0; aNum < 4; aNum++) {
-            Line newAreaName = new Line("Area " + String.valueOf(aNum + 1), "6CONT", "", true, true);
+            String areaNameString = "Overworld Area " + String.valueOf(aNum + 1);
+            String areaNameColorCode = "10CONT5CONT" + String.valueOf(aNum + 1).length() + "CONT";
+            Line newAreaName = new Line(areaNameString, areaNameColorCode, "", true, true);
             Location newAreaLocation = new Location(location.galaxy, location.solarSystem, this);
             Area newArea = new Area(newAreaName, newAreaLocation);
+            newArea.mapKey = "Overworld";
             areaMap.put(newAreaName.label, newArea);
 
             for(int rNum = 0; rNum < (areaSize * areaSize); rNum++) {
@@ -55,8 +58,8 @@ public class Planet extends Planetoid {
 
         // Connect Room Exits //
         for(int aNum = 0; aNum < 4; aNum++) {
-            if(areaMap.containsKey("Area " + String.valueOf(aNum + 1))) {
-                Area currentArea = areaMap.get("Area " + String.valueOf(aNum + 1));
+            if(areaMap.containsKey("Overworld Area " + String.valueOf(aNum + 1))) {
+                Area currentArea = areaMap.get("Overworld Area " + String.valueOf(aNum + 1));
                 for(int rNum = 0; rNum < (areaSize * areaSize); rNum++) {
                     if(rNum < currentArea.roomList.size()) {
                         Room currentRoom = currentArea.roomList.get(rNum);
@@ -71,8 +74,8 @@ public class Planet extends Planetoid {
                                     targetRoom = currentArea.roomList.get(rNum - areaSize);
                                 }
                             } else {
-                                if(areaMap.containsKey("Area " + String.valueOf(aNum - 1))) {
-                                    Area targetArea = areaMap.get("Area " + String.valueOf(aNum - 1));
+                                if(areaMap.containsKey("Overworld Area " + String.valueOf(aNum - 1))) {
+                                    Area targetArea = areaMap.get("Overworld Area " + String.valueOf(aNum - 1));
                                     if(((areaSize * areaSize) - areaSize + rNum) < targetArea.roomList.size()) {
                                         targetRoom = targetArea.roomList.get((areaSize * areaSize) - areaSize + rNum);
                                     }
@@ -92,8 +95,8 @@ public class Planet extends Planetoid {
                                     targetRoom = currentArea.roomList.get(rNum + 1);
                                 }
                             } else {
-                                if(areaMap.containsKey("Area " + String.valueOf(aNum + 2))) {
-                                    Area targetArea = areaMap.get("Area " + String.valueOf(aNum + 2));
+                                if(areaMap.containsKey("Overworld Area " + String.valueOf(aNum + 2))) {
+                                    Area targetArea = areaMap.get("Overworld Area " + String.valueOf(aNum + 2));
                                     if((yLoc * areaSize) < targetArea.roomList.size()) {
                                         targetRoom = targetArea.roomList.get(yLoc * areaSize);
                                     }
@@ -108,6 +111,13 @@ public class Planet extends Planetoid {
                 }
             }
         }
+
+        // Change Target Area Data //
+        Area targetArea = areaMap.get("Overworld Area 4");
+        targetArea.name = new Line("Area 1", "5CONT1DDW", "", true, true);
+        targetArea.mapKey = "";
+        areaMap.remove("Overworld Area 4");
+        areaMap.put("Area 1", targetArea);
     }
 
     public void update() {

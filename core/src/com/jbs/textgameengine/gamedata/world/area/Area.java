@@ -12,6 +12,7 @@ public class Area {
     public Line name;
     public Location location;
 
+    public String mapKey;
     public Color mapColor;
 
     public ArrayList<Room> roomList;
@@ -21,6 +22,7 @@ public class Area {
         this.location = location;
         this.location.area = this;
 
+        mapKey = "";
         mapColor = new Color(new Random().nextFloat() * .8f,
                              new Random().nextFloat() * .8f,
                              new Random().nextFloat() * .8f,
