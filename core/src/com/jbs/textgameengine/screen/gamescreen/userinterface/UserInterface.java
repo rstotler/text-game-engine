@@ -44,7 +44,7 @@ public class UserInterface {
         inputBar.font.dispose();
         console.font.dispose();
         if(map.frameBuffer != null) {map.frameBuffer = null;}
-        if(map.textureOverworld != null) {map.textureOverworld.dispose();}
-        if(map.textureMap != null) {map.textureMap.dispose();}
+        if(map.mapFrameBuffer != null) {map.mapFrameBuffer.dispose();}
+        if(map.overworldMapFrameBuffer != null) {map.overworldMapFrameBuffer.dispose();}
     }
 }

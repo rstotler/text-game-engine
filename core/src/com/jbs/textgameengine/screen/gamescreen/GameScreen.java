@@ -173,7 +173,9 @@ public class GameScreen extends Screen {
         userInterface.inputBar.update();
         userInterface.console.update();
 
-        System.out.println(mouse.hoverUIElement.toString());
+        if(mouse.hoverUIElement != null) {
+            System.out.println(mouse.hoverUIElement.toString());
+        }
 
         // Update Solar System //
         if(frameTimer == 0
