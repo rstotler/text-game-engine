@@ -126,6 +126,10 @@ public class Land extends Action {
                 parentEntity.location.spaceship.location.area = targetLandingRoom.location.area;
                 parentEntity.location.spaceship.location.room = targetLandingRoom;
 
+                if(parentEntity.location.spaceship.location.solarSystem.spaceshipList.contains(this)) {
+                    parentEntity.location.spaceship.location.solarSystem.spaceshipList.remove(this);
+                }
+
                 if(parentEntity.isPlayer) {
                     GameScreen.userInterface.console.writeToConsole(new Line("You press a button on the dashboard.", "4CONT6CONT2W7CONT3CONT4CONT4CONT9CONT1DY", "", true, true));
                 }

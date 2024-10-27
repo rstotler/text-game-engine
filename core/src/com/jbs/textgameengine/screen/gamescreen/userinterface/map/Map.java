@@ -158,14 +158,19 @@ public class Map extends UserInterfaceElement {
     }
 
     public void updateOffset(Room targetRoom) {
-        float sizePercent = Gdx.graphics.getWidth() / (rect.width + 0.0f);
-        float heightPercent = Gdx.graphics.getWidth() / (Settings.WINDOW_WIDTH + 0.0f);
-        float widthPercent = Gdx.graphics.getHeight() / (Settings.WINDOW_HEIGHT + 0.0f);
-        //mapFrameBufferOffset.x = ((rect.width * widthPercent) / 2) - ((tileSize - playerIcon.width) / 2) - 2 - (targetRoom.coordinates.x * tileSize);
-        //mapFrameBufferOffset.y = ((rect.height * heightPercent) / 2) - ((tileSize - playerIcon.height) / 2) - 2 - (targetRoom.coordinates.y * tileSize);
-
         mapFrameBufferOffset.x = (rect.width / 2) - (tileSize / 2) - (targetRoom.coordinates.x * tileSize);
         mapFrameBufferOffset.y = (rect.height / 2) - (tileSize / 2) - (targetRoom.coordinates.y * tileSize);
+    }
+
+    public void zoom(int targetDirection) {
+        cameraDraw.zoom += .25f * targetDirection;
+        if(cameraDraw.zoom < 1.0) {
+            cameraDraw.zoom = 1.0f;
+        }
+        else if(cameraDraw.zoom >= 3.0) {
+            cameraDraw.zoom = 3.0f;
+        }
+        cameraDraw.update();
     }
 }
 
@@ -185,7 +190,7 @@ class SurroundingAreaAndRoomData {
 
         ArrayList<TargetRoomData> examinedAreaAndRoomDataList = new ArrayList<>();
         ArrayList<Room> examinedRoomList = new ArrayList<>();
-        ArrayList<String> directionList = new ArrayList<>(Arrays.asList("North", "East", "South", "West"));
+        ArrayList<String> directionList = new ArrayList<>(Arrays.asList("North", "East", "South", "West", "Final"));
         HashMap<Room, PreviousRoomData> previousRoomMap = new HashMap<>();
         Point currentLocationPoint = new Point(0, 0);
         String targetMapKey = startRoom.location.area.mapKey;
@@ -206,8 +211,10 @@ class SurroundingAreaAndRoomData {
             && !examinedRoomList.contains(currentRoom.exitMap.get(targetDirection))
             && ((!targetMapKey.isEmpty() && currentRoom.exitMap.get(targetDirection).location.area.mapKey.equals(targetMapKey))
             || (targetMapKey.isEmpty() && currentRoom.exitMap.get(targetDirection).location.area == currentRoom.location.area))) {
-                PreviousRoomData previousRoomData = new PreviousRoomData(currentRoom, new Point(currentLocationPoint), i);
-                previousRoomMap.put(currentRoom.exitMap.get(targetDirection), previousRoomData);
+                if(i < directionList.size() - 1) {
+                    PreviousRoomData previousRoomData = new PreviousRoomData(currentRoom, new Point(currentLocationPoint), i);
+                    previousRoomMap.put(currentRoom.exitMap.get(targetDirection), previousRoomData);
+                }
 
                 if(targetDirection.equals("East")) {
                     currentLocationPoint.x += 1;
@@ -245,13 +252,21 @@ class SurroundingAreaAndRoomData {
                 i = -1;
             }
 
-            else if(i == directionList.size() - 1) {
+            if(i == directionList.size() - 2) {
                 if(previousRoomMap.containsKey(currentRoom)) {
                     PreviousRoomData previousRoomData = previousRoomMap.get(currentRoom);
                     currentRoom = previousRoomData.previousRoom;
                     currentLocationPoint = previousRoomData.previousLocationPoint;
                     i = previousRoomData.previousDirectionIndex;
                 }
+            }
+
+            if(i == directionList.size() - 1
+            && previousRoomMap.containsKey(currentRoom)) {
+                PreviousRoomData previousRoomData = previousRoomMap.get(currentRoom);
+                currentRoom = previousRoomData.previousRoom;
+                currentLocationPoint = previousRoomData.previousLocationPoint;
+                i = previousRoomData.previousDirectionIndex;
             }
         }
 

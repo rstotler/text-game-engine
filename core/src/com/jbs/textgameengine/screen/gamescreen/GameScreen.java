@@ -48,7 +48,7 @@ public class GameScreen extends Screen {
         startPlanet.generateOverworld();
 
         Location startLocation = startPlanet.areaMap.get("Center Of The Universe").roomList.get(0).location;
-        startLocation = startPlanet.areaMap.get("Overworld Area 1").roomList.get(3024).location;
+        //startLocation = startPlanet.areaMap.get("Overworld Area 1").roomList.get(0).location;
         player = new Player(startLocation);
 
         if(((Planet) player.location.planetoid).areaMap.containsKey("Overworld Area 1")) {
@@ -79,7 +79,16 @@ public class GameScreen extends Screen {
             // Mouse Input - Scroll Console //
             @Override
             public boolean scrolled(float amountX, float amountY) {
-                userInterface.console.scroll((int) amountY * -1);
+                if(mouse.hoverUIElement != null
+                && mouse.hoverUIElement.toString().equals("Console")){
+                    userInterface.console.scroll((int) amountY * -1);
+                }
+
+                else if(mouse.hoverUIElement != null
+                && mouse.hoverUIElement.toString().equals("Map")) {
+                    userInterface.map.zoom((int) amountY);
+                }
+
                 return false;
             }
 
@@ -172,10 +181,6 @@ public class GameScreen extends Screen {
         mouse.update();
         userInterface.inputBar.update();
         userInterface.console.update();
-
-        if(mouse.hoverUIElement != null) {
-            System.out.println(mouse.hoverUIElement.toString());
-        }
 
         // Update Solar System //
         if(frameTimer == 0

@@ -2,6 +2,7 @@ package com.jbs.textgameengine.gamedata.entity.mob.action.spaceship;
 
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
+import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
@@ -60,6 +61,7 @@ public class Launch extends Action {
         else {
             parentEntity.interruptAction();
 
+            Room landedRoom = parentEntity.location.spaceship.location.room;
             parentEntity.location.spaceship.status = "Launch";
             parentEntity.location.spaceship.currentPhase = 0;
             parentEntity.location.spaceship.phaseTimer = 3;
@@ -68,6 +70,10 @@ public class Launch extends Action {
 
             if(parentEntity.location.spaceship.hatchStatus.equals("Open")) {
                 parentEntity.location.spaceship.hatchStatus = "Closed";
+            }
+            if(landedRoom != null
+            && landedRoom.spaceshipList.contains(parentEntity.location.spaceship)) {
+                landedRoom.spaceshipList.remove(parentEntity.location.spaceship);
             }
             if(!parentEntity.location.solarSystem.spaceshipList.contains(parentEntity.location.spaceship)) {
                 parentEntity.location.solarSystem.spaceshipList.add(parentEntity.location.spaceship);

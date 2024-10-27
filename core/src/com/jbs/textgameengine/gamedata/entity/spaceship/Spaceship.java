@@ -195,10 +195,6 @@ public class Spaceship extends Entity {
                     speedPercent = 0.0f;
                     targetSpeedPercent = 0.0f;
 
-                    if(location.solarSystem.spaceshipList.contains(this)) {
-                        location.solarSystem.spaceshipList.remove(this);
-                    }
-
                     GameScreen.userInterface.console.writeToConsole(new Line("You feel a soft *thud* as you land.", "4CONT5CONT2W5CONT1DY4CONT2DY3CONT4CONT4CONT1DY", "", true, true));
                 }
             }

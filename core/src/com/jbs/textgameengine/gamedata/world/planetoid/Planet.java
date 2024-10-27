@@ -34,7 +34,7 @@ public class Planet extends Planetoid {
         // Debug Areas Created In A CW Circle Starting At The Top-Left Quadrant
 
         // Create Areas & Rooms //
-        int areaSize = 55;
+        int areaSize = 5;
         for(int aNum = 0; aNum < 4; aNum++) {
             String areaNameString = "Overworld Area " + String.valueOf(aNum + 1);
             String areaNameColorCode = "10CONT5CONT" + String.valueOf(aNum + 1).length() + "CONT";
@@ -118,6 +118,9 @@ public class Planet extends Planetoid {
         targetArea.mapKey = "";
         areaMap.remove("Overworld Area 4");
         areaMap.put("Area 1", targetArea);
+
+        // Add Landing Pad //
+        landingPadList.add(areaMap.get("Overworld Area 1").roomList.get(0));
     }
 
     public void update() {
