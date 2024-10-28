@@ -48,7 +48,7 @@ public class GameScreen extends Screen {
         startPlanet.generateOverworld();
 
         Location startLocation = startPlanet.areaMap.get("Center Of The Universe").roomList.get(0).location;
-        //startLocation = startPlanet.areaMap.get("Overworld Area 1").roomList.get(0).location;
+        startLocation = startPlanet.areaMap.get("Overworld Area 4").roomList.get(0).location;
         player = new Player(startLocation);
 
         if(((Planet) player.location.planetoid).areaMap.containsKey("Overworld Area 1")) {
@@ -58,6 +58,8 @@ public class GameScreen extends Screen {
             userInterface.map.buffer(player.location);
         }
         userInterface.map.updateOffset(player.location.room);
+        userInterface.map.cameraDraw.zoom = 3.0f;
+        userInterface.map.cameraDraw.update();
 
         // Start Game Time At Noon //
         if(true) {
@@ -215,11 +217,6 @@ public class GameScreen extends Screen {
     public void render() {
         ScreenUtils.clear(0, 0, 0, 1);
         userInterface.render(shapeRenderer, spriteBatch);
-
-        spriteBatch.setProjectionMatrix(camera.combined);
-        spriteBatch.begin();
-        spriteBatch.draw(userInterface.map.heightMap, 600, 220);
-        spriteBatch.end();
 
         // Render FPS //
         spriteBatch.setProjectionMatrix(camera.combined);

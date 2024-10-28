@@ -25,13 +25,13 @@ public class Map extends UserInterfaceElement {
     public FrameBuffer overworldMapFrameBuffer;
     public Point mapFrameBufferOffset;
 
+    public Texture heightMapDebug;
+
     public int tileSize;
     public int tileCountWidth;
     public int tileCountHeight;
 
     public Rect playerIconRect;
-
-    public Texture heightMap = generateHeightMap();
 
     public Map() {
         int mapX = Settings.INPUT_BAR_WIDTH;
@@ -54,6 +54,8 @@ public class Map extends UserInterfaceElement {
 
         mapFrameBufferOffset = new Point(0, 0);
 
+        heightMapDebug = null;
+
         tileSize = 32;
         tileCountWidth = 0;
         tileCountHeight = 0;
@@ -64,48 +66,16 @@ public class Map extends UserInterfaceElement {
         playerIconRect = new Rect(playerIconX, playerIconY, playerIconSize, playerIconSize);
     }
 
-    public Texture generateHeightMap() {
-        int size = 520;
-        Pixmap pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-
-        float increment = .005f;
-        float incrementRivers = .015f;
-        int seedValue = new Random().nextInt(999999999);
-
-        for(int y = 0; y < size; y++) {
-            for(int x = 0; x < size; x++) {
-                float value = OpenSimplex.noise2(seedValue, x * increment, y * increment);
-                value = (value + 1.0f) / 2.0f;
-
-                float valueRivers = OpenSimplex.noise2(seedValue, x * incrementRivers, y * incrementRivers);
-                valueRivers = (valueRivers + 1.0f) / 2.0f;
-                valueRivers -= .40f;
-
-                float distanceX = (2.0f * x / size) - 1;
-                float distanceY = (2.0f * y / size) - 1;
-                double dMod = (Math.pow(distanceX, 2.0) + Math.pow(distanceY, 2.0)) / Math.sqrt(1.35);
-                double distance = Math.min(1, dMod);
-                value -= distance;
-                value -= valueRivers;
-
-                pixmap.setColor(new Color(value, value, value,1));
-                pixmap.drawPixel(x, y);
-            }
-        }
-
-        Texture noiseTexture = new Texture(pixmap);
-        pixmap.dispose();
-
-        return noiseTexture;
-    }
-
     public void buffer(Location startLocation) {
 
         // Get Area & Room Data //
         SurroundingAreaAndRoomData surroundingAreaAndRoomData = SurroundingAreaAndRoomData.getAreaAndRoomData(startLocation.room);
-        surroundingAreaAndRoomData.normalizeRoomCoordinates(surroundingAreaAndRoomData.targetRoomDataList, surroundingAreaAndRoomData.lowestPoint);
+
+        // Normalize Coordinates If Not Overworld //
+        if(!startLocation.area.mapKey.equals("Overworld")) {
+            SurroundingAreaAndRoomData.normalizeRoomCoordinates(surroundingAreaAndRoomData.targetRoomDataList, surroundingAreaAndRoomData.lowestPoint);
+        }
+
         tileCountWidth = (int) surroundingAreaAndRoomData.highestPoint.x - (int) surroundingAreaAndRoomData.lowestPoint.x + 1;
         tileCountHeight = (int) surroundingAreaAndRoomData.highestPoint.y - (int) surroundingAreaAndRoomData.lowestPoint.y + 1;
 
@@ -128,7 +98,7 @@ public class Map extends UserInterfaceElement {
 
         // Draw Map FrameBuffer //
         targetFrameBuffer.begin();
-        Gdx.graphics.getGL20().glClearColor(0/255f, 0f, 0/255f, 0);
+        Gdx.graphics.getGL20().glClearColor(0, 0, 0, 0);
         Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         cameraBuffer.setToOrtho(true, targetFrameBuffer.getWidth(), targetFrameBuffer.getHeight());
@@ -136,16 +106,10 @@ public class Map extends UserInterfaceElement {
         for(TargetRoomData targetRoomData : surroundingAreaAndRoomData.targetRoomDataList) {
             int drawX = (int) targetRoomData.targetRoom.coordinates.x * tileSize;
             int drawY = (int) targetRoomData.targetRoom.coordinates.y * tileSize;
-            Color targetColor = new Color(targetRoomData.targetRoom.location.area.mapColor);
-            if(targetRoomData.targetRoom.mapColorTargetColor.equals("R")) {
-                targetColor.r += targetRoomData.targetRoom.mapColorMod;
-            }
-            if(targetRoomData.targetRoom.mapColorTargetColor.equals("G")) {
-                targetColor.g += targetRoomData.targetRoom.mapColorMod;
-            }
-            if(targetRoomData.targetRoom.mapColorTargetColor.equals("B")) {
-                targetColor.b += targetRoomData.targetRoom.mapColorMod;
-            }
+
+            float x = targetRoomData.targetRoom.coordinates.x;
+            float y = targetRoomData.targetRoom.coordinates.y;
+            Color targetColor = HeightMapData.getTileColor(targetRoomData.targetRoom.tileType);
 
             GameScreen.shapeRenderer.setProjectionMatrix(cameraBuffer.combined);
             GameScreen.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -168,8 +132,10 @@ public class Map extends UserInterfaceElement {
             targetFrameBuffer = overworldMapFrameBuffer;
         }
 
+        Color backgroundColor = HeightMapData.getTileColor("Water (Deep)");
+
         frameBuffer.begin();
-        Gdx.graphics.getGL20().glClearColor(0/255f, 0/255f, 14/255f, 1);
+        Gdx.graphics.getGL20().glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1);
         Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         GameScreen.spriteBatch.setProjectionMatrix(cameraDraw.combined);

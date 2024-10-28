@@ -23,6 +23,7 @@ public class Room {
     public Location location;
     public ArrayList<String> nameKeyList;
 
+    public String tileType;
     public String mapColorTargetColor;
     public float mapColorMod;
 
@@ -45,6 +46,7 @@ public class Room {
         this.location.room = this;
         nameKeyList = Entity.createNameKeyList(name.label.toLowerCase());
 
+        tileType = "";
         mapColorTargetColor = Arrays.asList("R", "G", "B").get(new Random().nextInt(3));
         mapColorMod = (new Random().nextFloat() * .25f);
 

@@ -5,6 +5,8 @@ import com.jbs.textgameengine.gamedata.world.area.Area;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
+import com.jbs.textgameengine.screen.gamescreen.userinterface.map.HeightMapData;
+import com.jbs.textgameengine.screen.utility.OpenSimplex;
 
 import java.util.*;
 
@@ -33,8 +35,11 @@ public class Planet extends Planetoid {
     public void generateOverworld() {
         // Debug Areas Created In A CW Circle Starting At The Top-Left Quadrant
 
+        int worldSize = 200;
+        int areaSize = worldSize / 2;
+        HeightMapData heightMapData = generateHeightMapData(worldSize, worldSize);
+
         // Create Areas & Rooms //
-        int areaSize = 5;
         for(int aNum = 0; aNum < 4; aNum++) {
             String areaNameString = "Overworld Area " + String.valueOf(aNum + 1);
             String areaNameColorCode = "10CONT5CONT" + String.valueOf(aNum + 1).length() + "CONT";
@@ -44,83 +49,118 @@ public class Planet extends Planetoid {
             newArea.mapKey = "Overworld";
             areaMap.put(newAreaName.label, newArea);
 
-            for(int rNum = 0; rNum < (areaSize * areaSize); rNum++) {
-                int xLoc = rNum % areaSize;
-                int yLoc = rNum / areaSize;
-                String roomString = "Room X:" + xLoc + ", Y:" + yLoc + " Area:" + (aNum + 1);
-                String roomColorCode = "5CONT1W1DY" + String.valueOf(xLoc).length() + "CONT2DY1W1DY" + String.valueOf(yLoc).length() + "CONT1W4CONT1DY" + String.valueOf(aNum + 1) + "CONT";
-                Line newRoomName = new Line(roomString, roomColorCode, "", true, true);
-                Location newRoomLocation = new Location(location.galaxy, location.solarSystem, this, newArea);
-                Room newRoom = new Room(newArea.roomList.size(), newRoomName, null, newRoomLocation);
-                newArea.roomList.add(newRoom);
-            }
-        }
+            for(int y = 0; y < areaSize; y++) {
+                for(int x = 0; x < areaSize; x++) {
+                    int rNum = (areaSize * y) + x;
+                    int tileX = x;
+                    int tileY = y;
+                    if(aNum == 1 || aNum == 3) {tileX += areaSize;}
+                    if(aNum == 2 || aNum == 3) {tileY += areaSize;}
+                    String tileType = heightMapData.getTileType(tileX, tileY);
 
-        // Connect Room Exits //
-        for(int aNum = 0; aNum < 4; aNum++) {
-            if(areaMap.containsKey("Overworld Area " + String.valueOf(aNum + 1))) {
-                Area currentArea = areaMap.get("Overworld Area " + String.valueOf(aNum + 1));
-                for(int rNum = 0; rNum < (areaSize * areaSize); rNum++) {
-                    if(rNum < currentArea.roomList.size()) {
-                        Room currentRoom = currentArea.roomList.get(rNum);
-                        int xLoc = rNum % areaSize;
-                        int yLoc = rNum / areaSize;
+                    String roomString = "";
+                    String roomColorCode = "";
+                    Line newRoomName = new Line(roomString, roomColorCode, "", true, true);
+                    Location newRoomLocation = new Location(location.galaxy, location.solarSystem, this, newArea);
+                    Room newRoom = new Room(newArea.roomList.size(), newRoomName, null, newRoomLocation);
 
-                        // North & South Exits //
-                        if(yLoc > 0 || aNum > 1) {
-                            Room targetRoom = null;
-                            if(yLoc > 0) {
-                                if((rNum - areaSize) < currentArea.roomList.size()) {
-                                    targetRoom = currentArea.roomList.get(rNum - areaSize);
-                                }
-                            } else {
-                                if(areaMap.containsKey("Overworld Area " + String.valueOf(aNum - 1))) {
-                                    Area targetArea = areaMap.get("Overworld Area " + String.valueOf(aNum - 1));
-                                    if(((areaSize * areaSize) - areaSize + rNum) < targetArea.roomList.size()) {
-                                        targetRoom = targetArea.roomList.get((areaSize * areaSize) - areaSize + rNum);
-                                    }
-                                }
+                    Line tileName = HeightMapData.getTileName(tileType);
+                    newRoom.name.label = tileName.label;
+                    newRoom.name.colorCode = tileName.colorCode;
+                    newRoom.tileType = tileType;
+                    newRoom.coordinates.x = tileX;
+                    newRoom.coordinates.y = worldSize - tileY;
+                    newArea.roomList.add(newRoom);
+
+                    // North & South Exits //
+                    if(y > 0 || aNum > 1) {
+                        Room targetRoom = null;
+                        if(y > 0) {
+                            if((rNum - areaSize) < newArea.roomList.size()) {
+                                targetRoom = newArea.roomList.get(rNum - areaSize);
                             }
-
-                            if(targetRoom != null) {
-                                currentRoom.createExit("North", targetRoom);
+                        } else {
+                            if(areaMap.containsKey("Overworld Area " + String.valueOf(aNum - 1))) {
+                                Area targetArea = areaMap.get("Overworld Area " + String.valueOf(aNum - 1));
+                                if((areaSize * areaSize) - areaSize + rNum < targetArea.roomList.size()) {
+                                    targetRoom = targetArea.roomList.get((areaSize * areaSize) - areaSize + rNum);
+                                }
                             }
                         }
 
-                        // East & West Exits //
-                        if(xLoc < (areaSize - 1) || (aNum == 0 || aNum == 2)) {
-                            Room targetRoom = null;
-                            if(xLoc < (areaSize - 1)) {
-                                if((rNum + 1) < currentArea.roomList.size()) {
-                                    targetRoom = currentArea.roomList.get(rNum + 1);
-                                }
-                            } else {
-                                if(areaMap.containsKey("Overworld Area " + String.valueOf(aNum + 2))) {
-                                    Area targetArea = areaMap.get("Overworld Area " + String.valueOf(aNum + 2));
-                                    if((yLoc * areaSize) < targetArea.roomList.size()) {
-                                        targetRoom = targetArea.roomList.get(yLoc * areaSize);
-                                    }
-                                }
-                            }
+                        if(targetRoom != null) {
+                            newRoom.createExit("North", targetRoom);
+                        }
+                    }
 
-                            if(targetRoom != null) {
-                                currentRoom.createExit("East", targetRoom);
+                    // West & East Exits //
+                    if(x > 0 || (aNum == 1 || aNum == 3)) {
+                        Room targetRoom = null;
+                        if(x > 0) {
+                            if((rNum - 1) < newArea.roomList.size()) {
+                                targetRoom = newArea.roomList.get(rNum - 1);
                             }
+                        } else {
+                            if(areaMap.containsKey("Overworld Area " + String.valueOf(aNum))) {
+                                Area targetArea = areaMap.get("Overworld Area " + String.valueOf(aNum));
+                                if(((y * areaSize) + (areaSize - 1)) < targetArea.roomList.size()) {
+                                    targetRoom = targetArea.roomList.get((y * areaSize) + (areaSize - 1));
+                                }
+                            }
+                        }
+
+                        if(targetRoom != null) {
+                            newRoom.createExit("West", targetRoom);
                         }
                     }
                 }
             }
         }
 
-        // Change Target Area Data //
-        Area targetArea = areaMap.get("Overworld Area 4");
-        targetArea.name = new Line("Area 1", "5CONT1DDW", "", true, true);
-        targetArea.mapKey = "";
-        areaMap.remove("Overworld Area 4");
-        areaMap.put("Area 1", targetArea);
-
         // Add Landing Pad //
         landingPadList.add(areaMap.get("Overworld Area 1").roomList.get(0));
+    }
+
+    public HeightMapData generateHeightMapData(int width, int height) {
+        float widthPercent = width / 54.0f;
+        float heightPercent = height / 54.0f;
+
+        //Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        //pixmap.setColor(Color.WHITE);
+        //pixmap.fill();
+
+        float increment = .05f / widthPercent;
+        float incrementRivers = .15f / heightPercent;
+        int seedValue = new Random().nextInt(999999999);
+
+        HeightMapData heightMapData = new HeightMapData(width, height);
+
+        for(int y = 0; y < height; y++) {
+            for(int x = 0; x < width; x++) {
+                float elevation = OpenSimplex.noise2(seedValue, x * increment, y * increment);
+                elevation = (elevation + 1.0f) / 2.0f;
+
+                float valueRivers = OpenSimplex.noise2(seedValue, x * incrementRivers, y * incrementRivers);
+                valueRivers = (valueRivers + 1.0f) / 2.0f;
+                valueRivers -= .40f;
+
+                float distanceX = (2.0f * x / width) - 1;
+                float distanceY = (2.0f * y / height) - 1;
+                double distance = Math.min(1, (Math.pow(distanceX, 2.0) + Math.pow(distanceY, 2.0)) / Math.sqrt(1.25));
+                elevation -= distance;
+                elevation -= valueRivers;
+
+                heightMapData.setData(x, y, elevation);
+
+                //pixmap.setColor(new Color(value, value, value,1));
+                //pixmap.drawPixel(x, y);
+            }
+        }
+
+        //Texture noiseTexture = new Texture(pixmap);
+        //pixmap.dispose();
+
+        return heightMapData;
     }
 
     public void update() {
