@@ -10,6 +10,7 @@ import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.gamedata.world.utility.TargetRoomData;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.UserInterfaceElement;
+import com.jbs.textgameengine.screen.utility.OpenSimplex;
 import com.jbs.textgameengine.screen.utility.Point;
 import com.jbs.textgameengine.screen.utility.Rect;
 
@@ -29,6 +30,8 @@ public class Map extends UserInterfaceElement {
     public int tileCountHeight;
 
     public Rect playerIconRect;
+
+    public Texture heightMap = generateHeightMap();
 
     public Map() {
         int mapX = Settings.INPUT_BAR_WIDTH;
@@ -59,6 +62,43 @@ public class Map extends UserInterfaceElement {
         int playerIconX = (rect.width / 2) - (playerIconSize / 2);
         int playerIconY = (rect.height / 2) - (playerIconSize / 2);
         playerIconRect = new Rect(playerIconX, playerIconY, playerIconSize, playerIconSize);
+    }
+
+    public Texture generateHeightMap() {
+        int size = 520;
+        Pixmap pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+
+        float increment = .005f;
+        float incrementRivers = .015f;
+        int seedValue = new Random().nextInt(999999999);
+
+        for(int y = 0; y < size; y++) {
+            for(int x = 0; x < size; x++) {
+                float value = OpenSimplex.noise2(seedValue, x * increment, y * increment);
+                value = (value + 1.0f) / 2.0f;
+
+                float valueRivers = OpenSimplex.noise2(seedValue, x * incrementRivers, y * incrementRivers);
+                valueRivers = (valueRivers + 1.0f) / 2.0f;
+                valueRivers -= .40f;
+
+                float distanceX = (2.0f * x / size) - 1;
+                float distanceY = (2.0f * y / size) - 1;
+                double dMod = (Math.pow(distanceX, 2.0) + Math.pow(distanceY, 2.0)) / Math.sqrt(1.35);
+                double distance = Math.min(1, dMod);
+                value -= distance;
+                value -= valueRivers;
+
+                pixmap.setColor(new Color(value, value, value,1));
+                pixmap.drawPixel(x, y);
+            }
+        }
+
+        Texture noiseTexture = new Texture(pixmap);
+        pixmap.dispose();
+
+        return noiseTexture;
     }
 
     public void buffer(Location startLocation) {

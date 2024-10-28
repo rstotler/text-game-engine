@@ -216,6 +216,11 @@ public class GameScreen extends Screen {
         ScreenUtils.clear(0, 0, 0, 1);
         userInterface.render(shapeRenderer, spriteBatch);
 
+        spriteBatch.setProjectionMatrix(camera.combined);
+        spriteBatch.begin();
+        spriteBatch.draw(userInterface.map.heightMap, 600, 220);
+        spriteBatch.end();
+
         // Render FPS //
         spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
