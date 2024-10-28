@@ -86,7 +86,10 @@ public class Say extends Action {
             punctuation = ".";
             sayStringRaw = sayStringRaw.substring(0, sayStringRaw.length() - 1);
         }
-        if(shoutCheck) {sayAskWord = "shout";}
+        if(shoutCheck) {
+            sayAskWord = "shout";
+            punctuation = "!";
+        }
 
         String sayAskString = "";
         String sayAskColorCode = "";
@@ -102,27 +105,28 @@ public class Say extends Action {
         }
 
         for(Room room : roomList) {
-            if(!parentEntity.location.room.isLit()
-            || room != parentEntity.location.room) {
-                if(room != parentEntity.location.room) {
-                    String shoutDirectionString = "";
-                    String shoutDirectionColorCode = "";
-                    TargetRoomData targetRoomData = TargetRoomData.findTargetRoomFromStartRoom(parentEntity.location.room, room, parentEntity.getMaxViewDistance());
-                    if(!targetRoomData.directionList.isEmpty()) {
-                        shoutDirectionString = "from the " + Location.getOppositeDirection(targetRoomData.directionList.get(targetRoomData.directionList.size() - 1)).toLowerCase() + " ";
-                        shoutDirectionColorCode = "5CONT4CONT" + String.valueOf(Location.getOppositeDirection(targetRoomData.directionList.get(targetRoomData.directionList.size() - 1)).length()) + "CONT1W";
+            if(!parentEntity.isPlayer) {
+                if(!parentEntity.location.room.isLit() || room != parentEntity.location.room) {
+                    if(room != parentEntity.location.room) {
+                        String shoutDirectionString = "";
+                        String shoutDirectionColorCode = "";
+                        TargetRoomData targetRoomData = TargetRoomData.findTargetRoomFromStartRoom(parentEntity.location.room, room, parentEntity.getMaxViewDistance());
+                        if(!targetRoomData.directionList.isEmpty()) {
+                            shoutDirectionString = "from the " + Location.getOppositeDirection(targetRoomData.directionList.get(targetRoomData.directionList.size() - 1)).toLowerCase() + " ";
+                            shoutDirectionColorCode = "5CONT4CONT" + String.valueOf(Location.getOppositeDirection(targetRoomData.directionList.get(targetRoomData.directionList.size() - 1)).length()) + "CONT1W";
+                        }
+                        sayAskString = "Someone " + shoutDirectionString + "shouts";
+                        sayAskColorCode = "8CONT" + shoutDirectionColorCode + "6CONT";
                     }
-                    sayAskString = "Someone " + shoutDirectionString + "shouts";
-                    sayAskColorCode = "8CONT" + shoutDirectionColorCode + "6CONT";
+                    else {
+                        sayAskString = "Someone " + sayAskWord + "s";
+                        sayAskColorCode = "8CONT" + String.valueOf(sayAskWord.length()) + "CONT1DDW";
+                    }
                 }
                 else {
-                    sayAskString = "Someone " + sayAskWord + "s";
-                    sayAskColorCode = "8CONT" + String.valueOf(sayAskWord.length()) + "CONT1DDW";
+                    sayAskString = parentEntity.prefix + parentEntity.name.label + " " + sayAskWord + "s";
+                    sayAskColorCode = String.valueOf(parentEntity.prefix.length()) + "CONT" + parentEntity.name.colorCode + "1W" + String.valueOf(sayAskWord.length() + 1) + "CONT";
                 }
-            }
-            else {
-                sayAskString = parentEntity.prefix + parentEntity.name.label + " " + sayAskWord + "s";
-                sayAskColorCode = String.valueOf(parentEntity.prefix.length()) + "CONT" + parentEntity.name.colorCode + "1W" + String.valueOf(sayAskWord.length() + 1) + "CONT";
             }
 
             // Player Message //

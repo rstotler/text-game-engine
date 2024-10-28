@@ -46,6 +46,5 @@ public class UserInterface {
         if(map.frameBuffer != null) {map.frameBuffer = null;}
         if(map.mapFrameBuffer != null) {map.mapFrameBuffer.dispose();}
         if(map.overworldMapFrameBuffer != null) {map.overworldMapFrameBuffer.dispose();}
-        if(map.heightMapDebug != null) {map.heightMapDebug.dispose();}
     }
 }

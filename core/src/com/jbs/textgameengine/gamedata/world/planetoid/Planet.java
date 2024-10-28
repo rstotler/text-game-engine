@@ -35,7 +35,7 @@ public class Planet extends Planetoid {
     public void generateOverworld() {
         // Debug Areas Created In A CW Circle Starting At The Top-Left Quadrant
 
-        int worldSize = 200;
+        int worldSize = 20;
         int areaSize = worldSize / 2;
         HeightMapData heightMapData = generateHeightMapData(worldSize, worldSize);
 
@@ -118,7 +118,7 @@ public class Planet extends Planetoid {
         }
 
         // Add Landing Pad //
-        landingPadList.add(areaMap.get("Overworld Area 1").roomList.get(0));
+        landingPadList.add(areaMap.get("Overworld Area 3").roomList.get(0));
     }
 
     public HeightMapData generateHeightMapData(int width, int height) {

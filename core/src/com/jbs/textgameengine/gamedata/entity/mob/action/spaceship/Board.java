@@ -4,6 +4,7 @@ import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.gamedata.entity.spaceship.Spaceship;
 import com.jbs.textgameengine.gamedata.world.Location;
+import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
@@ -88,6 +89,12 @@ public class Board extends Action {
             parentEntity.interruptAction();
 
             parentEntity.location = new Location(targetSpaceship.boardingRoom.location);
+
+            // Update Map (Player Only) //
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.map.buffer(parentEntity.location);
+                GameScreen.userInterface.map.updateOffset(parentEntity.location.room);
+            }
 
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("The door opens and closes as you board the ship.", "4CONT5CONT6CONT4CONT7CONT3CONT4CONT6CONT4CONT4CONT1DY", "", true, true));

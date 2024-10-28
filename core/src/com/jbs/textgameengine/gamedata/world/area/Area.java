@@ -23,10 +23,11 @@ public class Area {
         this.location.area = this;
 
         mapKey = "";
-        mapColor = new Color(new Random().nextFloat() * .8f,
-                             new Random().nextFloat() * .8f,
-                             new Random().nextFloat() * .8f,
-                          1);
+        mapColor = new Color(0, 0, 0, 1);
+        int randomIndex = new Random().nextInt(3);
+        if(randomIndex == 0) {mapColor.r += new Random().nextFloat() * .5f;}
+        else if(randomIndex == 1) {mapColor.g += new Random().nextFloat() * .5f;}
+        else {mapColor.b += new Random().nextFloat() * .5f;}
 
         roomList = new ArrayList<>();
     }

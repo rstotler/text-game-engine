@@ -17,15 +17,11 @@ import com.jbs.textgameengine.screen.utility.Rect;
 import java.util.*;
 
 public class Map extends UserInterfaceElement {
-    public Texture tileTexture = new Texture("images/Tile.png");
-
     public OrthographicCamera cameraDraw;
     public OrthographicCamera cameraBuffer;
     public FrameBuffer mapFrameBuffer;
     public FrameBuffer overworldMapFrameBuffer;
     public Point mapFrameBufferOffset;
-
-    public Texture heightMapDebug;
 
     public int tileSize;
     public int tileCountWidth;
@@ -54,8 +50,6 @@ public class Map extends UserInterfaceElement {
 
         mapFrameBufferOffset = new Point(0, 0);
 
-        heightMapDebug = null;
-
         tileSize = 32;
         tileCountWidth = 0;
         tileCountHeight = 0;
@@ -71,7 +65,7 @@ public class Map extends UserInterfaceElement {
         // Get Area & Room Data //
         SurroundingAreaAndRoomData surroundingAreaAndRoomData = SurroundingAreaAndRoomData.getAreaAndRoomData(startLocation.room);
 
-        // Normalize Coordinates If Not Overworld //
+        // Normalize Coordinates (If Not Overworld) //
         if(!startLocation.area.mapKey.equals("Overworld")) {
             SurroundingAreaAndRoomData.normalizeRoomCoordinates(surroundingAreaAndRoomData.targetRoomDataList, surroundingAreaAndRoomData.lowestPoint);
         }
@@ -109,7 +103,16 @@ public class Map extends UserInterfaceElement {
 
             float x = targetRoomData.targetRoom.coordinates.x;
             float y = targetRoomData.targetRoom.coordinates.y;
-            Color targetColor = HeightMapData.getTileColor(targetRoomData.targetRoom.tileType);
+
+            Color targetColor;
+            if(targetRoomData.targetRoom.location.area.mapKey.equals("Overworld")) {
+                targetColor = HeightMapData.getTileColor(targetRoomData.targetRoom.tileType);
+            } else {
+                int r = (int) (targetRoomData.targetRoom.location.area.mapColor.r * 255) + new Random().nextInt(30);
+                int g = (int) (targetRoomData.targetRoom.location.area.mapColor.g * 255) + new Random().nextInt(30);
+                int b = (int) (targetRoomData.targetRoom.location.area.mapColor.b * 255) + new Random().nextInt(30);
+                targetColor = new Color(r/255f, g/255f, b/255f, 1);
+            }
 
             GameScreen.shapeRenderer.setProjectionMatrix(cameraBuffer.combined);
             GameScreen.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -128,11 +131,11 @@ public class Map extends UserInterfaceElement {
 
     public void render() {
         FrameBuffer targetFrameBuffer = mapFrameBuffer;
+        Color backgroundColor = new Color(0/255f, 0/255f, 14/255f, 1);
         if(GameScreen.player.location.area.mapKey.equals("Overworld")) {
             targetFrameBuffer = overworldMapFrameBuffer;
+            backgroundColor = HeightMapData.getTileColor("Water (Deep)");
         }
-
-        Color backgroundColor = HeightMapData.getTileColor("Water (Deep)");
 
         frameBuffer.begin();
         Gdx.graphics.getGL20().glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1);
