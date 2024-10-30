@@ -165,6 +165,11 @@ public class Move extends Action {
                         GameScreen.userInterface.map.updateOffset(newRoom);
                     }
 
+                    // Update RoomView (Player) //
+                    if(parentEntity.isPlayer) {
+                        GameScreen.userInterface.roomView.buffer(newRoom.location, parentEntity.facingDirection);
+                    }
+
                     boolean closedCheck = false;
                     boolean lockedCheck = false;
                     boolean automaticCheck = false;

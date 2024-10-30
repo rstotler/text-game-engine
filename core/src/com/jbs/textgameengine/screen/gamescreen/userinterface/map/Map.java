@@ -10,7 +10,6 @@ import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.gamedata.world.utility.TargetRoomData;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.UserInterfaceElement;
-import com.jbs.textgameengine.screen.utility.OpenSimplex;
 import com.jbs.textgameengine.screen.utility.Point;
 import com.jbs.textgameengine.screen.utility.Rect;
 
@@ -27,7 +26,8 @@ public class Map extends UserInterfaceElement {
     public int tileCountWidth;
     public int tileCountHeight;
 
-    public Rect playerIconRect;
+    public Texture playerIconTexture;
+    public Point playerIconLocation;
 
     public Map() {
         int mapX = Settings.INPUT_BAR_WIDTH;
@@ -54,10 +54,8 @@ public class Map extends UserInterfaceElement {
         tileCountWidth = 0;
         tileCountHeight = 0;
 
-        int playerIconSize = (int) (tileSize * .60f);
-        int playerIconX = (rect.width / 2) - (playerIconSize / 2);
-        int playerIconY = (rect.height / 2) - (playerIconSize / 2);
-        playerIconRect = new Rect(playerIconX, playerIconY, playerIconSize, playerIconSize);
+        playerIconTexture = new Texture("images/gamescreen/map/PlayerIcon.png");
+        playerIconLocation = new Point((rect.width / 2) - (playerIconTexture.getWidth() / 2), (rect.height / 2) - (playerIconTexture.getHeight() / 2));
     }
 
     public void buffer(Location startLocation) {
@@ -152,11 +150,15 @@ public class Map extends UserInterfaceElement {
         GameScreen.spriteBatch.end();
 
         // Player Icon //
-        GameScreen.shapeRenderer.setProjectionMatrix(cameraDraw.combined);
-        GameScreen.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        GameScreen.shapeRenderer.setColor(Color.RED);
-        GameScreen.shapeRenderer.rect(playerIconRect.x, playerIconRect.y, playerIconRect.width, playerIconRect.height);
-        GameScreen.shapeRenderer.end();
+        int rotation = 0;
+        if(GameScreen.player.facingDirection.equals("East")) {rotation = 270;}
+        else if(GameScreen.player.facingDirection.equals("South")) {rotation = 180;}
+        else if(GameScreen.player.facingDirection.equals("West")) {rotation = 90;}
+
+        GameScreen.spriteBatch.setProjectionMatrix(cameraDraw.combined);
+        GameScreen.spriteBatch.begin();
+        GameScreen.spriteBatch.draw(playerIconTexture, playerIconLocation.x, playerIconLocation.y, (playerIconTexture.getWidth() / 2), (playerIconTexture.getHeight() / 2), playerIconTexture.getWidth(), playerIconTexture.getHeight(), 1.0f, 1.0f, rotation, 0, 0, playerIconTexture.getWidth(), playerIconTexture.getHeight(), false, false);
+        GameScreen.spriteBatch.end();
 
         frameBuffer.end();
 

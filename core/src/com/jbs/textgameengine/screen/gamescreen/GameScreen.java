@@ -59,6 +59,8 @@ public class GameScreen extends Screen {
         }
         userInterface.map.updateOffset(player.location.room);
 
+        userInterface.roomView.buffer(player.location, player.facingDirection);
+
         // Start Game Time At Noon //
         if(true) {
             player.location.planetoid.minuteCountDay = player.location.planetoid.minutesInDay / 2;
@@ -144,8 +146,7 @@ public class GameScreen extends Screen {
                 }
 
                 // Change Facing Direction //
-                else if(controlIsPressed
-                && shiftIsPressed
+                else if(shiftIsPressed
                 && (key.equals("Left") || key.equals("Right"))) {
                     GameScreen.player.changeFacingDirection(key);
                 }

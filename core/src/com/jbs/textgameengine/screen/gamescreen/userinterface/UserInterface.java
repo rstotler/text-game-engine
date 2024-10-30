@@ -43,8 +43,11 @@ public class UserInterface {
     public void dispose() {
         inputBar.font.dispose();
         console.font.dispose();
-        if(map.frameBuffer != null) {map.frameBuffer = null;}
+        if(map.frameBuffer != null) {map.frameBuffer.dispose();}
         if(map.mapFrameBuffer != null) {map.mapFrameBuffer.dispose();}
         if(map.overworldMapFrameBuffer != null) {map.overworldMapFrameBuffer.dispose();}
+        if(map.playerIconTexture != null) {map.playerIconTexture.dispose();}
+        if(roomView.frameBuffer != null) {roomView.frameBuffer.dispose();}
+        if(roomView.imageManager != null) {roomView.imageManager.disposeTextures();}
     }
 }

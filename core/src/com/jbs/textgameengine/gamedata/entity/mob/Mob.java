@@ -414,6 +414,11 @@ public class Mob extends Entity {
 
             facingDirection = directionList.get(currentIndex);
         }
+
+        // Update RoomView (Player Only) //
+        if(isPlayer) {
+            GameScreen.userInterface.roomView.buffer(location, facingDirection);
+        }
     }
 
     public boolean hasKey(int keyNum) {

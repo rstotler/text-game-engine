@@ -25,9 +25,9 @@ public class Area {
         mapKey = "";
         mapColor = new Color(0, 0, 0, 1);
         int randomIndex = new Random().nextInt(3);
-        if(randomIndex == 0) {mapColor.r += new Random().nextFloat() * .5f;}
-        else if(randomIndex == 1) {mapColor.g += new Random().nextFloat() * .5f;}
-        else {mapColor.b += new Random().nextFloat() * .5f;}
+        if(randomIndex == 0) {mapColor.r += new Random().nextFloat() * .10f;}
+        else if(randomIndex == 1) {mapColor.g += new Random().nextFloat() * .35f;}
+        else {mapColor.b += new Random().nextFloat() * .35f;}
 
         roomList = new ArrayList<>();
     }
