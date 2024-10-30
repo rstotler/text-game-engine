@@ -167,7 +167,7 @@ public class Move extends Action {
 
                     // Update RoomView (Player) //
                     if(parentEntity.isPlayer) {
-                        GameScreen.userInterface.roomView.buffer(newRoom.location, parentEntity.facingDirection);
+                        GameScreen.userInterface.roomView.buffer(parentEntity.location, parentEntity.facingDirection);
                     }
 
                     boolean closedCheck = false;

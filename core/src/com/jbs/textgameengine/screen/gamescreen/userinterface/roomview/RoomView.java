@@ -7,9 +7,14 @@ import com.jbs.textgameengine.Settings;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.gamedata.world.utility.AreaAndRoomData;
+import com.jbs.textgameengine.gamedata.world.utility.TargetRoomData;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.UserInterfaceElement;
+import com.jbs.textgameengine.screen.utility.Point;
 import com.jbs.textgameengine.screen.utility.Rect;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class RoomView extends UserInterfaceElement {
     public OrthographicCamera cameraDraw;
@@ -33,7 +38,7 @@ public class RoomView extends UserInterfaceElement {
     }
 
     public void buffer(Location targetLocation, String facingDirection) {
-        AreaAndRoomData surroundingAreaAndRoomData = AreaAndRoomData.getSurroundingAreaAndRoomData(targetLocation.room, 5, true, true);
+        AreaAndRoomData surroundingAreaAndRoomData = RoomView.getSurroundingAreaAndRoomData(targetLocation.room, 5);
 
         frameBuffer.begin();
         Gdx.graphics.getGL20().glClearColor(rect.fillColor.r, rect.fillColor.g, rect.fillColor.b, 1);
@@ -112,5 +117,66 @@ public class RoomView extends UserInterfaceElement {
         GameScreen.spriteBatch.begin();
         GameScreen.spriteBatch.draw(frameBuffer.getColorBufferTexture(), rect.x, rect.y);
         GameScreen.spriteBatch.end();
+    }
+
+    // Utility Functions //
+    public static AreaAndRoomData getSurroundingAreaAndRoomData(Room targetRoom, int maxDistance) {
+        return examineRoomData(targetRoom, maxDistance, "", new ArrayList<Room>(), new Point(0, 0), new Room[7][7]);
+    }
+
+    public static AreaAndRoomData examineRoomData(Room targetRoom, int maxDistance, String targetDirection, ArrayList<Room> examinedRoomList, Point coordinatePoint, Room[][] roomViewRoomList) {
+        // Helper Function For GetSurroundingAreaAndRoomData()
+
+        if(!examinedRoomList.contains(targetRoom)) {
+            examinedRoomList.add(targetRoom);
+
+            // RoomView Data //
+            int roomViewX = 3 + (int) coordinatePoint.x;
+            int roomViewY = 3 + (int) coordinatePoint.y;
+            if(roomViewX >= 0 && roomViewX < roomViewRoomList.length
+            && roomViewY >= 0 && roomViewY < roomViewRoomList[0].length
+            && roomViewRoomList[roomViewX][roomViewY] == null) {
+                roomViewRoomList[roomViewX][roomViewY] = targetRoom;
+            }
+        }
+
+        if(coordinatePoint.x + coordinatePoint.y < maxDistance) {
+            Point firstCoordinatePoint = new Point(coordinatePoint);
+            ArrayList<String> potentialDirectionList = new ArrayList<>(Arrays.asList("North", "East", "South", "West"));
+            if(!targetDirection.isEmpty() && potentialDirectionList.contains(Location.getOppositeDirection(targetDirection))) {
+                potentialDirectionList.remove(Location.getOppositeDirection(targetDirection));
+            }
+
+            for(String direction : potentialDirectionList) {
+                if(!direction.equals("North")) {
+                    coordinatePoint = new Point(firstCoordinatePoint);
+                }
+                if(targetRoom.exitMap.containsKey(direction)) {
+                    TargetRoomData targetRoomData = TargetRoomData.getTargetRoomFromStartRoom(targetRoom, new ArrayList<>(Arrays.asList(direction)), true, true);
+
+                    if(!examinedRoomList.contains(targetRoomData.targetRoom)
+                    && targetRoomData.targetRoom.location.area != null) {
+                        if(direction.equals("North")) {
+                            coordinatePoint.y += 1;
+                        }
+                        else if(direction.equals("East")) {
+                            coordinatePoint.x += 1;
+                        }
+                        else if(direction.equals("South")) {
+                            coordinatePoint.y -= 1;
+                        }
+                        else if(direction.equals("West")) {
+                            coordinatePoint.x -= 1;
+                        }
+
+                        AreaAndRoomData targetAreaAndRoomData = RoomView.examineRoomData(targetRoomData.targetRoom, maxDistance, direction, examinedRoomList, coordinatePoint, roomViewRoomList);
+                        examinedRoomList = targetAreaAndRoomData.roomList;
+                        roomViewRoomList = targetAreaAndRoomData.roomViewRoomList;
+                    }
+                }
+            }
+        }
+
+        return new AreaAndRoomData(null, examinedRoomList, roomViewRoomList);
     }
 }

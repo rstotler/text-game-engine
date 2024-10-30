@@ -96,6 +96,11 @@ public class Board extends Action {
                 GameScreen.userInterface.map.updateOffset(parentEntity.location.room);
             }
 
+            // Update RoomView (Player) //
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.roomView.buffer(parentEntity.location, parentEntity.facingDirection);
+            }
+
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("The door opens and closes as you board the ship.", "4CONT5CONT6CONT4CONT7CONT3CONT4CONT6CONT4CONT4CONT1DY", "", true, true));
 

@@ -25,4 +25,27 @@ public class Player extends Mob {
             super.update();
         }
     }
+
+    public String getTargetDirectionFromKey(String key) {
+        int facingIndex = 0;
+        ArrayList<String> directionList = new ArrayList<>(Arrays.asList("North", "East", "South", "West"));
+
+        if(directionList.contains(facingDirection)) {
+            facingIndex = Arrays.asList("North", "East", "South", "West").indexOf(facingDirection);
+        }
+
+        String targetDirection = "";
+
+        if(key.equals("Right")) {facingIndex += 1;}
+        else if(key.equals("Down")) {facingIndex += 2;}
+        else if(key.equals("Left")) {facingIndex += 3;}
+
+        if(facingIndex >= directionList.size()) {
+            facingIndex -= directionList.size();
+        }
+
+        targetDirection = directionList.get(facingIndex);
+
+        return targetDirection;
+    }
 }

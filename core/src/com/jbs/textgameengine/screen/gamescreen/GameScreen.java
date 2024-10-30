@@ -154,18 +154,16 @@ public class GameScreen extends Screen {
                 // Alt. Movement (Control + Arrow Keys) //
                 else if(controlIsPressed
                 && (key.equals("Up") || key.equals("Down") || key.equals("Left") || key.equals("Right"))) {
-                    String targetDirection = "";
-                    if(key.equals("Up")) {targetDirection = "North";}
-                    else if(key.equals("Down")) {targetDirection = "South";}
-                    else if(key.equals("Left")) {targetDirection = "West";}
-                    else if(key.equals("Right")) {targetDirection = "East";}
+                    String targetDirection = player.getTargetDirectionFromKey(key);
 
-                    Move moveAction = new Move(player);
-                    player.interruptAction();
+                    if(!targetDirection.isEmpty()) {
+                        Move moveAction = new Move(player);
+                        player.interruptAction();
 
-                    moveAction.actionType = "Direction";
-                    moveAction.targetDirection = targetDirection;
-                    moveAction.initiate();
+                        moveAction.actionType = "Direction";
+                        moveAction.targetDirection = targetDirection;
+                        moveAction.initiate();
+                    }
                 }
 
                 // Scroll User Input //
