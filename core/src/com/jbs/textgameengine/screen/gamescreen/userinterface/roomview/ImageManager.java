@@ -7,10 +7,14 @@ import com.badlogic.gdx.graphics.Texture;
 import java.util.HashMap;
 
 public class ImageManager {
-    public HashMap<String, HashMap<String, HashMap<String, Texture>>> tileMap;
+    public HashMap<String, HashMap<String, HashMap<String, Texture>>> floorMap;
+    public HashMap<String, HashMap<String, HashMap<String, Texture>>> wallMap;
+    public HashMap<String, HashMap<String, HashMap<String, Texture>>> ceilingMap;
 
     public ImageManager() {
-        tileMap = new HashMap<String, HashMap<String, HashMap<String, Texture>>>();
+        floorMap = new HashMap<String, HashMap<String, HashMap<String, Texture>>>();
+        wallMap = new HashMap<String, HashMap<String, HashMap<String, Texture>>>();
+        ceilingMap = new HashMap<String, HashMap<String, HashMap<String, Texture>>>();
 
         loadImages();
     }
@@ -19,21 +23,39 @@ public class ImageManager {
         disposeTextures();
 
         // Tiles //
-        for(FileHandle directoryHandle : Gdx.files.internal("assets/images/gamescreen/roomview/tile").list()) {
-            String rowString = directoryHandle.toString().substring(directoryHandle.toString().lastIndexOf("/") + 1);
-            rowString = rowString.substring(0, 1).toUpperCase() + rowString.substring(1);
+        for(FileHandle tileTypeDirectoryHandle : Gdx.files.internal("assets/images/gamescreen/roomview/tile").list()) {
+            String tileTypeString = tileTypeDirectoryHandle.toString().substring(tileTypeDirectoryHandle.toString().lastIndexOf("/") + 1);
+            tileTypeString = tileTypeString.substring(0, 1).toUpperCase() + tileTypeString.substring(1);
 
-            tileMap.put(rowString, new HashMap<String, HashMap<String, Texture>>());
+            HashMap<String, HashMap<String, HashMap<String, Texture>>> targetMap;
+            if(tileTypeString.equals("Ceiling")) {targetMap = ceilingMap;}
+            else if(tileTypeString.equals("Floor")) {targetMap = floorMap;}
+            else {targetMap = wallMap;}
 
-            for(FileHandle fileHandle : Gdx.files.internal(directoryHandle.toString()).list()) {
-                if(fileHandle.toString().contains(".png")) {
-                    String locationString = fileHandle.toString().substring(fileHandle.toString().lastIndexOf("/") + 1, fileHandle.toString().length() - 4);
-                    locationString = locationString.substring(0, 1).toUpperCase() + locationString.substring(1);
+            for(FileHandle rowDirectoryHandle : Gdx.files.internal(tileTypeDirectoryHandle.toString()).list()) {
+                String rowString = rowDirectoryHandle.toString().substring(rowDirectoryHandle.toString().lastIndexOf("/") + 1);
+                rowString = rowString.substring(0, 1).toUpperCase() + rowString.substring(1);
 
-                    tileMap.get(rowString).put(locationString, new HashMap<String, Texture>());
+                targetMap.put(rowString, new HashMap<String, HashMap<String, Texture>>());
 
-                    Texture texture = new Texture(fileHandle);
-                    tileMap.get(rowString).get(locationString).put("Default", texture);
+                for(FileHandle typeDirectoryHandle : Gdx.files.internal(rowDirectoryHandle.toString()).list()) {
+                    String typeString = typeDirectoryHandle.toString().substring(typeDirectoryHandle.toString().lastIndexOf("/") + 1);
+                    typeString = typeString.substring(0, 1).toUpperCase() + typeString.substring(1);
+
+                    for(FileHandle fileDirectoryHandle : Gdx.files.internal(typeDirectoryHandle.toString()).list()) {
+                        if(fileDirectoryHandle.toString().contains(".png")) {
+                            String columnString = fileDirectoryHandle.toString().substring(fileDirectoryHandle.toString().lastIndexOf("/") + 1, fileDirectoryHandle.toString().length() - 4);
+                            columnString = columnString.substring(0, 1).toUpperCase() + columnString.substring(1);
+
+                            if(!targetMap.get(rowString).containsKey(columnString)) {
+                                targetMap.get(rowString).put(columnString, new HashMap<String, Texture>());
+                            }
+                            if(!targetMap.get(rowString).get(columnString).containsKey(typeString)) {
+                                Texture texture = new Texture(fileDirectoryHandle);
+                                targetMap.get(rowString).get(columnString).put(typeString, texture);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -41,15 +63,37 @@ public class ImageManager {
 
     public void disposeTextures() {
 
-        // Tiles //
-        for(String rowString : tileMap.keySet()) {
-            for(String locationString : tileMap.get(rowString).keySet()) {
-                for(String typeString : tileMap.get(rowString).get(locationString).keySet()) {
-                    Texture texture = tileMap.get(rowString).get(locationString).get(typeString);
+        // Floor Tiles //
+        for(String rowString : floorMap.keySet()) {
+            for(String locationString : floorMap.get(rowString).keySet()) {
+                for(String typeString : floorMap.get(rowString).get(locationString).keySet()) {
+                    Texture texture = floorMap.get(rowString).get(locationString).get(typeString);
                     texture.dispose();
                 }
             }
         }
-        tileMap.clear();
+        floorMap.clear();
+
+        // Wall Tiles //
+        for(String rowString : wallMap.keySet()) {
+            for(String locationString : wallMap.get(rowString).keySet()) {
+                for(String typeString : wallMap.get(rowString).get(locationString).keySet()) {
+                    Texture texture = wallMap.get(rowString).get(locationString).get(typeString);
+                    texture.dispose();
+                }
+            }
+        }
+        wallMap.clear();
+
+        // Ceiling Tiles //
+        for(String rowString : ceilingMap.keySet()) {
+            for(String locationString : ceilingMap.get(rowString).keySet()) {
+                for(String typeString : ceilingMap.get(rowString).get(locationString).keySet()) {
+                    Texture texture = ceilingMap.get(rowString).get(locationString).get(typeString);
+                    texture.dispose();
+                }
+            }
+        }
+        ceilingMap.clear();
     }
 }

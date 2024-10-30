@@ -88,10 +88,11 @@ public class RoomView extends UserInterfaceElement {
                     else if(x == 5) {columnString = "Right2";}
                     else if(x == 6) {columnString = "Right3";}
 
-                    if(imageManager.tileMap.containsKey(rowString)
-                    && imageManager.tileMap.get(rowString).containsKey(columnString)
-                    && imageManager.tileMap.get(rowString).get(columnString).containsKey("Default")) {
-                        Texture floorTileTexture = imageManager.tileMap.get(rowString).get(columnString).get("Default");
+                    System.out.println(imageManager.floorMap.get(rowString).get(columnString).keySet());
+                    if(imageManager.floorMap.containsKey(rowString)
+                    && imageManager.floorMap.get(rowString).containsKey(columnString)
+                    && imageManager.floorMap.get(rowString).get(columnString).containsKey("Default")) {
+                        Texture floorTileTexture = imageManager.floorMap.get(rowString).get(columnString).get("Default");
                         GameScreen.spriteBatch.draw(floorTileTexture, 0, 0);
                     }
                 }
