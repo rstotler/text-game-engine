@@ -25,6 +25,11 @@ import com.jbs.textgameengine.screen.utility.Mouse;
 import java.util.HashMap;
 import java.util.Random;
 
+// 1 - RoomView Walls
+// 2 - RoomView Sunrise/Sunset
+// 3 - Basic Weather
+// 4 - Basic Plant Life
+
 public class GameScreen extends Screen {
     public static UserInterface userInterface;
     public static Mouse mouse;

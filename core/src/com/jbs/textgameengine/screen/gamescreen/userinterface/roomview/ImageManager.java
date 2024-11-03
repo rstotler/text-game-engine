@@ -11,6 +11,8 @@ public class ImageManager {
     public HashMap<String, HashMap<String, HashMap<String, Texture>>> wallMap;
     public HashMap<String, HashMap<String, HashMap<String, Texture>>> ceilingMap;
 
+    public Texture backgroundFloor;
+
     public ImageManager() {
         floorMap = new HashMap<String, HashMap<String, HashMap<String, Texture>>>();
         wallMap = new HashMap<String, HashMap<String, HashMap<String, Texture>>>();
@@ -22,7 +24,10 @@ public class ImageManager {
     public void loadImages() {
         disposeTextures();
 
-        // Tiles //
+        // Textures //
+        backgroundFloor = new Texture("images/gamescreen/roomview/Background.png");
+
+        // Tile Textures (Floor, Wall, Ceiling) //
         for(FileHandle tileTypeDirectoryHandle : Gdx.files.internal("assets/images/gamescreen/roomview/tile").list()) {
             String tileTypeString = tileTypeDirectoryHandle.toString().substring(tileTypeDirectoryHandle.toString().lastIndexOf("/") + 1);
             tileTypeString = tileTypeString.substring(0, 1).toUpperCase() + tileTypeString.substring(1);
@@ -62,6 +67,9 @@ public class ImageManager {
     }
 
     public void disposeTextures() {
+        if(backgroundFloor != null) {
+            backgroundFloor.dispose();
+        }
 
         // Floor Tiles //
         for(String rowString : floorMap.keySet()) {

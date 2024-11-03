@@ -64,7 +64,7 @@ public class TargetRoomData {
             && targetRoom.hiddenExitMap.get(direction) != null
             && !targetRoom.hiddenExitMap.get(direction).isOpen) {
                 targetRoomData.message = "Hidden Exit Is Closed";
-                if(!ignoreDoors) {
+                if(!ignoreHiddenExits) {
                     break;
                 }
             }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.Console;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.map.Map;
+import com.jbs.textgameengine.screen.gamescreen.userinterface.playerstats.PlayerStats;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.prompt.InputBar;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.roomview.RoomView;
 
@@ -14,12 +15,14 @@ public class UserInterface {
     public Console console;
     public RoomView roomView;
     public Map map;
+    public PlayerStats playerStats;
 
     public UserInterface() {
         inputBar = new InputBar();
         console = new Console();
         roomView = new RoomView();
         map = new Map();
+        playerStats = new PlayerStats();
     }
 
     public void render(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch) {
@@ -27,6 +30,7 @@ public class UserInterface {
         console.render();
         roomView.render();
         map.render();
+        playerStats.render();
     }
 
     public ArrayList<UserInterfaceElement> getAllElements() {
@@ -36,6 +40,7 @@ public class UserInterface {
         uiElementList.add(console);
         uiElementList.add(roomView);
         uiElementList.add(map);
+        uiElementList.add(playerStats);
 
         return uiElementList;
     }

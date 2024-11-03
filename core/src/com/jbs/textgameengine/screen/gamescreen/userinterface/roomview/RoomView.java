@@ -38,7 +38,7 @@ public class RoomView extends UserInterfaceElement {
     }
 
     public void buffer(Location targetLocation, String facingDirection) {
-        AreaAndRoomData surroundingAreaAndRoomData = RoomView.getSurroundingAreaAndRoomData(targetLocation.room, 5);
+        AreaAndRoomData surroundingAreaAndRoomData = RoomView.getSurroundingAreaAndRoomData(targetLocation.room, 6);
 
         frameBuffer.begin();
         Gdx.graphics.getGL20().glClearColor(rect.fillColor.r, rect.fillColor.g, rect.fillColor.b, 1);
@@ -47,66 +47,174 @@ public class RoomView extends UserInterfaceElement {
         GameScreen.spriteBatch.setProjectionMatrix(cameraDraw.combined);
         GameScreen.spriteBatch.begin();
 
-        int rowIndexStart = 5;
-        int columnIndexStart = 0;
+        GameScreen.spriteBatch.draw(imageManager.backgroundFloor, 0, 0);
 
+        // Get Start Coordinate //
+        int coordinateXStart = 0;
+        int coordinateYStart = 6;
         if(facingDirection.equals("East")) {
-            rowIndexStart = 6;
-            columnIndexStart = 5;
+            coordinateXStart = 6;
+            coordinateYStart = 8;
         }
         else if(facingDirection.equals("South")) {
-            rowIndexStart = 1;
-            columnIndexStart = 6;
+            coordinateXStart = 8;
+            coordinateYStart = 2;
         }
         else if(facingDirection.equals("West")) {
-            rowIndexStart = 0;
-            columnIndexStart = 1;
+            coordinateXStart = 2;
+            coordinateYStart = 0;
         }
 
-        int rowIndex = rowIndexStart;
-        int columnIndex = columnIndexStart;
+        int coordinateX = coordinateXStart;
+        int coordinateY = coordinateYStart;
+
+        ArrayList<String> columnStringList = new ArrayList<>(Arrays.asList("Left1", "Left2", "Left3", "Left4", "Right1", "Right2", "Right3", "Right4", "Middle"));
 
         for(int y = 0; y < 3; y++) {
-            if(facingDirection.equals("North")) {columnIndex = columnIndexStart;}
-            else if(facingDirection.equals("East")) {rowIndex = rowIndexStart;}
-            else if(facingDirection.equals("South")) {columnIndex = columnIndexStart;}
-            else if(facingDirection.equals("West")) {rowIndex = rowIndexStart;}
+            if(y > 0) {
+                if(facingDirection.equals("North") || facingDirection.equals("South")) {
+                    coordinateX = coordinateXStart;
+                }
+                else {
+                    coordinateY = coordinateYStart;
+                }
+            }
 
-            for(int x = 0; x < 7; x++) {
-                if(columnIndex > 0 && columnIndex < surroundingAreaAndRoomData.roomViewRoomList.length
-                && rowIndex > 0 && rowIndex < surroundingAreaAndRoomData.roomViewRoomList[0].length
-                && surroundingAreaAndRoomData.roomViewRoomList[columnIndex][rowIndex] != null) {
-                    String rowString = "Back";
-                    if(y == 1) {rowString = "Middle";}
-                    else if(y == 2) {rowString = "Front";}
+            String rowString = "Back";
+            if(y == 1) {rowString = "Middle";}
+            else if(y == 2) {rowString = "Front";}
+            String columnString = "Left1";
+            int columnStringIndex = 0;
 
-                    String columnString = "Left3";
-                    if(x == 1) {columnString = "Left2";}
-                    else if(x == 2) {columnString = "Left1";}
-                    else if(x == 3) {columnString = "Middle";}
-                    else if(x == 4) {columnString = "Right1";}
-                    else if(x == 5) {columnString = "Right2";}
-                    else if(x == 6) {columnString = "Right3";}
+            for(int x = 0; x < 9 - y; x++) {
+                if(x >= y && x < 9- y) {
+                    boolean drawFloor = true;
 
-                    System.out.println(imageManager.floorMap.get(rowString).get(columnString).keySet());
-                    if(imageManager.floorMap.containsKey(rowString)
-                    && imageManager.floorMap.get(rowString).containsKey(columnString)
-                    && imageManager.floorMap.get(rowString).get(columnString).containsKey("Default")) {
-                        Texture floorTileTexture = imageManager.floorMap.get(rowString).get(columnString).get("Default");
-                        GameScreen.spriteBatch.draw(floorTileTexture, 0, 0);
+                    Room targetRoom = null;
+                    Room behindRoom = null;
+                    if(surroundingAreaAndRoomData.roomViewRoomList[coordinateX][coordinateY] != null) {
+                        targetRoom = surroundingAreaAndRoomData.roomViewRoomList[coordinateX][coordinateY];
+                        if(targetRoom.exitMap.containsKey(facingDirection)
+                        && targetRoom.exitMap.get(facingDirection) != null) {
+                            behindRoom = targetRoom.exitMap.get(facingDirection);
+                        }
+                    }
+                    if(targetRoom == null) {drawFloor = false;}
+
+                    // Back Wall //
+                    if(rowString.equals("Back")
+                    && GameScreen.player.location.room.inside
+                    && (behindRoom == null || !behindRoom.inside)) {
+                        if(imageManager.wallMap.containsKey("Backwall")
+                        && imageManager.wallMap.get("Backwall").containsKey(columnString)
+                        && imageManager.wallMap.get("Backwall").get(columnString).containsKey("Default")) {
+                            Texture wallTexture = imageManager.wallMap.get("Backwall").get(columnString).get("Default");
+                            GameScreen.spriteBatch.draw(wallTexture, 0, 0);
+                        }
+                    }
+
+                    // Ceiling //
+                    if(targetRoom != null
+                    && targetRoom.inside
+                    && !(!GameScreen.player.location.room.inside && rowString.equals("Middle"))) {
+                        if(imageManager.ceilingMap.containsKey(rowString)
+                        && imageManager.ceilingMap.get(rowString).containsKey(columnString)
+                        && imageManager.ceilingMap.get(rowString).get(columnString).containsKey("Default")) {
+                            Texture ceilingTexture = imageManager.ceilingMap.get(rowString).get(columnString).get("Default");
+                            GameScreen.spriteBatch.draw(ceilingTexture, 0, 0);
+                        }
+                    }
+
+                    // Outside Walls //
+                    if(targetRoom != null
+                    && targetRoom.inside) {
+                        if(!GameScreen.player.location.room.inside) {
+                            if(imageManager.wallMap.containsKey(rowString)
+                            && imageManager.wallMap.get(rowString).containsKey(columnString)
+                            && imageManager.wallMap.get(rowString).get(columnString).containsKey("Default")) {
+                                Texture wallTexture = imageManager.wallMap.get(rowString).get(columnString).get("Default");
+                                GameScreen.spriteBatch.draw(wallTexture, 0, 0);
+                                drawFloor = false;
+                            }
+                        }
+                    }
+
+                    // Inside Walls //
+                    else if(GameScreen.player.location.room.inside
+                    && (targetRoom == null || !targetRoom.inside)) {
+                        if(imageManager.wallMap.containsKey(rowString)
+                        && imageManager.wallMap.get(rowString).containsKey(columnString)
+                        && imageManager.wallMap.get(rowString).get(columnString).containsKey("Default")) {
+                            Texture wallTexture = imageManager.wallMap.get(rowString).get(columnString).get("Default");
+                            GameScreen.spriteBatch.draw(wallTexture, 0, 0);
+                            drawFloor = false;
+                        }
+                    }
+
+                    // Draw Floor //
+                    if(drawFloor) {
+                        if(imageManager.floorMap.containsKey(rowString)
+                        && imageManager.floorMap.get(rowString).containsKey(columnString)
+                        && imageManager.floorMap.get(rowString).get(columnString).containsKey("Default")) {
+                            Texture floorTexture = imageManager.floorMap.get(rowString).get(columnString).get("Default");
+                            GameScreen.spriteBatch.draw(floorTexture, 0, 0);
+                        }
                     }
                 }
 
-                if(facingDirection.equals("North")) {columnIndex++;}
-                else if(facingDirection.equals("East")) {rowIndex--;}
-                else if(facingDirection.equals("South")) {columnIndex--;}
-                else if(facingDirection.equals("West")) {rowIndex++;}
+                if(facingDirection.equals("North")) {
+                    if(x < 3) {
+                        coordinateX++;
+                    } else if(x == 3) {
+                        coordinateX = 8 - y;
+                    } else {
+                        coordinateX--;
+                    }
+                }
+                else if(facingDirection.equals("East")) {
+                    if(x < 3) {
+                        coordinateY--;
+                    } else if(x == 3) {
+                        coordinateY = y;
+                    } else {
+                        coordinateY++;
+                    }
+                }
+                else if(facingDirection.equals("South")) {
+                    if(x < 3) {
+                        coordinateX--;
+                    } else if(x == 3) {
+                        coordinateX = y;
+                    } else {
+                        coordinateX++;
+                    }
+                }
+                else if(facingDirection.equals("West")) {
+                    if(x < 3) {
+                        coordinateY++;
+                    } else if(x == 3) {
+                        coordinateY = 8 - y;
+                    } else {
+                        coordinateY--;
+                    }
+                }
+
+                if(x >= y && x < 9 - y) {
+                    columnStringIndex += 1;
+                    if(columnStringIndex >= columnStringList.size()) {
+                        columnStringIndex = 0;
+                    }
+                    if(x == 3) {columnStringIndex = 4;}
+                    else if(x == 7 - y) {columnStringIndex = 8;}
+
+                    columnString = columnStringList.get(columnStringIndex);
+                }
             }
 
-            if(facingDirection.equals("North")) {rowIndex--;}
-            else if(facingDirection.equals("East")) {columnIndex--;}
-            else if(facingDirection.equals("South")) {rowIndex++;}
-            else if(facingDirection.equals("West")) {columnIndex++;}
+            if(facingDirection.equals("North")) {coordinateY--;}
+            else if(facingDirection.equals("East")) {coordinateX--;}
+            else if(facingDirection.equals("South")) {coordinateY++;}
+            else if(facingDirection.equals("West")) {coordinateX++;}
         }
 
         GameScreen.spriteBatch.end();
@@ -122,7 +230,7 @@ public class RoomView extends UserInterfaceElement {
 
     // Utility Functions //
     public static AreaAndRoomData getSurroundingAreaAndRoomData(Room targetRoom, int maxDistance) {
-        return examineRoomData(targetRoom, maxDistance, "", new ArrayList<Room>(), new Point(0, 0), new Room[7][7]);
+        return examineRoomData(targetRoom, maxDistance, "", new ArrayList<Room>(), new Point(0, 0), new Room[9][9]);
     }
 
     public static AreaAndRoomData examineRoomData(Room targetRoom, int maxDistance, String targetDirection, ArrayList<Room> examinedRoomList, Point coordinatePoint, Room[][] roomViewRoomList) {
@@ -132,8 +240,8 @@ public class RoomView extends UserInterfaceElement {
             examinedRoomList.add(targetRoom);
 
             // RoomView Data //
-            int roomViewX = 3 + (int) coordinatePoint.x;
-            int roomViewY = 3 + (int) coordinatePoint.y;
+            int roomViewX = 4 + (int) coordinatePoint.x;
+            int roomViewY = 4 + (int) coordinatePoint.y;
             if(roomViewX >= 0 && roomViewX < roomViewRoomList.length
             && roomViewY >= 0 && roomViewY < roomViewRoomList[0].length
             && roomViewRoomList[roomViewX][roomViewY] == null) {
@@ -153,7 +261,7 @@ public class RoomView extends UserInterfaceElement {
                     coordinatePoint = new Point(firstCoordinatePoint);
                 }
                 if(targetRoom.exitMap.containsKey(direction)) {
-                    TargetRoomData targetRoomData = TargetRoomData.getTargetRoomFromStartRoom(targetRoom, new ArrayList<>(Arrays.asList(direction)), true, true);
+                    TargetRoomData targetRoomData = TargetRoomData.getTargetRoomFromStartRoom(targetRoom, new ArrayList<>(Arrays.asList(direction)), true, false);
 
                     if(!examinedRoomList.contains(targetRoomData.targetRoom)
                     && targetRoomData.targetRoom.location.area != null) {
