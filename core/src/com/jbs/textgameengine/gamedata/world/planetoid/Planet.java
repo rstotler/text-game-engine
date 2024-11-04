@@ -1,5 +1,6 @@
 package com.jbs.textgameengine.gamedata.world.planetoid;
 
+import com.badlogic.gdx.graphics.Color;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.area.Area;
 import com.jbs.textgameengine.gamedata.world.room.Room;
@@ -21,6 +22,12 @@ public class Planet extends Planetoid {
     public HashMap<String, Area> areaMap;
     public ArrayList<Room> landingPadList;
 
+    public Color skyColor;
+    public Color nightSkyColor;
+    public Color currentSkyColor;
+    public Color targetSkyColor;
+    public boolean switchSkyColorCheck;
+
     public Planet(Line name, Location location, int distanceFromCenter, int orbitDirection, float axialTilt, int minutesInDay, int minutesInYear) {
         super(name, location, distanceFromCenter, orbitDirection, axialTilt, minutesInDay, minutesInYear);
         isPlanet = true;
@@ -30,6 +37,12 @@ public class Planet extends Planetoid {
         moonMap = new HashMap<>();
         areaMap = new HashMap<>();
         landingPadList = new ArrayList<>();
+
+        skyColor = new Color(20/255f, 60/255f, 140/255f, 1);
+        nightSkyColor = new Color(5/255f, 5/255f, 20/255f, 1);
+        currentSkyColor = new Color(skyColor.r, skyColor.g, skyColor.b, 1);
+        targetSkyColor = new Color(skyColor.r, skyColor.g, skyColor.b, 1);
+        switchSkyColorCheck = false;
     }
 
     public void generateOverworld() {
@@ -169,12 +182,15 @@ public class Planet extends Planetoid {
         float dayPercent = 0.0f;
         if(minutesInDay > 0) {dayPercent = (minuteCountDay + 0.0f) / minutesInDay;}
 
-        // Time Of Day Messages //
+        // Set Current Time Of Day Messages & Target Set Sky Color //
         if(GameScreen.player.location.planetoid == this) {
             if(GameScreen.player.location.room != null
             && !(GameScreen.player.location.spaceship != null && !GameScreen.player.location.spaceship.status.equals("Landed"))) {
                 if(!dawnMessage && dayPercent >= dawnPercent) {
                     dawnMessage = true;
+                    currentSkyColor = new Color(nightSkyColor.r, targetSkyColor.g, targetSkyColor.b, 1);
+                    targetSkyColor = new Color(240/255f, 130/255f, 30/255f, 1);
+                    switchSkyColorCheck = false;
                     Line dawnLine = new Line("The sky begins to lighten.", "4CONT4SHIAC7CONT3CONT7CONT1DY", "", true, true);
                     GameScreen.userInterface.console.writeToConsole(dawnLine);
                 }
@@ -190,6 +206,9 @@ public class Planet extends Planetoid {
                 }
                 else if(!duskMessage && dayPercent >= duskPercent) {
                     duskMessage = true;
+                    currentSkyColor = new Color(skyColor.r, skyColor.g, skyColor.b, 1);
+                    targetSkyColor = new Color(240/255f, 130/255f, 30/255f, 1);
+                    switchSkyColorCheck = false;
                     Line duskLine = new Line("The sun begins to set.", "4CONT4SHIAY7CONT3CONT3CONT1DY", "", true, true);
                     GameScreen.userInterface.console.writeToConsole(duskLine);
                 }
@@ -221,12 +240,51 @@ public class Planet extends Planetoid {
         sunsetPercent = ((nightMinutes / 1.64f) + (minutesInDay - nightMinutes)) / minutesInDay;
 
         if(GameScreen.player.location.planetoid == this) {
-            dawnMessage = ((minuteCountDay + 0.0f) / minuteCountDay) >= dawnPercent;
+            dawnMessage = ((minuteCountDay + 0.0f) / minutesInDay) >= dawnPercent;
             sunriseMessage = ((minuteCountDay + 0.0f) / minutesInDay) >= sunrisePercent;
             noonMessage = ((minuteCountDay + 0.0f) / minutesInDay) >= noonPercent;
             duskMessage = ((minuteCountDay + 0.0f) / minutesInDay) >= duskPercent;
             sunsetMessage = ((minuteCountDay + 0.0f) / minutesInDay) >= sunsetPercent;
         }
+
+        float dayPercent = (minuteCountDay + 0.0f) / minutesInDay;
+        if(dayPercent < minutesInDay * dawnPercent
+        || dayPercent > minutesInDay * sunsetPercent) {
+            currentSkyColor = new Color(nightSkyColor.r, nightSkyColor.g, nightSkyColor.b, 1);
+            targetSkyColor = nightSkyColor;
+        }
+    }
+
+    public Color updateSkyColor(float dawnDuskPercent) {
+        Color newColor = new Color(0, 0, 0, 1);
+
+        for(int i = 0; i < 3; i++) {
+            float targetSkyColorValue;
+            float currentSkyColorValue;
+            if(i == 0) {
+                targetSkyColorValue = targetSkyColor.r;
+                currentSkyColorValue = currentSkyColor.r;
+            }
+            else if(i == 1) {
+                targetSkyColorValue = targetSkyColor.g;
+                currentSkyColorValue = currentSkyColor.g;
+            }
+            else {
+                targetSkyColorValue = targetSkyColor.b;
+                currentSkyColorValue = currentSkyColor.b;
+            }
+
+            float differencePercent = (targetSkyColorValue - currentSkyColorValue) * dawnDuskPercent;
+            int newColorValue = (int) ((currentSkyColorValue + differencePercent) * 255);
+            if(newColorValue < 0) {newColorValue = 0;}
+            else if(newColorValue > 255) {newColorValue = 255;}
+
+            if(i == 0) {newColor.r = newColorValue/255f;}
+            else if(i == 1) {newColor.g = newColorValue/255f;}
+            else {newColor.b = newColorValue/255f;}
+        }
+
+        return newColor;
     }
 
     public boolean isDay() {

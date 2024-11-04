@@ -25,10 +25,8 @@ import com.jbs.textgameengine.screen.utility.Mouse;
 import java.util.HashMap;
 import java.util.Random;
 
-// 1 - RoomView Walls
-// 2 - RoomView Sunrise/Sunset
-// 3 - Basic Weather
-// 4 - Basic Plant Life
+// 2 - Basic Weather
+// 3 - Basic Plant Life
 
 public class GameScreen extends Screen {
     public static UserInterface userInterface;
@@ -64,14 +62,14 @@ public class GameScreen extends Screen {
         }
         userInterface.map.updateOffset(player.location.room);
 
-        userInterface.roomView.buffer(player.location, player.facingDirection);
-
         // Start Game Time At Noon //
         if(true) {
-            player.location.planetoid.minuteCountDay = player.location.planetoid.minutesInDay / 2;
+            player.location.planetoid.minuteCountDay = player.location.planetoid.minutesInDay / 2+322;
             player.location.planetoid.minuteCountYear = player.location.planetoid.minuteCountDay;
             ((Planet) (player.location.planetoid)).updateDayNightTimers();
         }
+
+        userInterface.roomView.buffer(player.location, player.facingDirection);
 
         gameTimer = 0;
         frameTimer = 0;
@@ -196,7 +194,7 @@ public class GameScreen extends Screen {
         // Update Player //
         player.update();
 
-        // Update Player, Area & Surrounding Rooms //
+        // Update Area & Surrounding Rooms //
         if((frameTimer == 0 || frameTimer == 30)
         && player.location != null
         && player.location.area != null

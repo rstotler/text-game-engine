@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.jbs.textgameengine.Settings;
 import com.jbs.textgameengine.gamedata.world.Location;
+import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.gamedata.world.utility.AreaAndRoomData;
 import com.jbs.textgameengine.gamedata.world.utility.TargetRoomData;
@@ -41,11 +42,10 @@ public class RoomView extends UserInterfaceElement {
         AreaAndRoomData surroundingAreaAndRoomData = RoomView.getSurroundingAreaAndRoomData(targetLocation.room, 6);
 
         frameBuffer.begin();
-        Gdx.graphics.getGL20().glClearColor(rect.fillColor.r, rect.fillColor.g, rect.fillColor.b, 1);
-        Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         GameScreen.spriteBatch.setProjectionMatrix(cameraDraw.combined);
         GameScreen.spriteBatch.begin();
+
+        bufferBackground(targetLocation, facingDirection);
 
         GameScreen.spriteBatch.draw(imageManager.backgroundFloor, 0, 0);
 
@@ -219,6 +219,57 @@ public class RoomView extends UserInterfaceElement {
 
         GameScreen.spriteBatch.end();
         frameBuffer.end();
+    }
+
+    public void bufferBackground(Location targetLocation, String facingDirection) {
+        float dayPercent = targetLocation.planetoid.minuteCountDay / (targetLocation.planetoid.minutesInDay + 0.0f);
+
+        Color skyColor = ((Planet) targetLocation.planetoid).skyColor;
+        if(dayPercent < targetLocation.planetoid.dawnPercent
+        || dayPercent >= targetLocation.planetoid.sunsetPercent) {
+            skyColor = ((Planet) targetLocation.planetoid).nightSkyColor;
+        }
+
+        boolean dawnCheck = false;
+        boolean duskCheck = false;
+        float dawnDuskPercent = 0.0f;
+        int minutesBeforeDusk;
+        int minutesBeforeDawn = (int) (targetLocation.planetoid.dawnPercent * targetLocation.planetoid.minutesInDay);
+
+        if(dayPercent >= targetLocation.planetoid.dawnPercent
+        && dayPercent < targetLocation.planetoid.sunrisePercent) {
+            int dawnMinutes = (int) (targetLocation.planetoid.sunrisePercent * targetLocation.planetoid.minutesInDay) - minutesBeforeDawn;
+            dawnDuskPercent = (targetLocation.planetoid.minuteCountDay - minutesBeforeDawn) / (dawnMinutes + 0.0f);
+            dawnCheck = true;
+        }
+        else if(dayPercent >= targetLocation.planetoid.duskPercent
+        && dayPercent < targetLocation.planetoid.sunsetPercent) {
+            minutesBeforeDusk = (int) (targetLocation.planetoid.duskPercent * targetLocation.planetoid.minutesInDay);
+            int duskMinutes = (int) (targetLocation.planetoid.sunsetPercent * targetLocation.planetoid.minutesInDay) - minutesBeforeDusk;
+            dawnDuskPercent = (targetLocation.planetoid.minuteCountDay - minutesBeforeDusk) / (duskMinutes + 0.0f);
+            duskCheck = true;
+        }
+
+        if(dawnCheck || duskCheck) {
+            float dawnDuskPercentMod;
+            if(dawnDuskPercent <= .50) {dawnDuskPercentMod = dawnDuskPercent * 2;}
+            else {dawnDuskPercentMod = (dawnDuskPercent - .50f) * 2;}
+            if(dawnDuskPercent > .50 && !((Planet) targetLocation.planetoid).switchSkyColorCheck) {
+                ((Planet) targetLocation.planetoid).switchSkyColorCheck = true;
+                Color targetSkyColor = ((Planet) targetLocation.planetoid).targetSkyColor;
+                ((Planet) targetLocation.planetoid).currentSkyColor = new Color(targetSkyColor.r, targetSkyColor.g, targetSkyColor.b, 1);
+                if(duskCheck) {
+                    ((Planet) targetLocation.planetoid).targetSkyColor = ((Planet) targetLocation.planetoid).nightSkyColor;
+                } else {
+                    ((Planet) targetLocation.planetoid).targetSkyColor = ((Planet) targetLocation.planetoid).skyColor;
+                }
+            }
+
+            skyColor = ((Planet) targetLocation.planetoid).updateSkyColor(dawnDuskPercentMod);
+        }
+
+        Gdx.graphics.getGL20().glClearColor(skyColor.r, skyColor.g, skyColor.b, 1);
+        Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
     public void render() {

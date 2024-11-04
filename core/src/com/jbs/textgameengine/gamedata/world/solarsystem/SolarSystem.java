@@ -3,6 +3,7 @@ package com.jbs.textgameengine.gamedata.world.solarsystem;
 import com.jbs.textgameengine.gamedata.entity.spaceship.Spaceship;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.planetoid.Planetoid;
+import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
 import java.util.ArrayList;
@@ -26,6 +27,10 @@ public class SolarSystem {
     public void update() {
         for(Planetoid planetoid : planetoidList) {
             planetoid.update();
+
+            if(GameScreen.player.location.planetoid == planetoid) {
+                GameScreen.userInterface.roomView.buffer(GameScreen.player.location, GameScreen.player.facingDirection);
+            }
         }
 
         int iMod = 0;
