@@ -3,12 +3,14 @@ package com.jbs.textgameengine.screen.gamescreen.userinterface.roomview;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.jbs.textgameengine.Settings;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.gamedata.world.utility.AreaAndRoomData;
 import com.jbs.textgameengine.gamedata.world.utility.TargetRoomData;
+import com.jbs.textgameengine.screen.Screen;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.UserInterfaceElement;
 import com.jbs.textgameengine.screen.utility.Point;
@@ -41,11 +43,11 @@ public class RoomView extends UserInterfaceElement {
     public void buffer(Location targetLocation, String facingDirection) {
         AreaAndRoomData surroundingAreaAndRoomData = RoomView.getSurroundingAreaAndRoomData(targetLocation.room, 6);
 
+        bufferBackground(targetLocation, facingDirection);
+
         frameBuffer.begin();
         GameScreen.spriteBatch.setProjectionMatrix(cameraDraw.combined);
         GameScreen.spriteBatch.begin();
-
-        bufferBackground(targetLocation, facingDirection);
 
         GameScreen.spriteBatch.draw(imageManager.backgroundFloor, 0, 0);
 
@@ -109,7 +111,7 @@ public class RoomView extends UserInterfaceElement {
                         && imageManager.wallMap.get("Backwall").containsKey(columnString)
                         && imageManager.wallMap.get("Backwall").get(columnString).containsKey("Default")) {
                             Texture wallTexture = imageManager.wallMap.get("Backwall").get(columnString).get("Default");
-                            GameScreen.spriteBatch.draw(wallTexture, 0, 0);
+                            //GameScreen.spriteBatch.draw(wallTexture, 0, 0);
                         }
                     }
 
@@ -121,7 +123,7 @@ public class RoomView extends UserInterfaceElement {
                         && imageManager.ceilingMap.get(rowString).containsKey(columnString)
                         && imageManager.ceilingMap.get(rowString).get(columnString).containsKey("Default")) {
                             Texture ceilingTexture = imageManager.ceilingMap.get(rowString).get(columnString).get("Default");
-                            GameScreen.spriteBatch.draw(ceilingTexture, 0, 0);
+                            //GameScreen.spriteBatch.draw(ceilingTexture, 0, 0);
                         }
                     }
 
@@ -133,8 +135,8 @@ public class RoomView extends UserInterfaceElement {
                             && imageManager.wallMap.get(rowString).containsKey(columnString)
                             && imageManager.wallMap.get(rowString).get(columnString).containsKey("Default")) {
                                 Texture wallTexture = imageManager.wallMap.get(rowString).get(columnString).get("Default");
-                                GameScreen.spriteBatch.draw(wallTexture, 0, 0);
-                                drawFloor = false;
+                                //GameScreen.spriteBatch.draw(wallTexture, 0, 0);
+                                //drawFloor = false;
                             }
                         }
                     }
@@ -146,8 +148,8 @@ public class RoomView extends UserInterfaceElement {
                         && imageManager.wallMap.get(rowString).containsKey(columnString)
                         && imageManager.wallMap.get(rowString).get(columnString).containsKey("Default")) {
                             Texture wallTexture = imageManager.wallMap.get(rowString).get(columnString).get("Default");
-                            GameScreen.spriteBatch.draw(wallTexture, 0, 0);
-                            drawFloor = false;
+                            //GameScreen.spriteBatch.draw(wallTexture, 0, 0);
+                            //drawFloor = false;
                         }
                     }
 
@@ -268,8 +270,23 @@ public class RoomView extends UserInterfaceElement {
             skyColor = ((Planet) targetLocation.planetoid).updateSkyColor(dawnDuskPercentMod);
         }
 
+        frameBuffer.begin();
         Gdx.graphics.getGL20().glClearColor(skyColor.r, skyColor.g, skyColor.b, 1);
         Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        Screen.shapeRenderer.setProjectionMatrix(cameraDraw.combined);
+        Screen.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        Screen.shapeRenderer.setColor(new Color(100/255f, 100/255f, 0/255f, 1));
+
+        int dayMinutes = (int) ((targetLocation.planetoid.sunsetPercent * targetLocation.planetoid.minutesInDay) - minutesBeforeDawn);
+        float dayLightPercent = (targetLocation.planetoid.minuteCountDay - minutesBeforeDawn) / (dayMinutes + 0.0f);
+        int sunX = (int) (Math.cos(Math.toRadians(dayLightPercent * 180)) * 620);
+        int sunY = (int) ((Math.sin(Math.toRadians(dayLightPercent * 180)) * 290) - 54);
+
+        Screen.shapeRenderer.circle(sunX + (rect.width / 2), sunY + (rect.height / 2), 54);
+        Screen.shapeRenderer.end();
+
+        frameBuffer.end();
     }
 
     public void render() {
