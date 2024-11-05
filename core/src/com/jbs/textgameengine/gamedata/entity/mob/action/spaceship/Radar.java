@@ -2,7 +2,7 @@ package com.jbs.textgameengine.gamedata.entity.mob.action.spaceship;
 
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
-import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
+import com.jbs.textgameengine.gamedata.world.planetoid.planet.Planet;
 import com.jbs.textgameengine.gamedata.world.planetoid.Planetoid;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;

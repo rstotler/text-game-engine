@@ -1,8 +1,10 @@
-package com.jbs.textgameengine.gamedata.world.planetoid;
+package com.jbs.textgameengine.gamedata.world.planetoid.planet;
 
 import com.badlogic.gdx.graphics.Color;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.area.Area;
+import com.jbs.textgameengine.gamedata.world.planetoid.Moon;
+import com.jbs.textgameengine.gamedata.world.planetoid.Planetoid;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
@@ -20,6 +22,9 @@ public class Planet extends Planetoid {
 
     public HashMap<String, Moon> moonMap;
     public HashMap<String, Area> areaMap;
+
+    public float atmosphereLevel;
+
     public ArrayList<Room> landingPadList;
 
     public Color skyColor;
@@ -28,7 +33,7 @@ public class Planet extends Planetoid {
     public Color targetSkyColor;
     public boolean switchSkyColorCheck;
 
-    public Planet(Line name, Location location, int distanceFromCenter, int orbitDirection, float axialTilt, int minutesInDay, int minutesInYear) {
+    public Planet(Line name, Location location, int distanceFromCenter, int orbitDirection, float axialTilt, float atmosphereLevel, int minutesInDay, int minutesInYear) {
         super(name, location, distanceFromCenter, orbitDirection, axialTilt, minutesInDay, minutesInYear);
         isPlanet = true;
 
@@ -36,6 +41,9 @@ public class Planet extends Planetoid {
 
         moonMap = new HashMap<>();
         areaMap = new HashMap<>();
+
+        this.atmosphereLevel = atmosphereLevel;
+
         landingPadList = new ArrayList<>();
 
         skyColor = new Color(20/255f, 60/255f, 140/255f, 1);

@@ -11,6 +11,7 @@ import java.util.Random;
 public class Planetoid {
     public static String[][] nameGenVowels = loadNameGenVowels();
     public static int[][] nameGenMatrix = loadNameGenMatrix();
+    public static int AU_DISTANCE = 92598974;
 
     public Line name;
     public ArrayList<String> nameKeyList;
@@ -18,9 +19,9 @@ public class Planetoid {
     public boolean isPlanet;
     public Point coordinates;
 
-    public int distanceFromCenter;
-    public int orbitDirection;
-    public float axialTilt;
+    public int distanceFromCenter; // In Miles
+    public int orbitDirection;     // 1 - Clockwise, -1 - Counter-Clockwise
+    public float axialTilt;        // 0.0 - No Tilt, 100.0 - Full 90.0 Tilt
 
     public int minuteCountDay;
     public int minuteCountYear;
@@ -140,6 +141,18 @@ public class Planetoid {
         }
 
         return stringName;
+    }
+
+    public int getCurrentHoursInYear() {
+        return minuteCountYear / 60;
+    }
+
+    public int getHoursInDay() {
+        return minutesInDay / 60;
+    }
+
+    public int getHoursInYear() {
+        return minutesInYear / 60;
     }
 
     public String toString() {

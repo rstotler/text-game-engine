@@ -14,7 +14,7 @@ import com.jbs.textgameengine.gamedata.world.utility.AreaAndRoomData;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.area.Area;
 import com.jbs.textgameengine.gamedata.world.galaxy.Galaxy;
-import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
+import com.jbs.textgameengine.gamedata.world.planetoid.planet.Planet;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.Screen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.UserInterface;
@@ -25,8 +25,8 @@ import com.jbs.textgameengine.screen.utility.Mouse;
 import java.util.HashMap;
 import java.util.Random;
 
-// 2 - Basic Weather
-// 3 - Basic Plant Life
+// 1 - Basic Weather
+// 2 - Basic Plant Life
 
 public class GameScreen extends Screen {
     public static UserInterface userInterface;

@@ -4,7 +4,8 @@ import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.area.Area;
 import com.jbs.textgameengine.gamedata.world.planetoid.Moon;
-import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
+import com.jbs.textgameengine.gamedata.world.planetoid.Planetoid;
+import com.jbs.textgameengine.gamedata.world.planetoid.planet.Planet;
 import com.jbs.textgameengine.gamedata.world.planetoid.Star;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.gamedata.world.solarsystem.SolarSystem;
@@ -49,7 +50,7 @@ public class Galaxy {
         // Planet - Lapine (365 Days In Year, 1440 Minutes In Day) //
         Line lapineName = new Line("Lapine", "6CONT", "", true, true);
         Location lapineLocation = new Location(galaxyCottonTail, systemLagoMorpha);
-        Planet planetLapine = new Planet(lapineName, lapineLocation, 92598974, -1, 23.45f, 1440, 525600);
+        Planet planetLapine = new Planet(lapineName, lapineLocation, Planetoid.AU_DISTANCE, -1, 23.45f, .10f, 1440, 525600);
         systemLagoMorpha.planetoidList.add(planetLapine);
 
         // Area - Center Of The Universe //
@@ -134,7 +135,7 @@ public class Galaxy {
         // Planet - Seres (670 Days In Year, 1480 Minutes In Day) //
         Line seresName = new Line("Seres", "5CONT", "", true, true);
         Location seresLocation = new Location(galaxyCottonTail, systemLagoMorpha);
-        Planet planetSeres = new Planet(seresName, seresLocation, 142753817, -1, 25.20f, 1480, 991600);
+        Planet planetSeres = new Planet(seresName, seresLocation, 142753817, -1, 25.20f, .01f, 1480, 991600);
         systemLagoMorpha.planetoidList.add(planetSeres);
 
         loadDebugEntities(debugGalaxy);

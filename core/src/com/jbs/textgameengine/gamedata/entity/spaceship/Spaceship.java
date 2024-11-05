@@ -4,7 +4,7 @@ import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.area.Area;
-import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
+import com.jbs.textgameengine.gamedata.world.planetoid.planet.Planet;
 import com.jbs.textgameengine.gamedata.world.planetoid.Planetoid;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
