@@ -43,7 +43,10 @@ public class Area {
         latitude = 0.50f;
 
         currentTemperature = getTemperature();
-        weatherSystem = new WeatherSystem(this);
+        weatherSystem = null;
+        if(location.spaceship == null) {
+            weatherSystem = new WeatherSystem(this);
+        }
     }
 
     public void update() {

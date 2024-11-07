@@ -18,7 +18,7 @@ public class WeatherSystem {
     public WeatherSystem(Area parentArea) {
         this.parentArea = parentArea;
 
-        startTimer = 1;
+        startTimer = new Random().nextInt(700);
         weatherTimer = -1;
         startPrecipitationTimer = -1;
         precipitationTimer = -1;

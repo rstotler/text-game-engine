@@ -5,6 +5,7 @@ import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.entity.spaceship.Spaceship;
+import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
 import com.jbs.textgameengine.gamedata.world.room.door.Door;
 import com.jbs.textgameengine.gamedata.world.room.hiddenexit.HiddenExit;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
@@ -36,6 +37,9 @@ public class Room {
     public ArrayList<Entity> spaceshipList;
     public ArrayList<Entity> itemList;
 
+    public String groundType;
+    public float groundSaturation;
+
     public Room(int index, Line name, Line description, Location location) {
         this.index = index;
         coordinates = new Point(0, 0);
@@ -63,9 +67,38 @@ public class Room {
         mobList = new ArrayList<>();
         spaceshipList = new ArrayList<>();
         itemList = new ArrayList<>();
+
+        groundType = "Dirt";
+        groundSaturation = 0.0f;
     }
 
     public void update() {
+
+        // Update Room Saturation Timers //
+        if(Arrays.asList("Dirt", "Soil").contains(groundType)) {
+            if(!inside
+            && location.area.weatherSystem != null
+            && location.area.weatherSystem.precipitationTimer > 0
+            && location.area.currentTemperature > ((Planet) location.planetoid).getFreezingTemperature()) {
+                groundSaturation += .01f;
+                if(groundSaturation > 1.0) {groundSaturation = 1.0f;}
+            }
+            else {
+                if(groundSaturation > 0) {
+                    groundSaturation -= .005f;
+                    if(groundSaturation < 0.0) {
+                        groundSaturation = 0.0f;
+
+                        // Display Message //
+                        if(GameScreen.player.location.room == this) {
+                            GameScreen.userInterface.console.writeToConsole(new Line("The ground dries up.", "4CONT7CONT6CONT2CONT1DY", "", true, true));
+                        }
+                    }
+                }
+            }
+        }
+
+        // Update Mobs //
         for(int i = mobList.size() - 1; i >= 0; i--) {
             Mob mob = (Mob) mobList.get(i);
             mob.update();
@@ -90,6 +123,19 @@ public class Room {
                 insideString = "(Inside) ";
                 insideColorCode = "1DR6CONT2DR";
                 insideEffectCode = String.valueOf(insideString.length()) + "X";
+            }
+            else if(location.area.weatherSystem != null
+            && location.area.weatherSystem.precipitationTimer > 0) {
+                if(location.area.currentTemperature > ((Planet) location.planetoid).getFreezingTemperature()) {
+                    insideString = "(Raining) ";
+                    insideColorCode = "1DR7SHIAB2DR";
+                    insideEffectCode = "10X";
+                }
+                else {
+                    insideString = "(Snowing) ";
+                    insideColorCode = "1DR7SHIA2DR";
+                    insideEffectCode = "10X";
+                }
             }
 
             Line nameLine = new Line(insideString + name.label, insideColorCode + name.colorCode, insideEffectCode + name.effectCode, false, true);
@@ -323,7 +369,29 @@ public class Room {
     public void displayDark() {
 
         // Name & Underline //
-        Line nameLine = new Line("Darkness..", "1DW1DW1DDW1DDW1DDDW1DDDW1DDDGR1DDDGR1DDDGR1DDDGR", "10FADA", false, true);
+        String insideString = "";
+        String insideColorCode = "";
+        String insideEffectCode = "";
+        if(inside) {
+            insideString = "(Inside) ";
+            insideColorCode = "1DR6CONT2DR";
+            insideEffectCode = String.valueOf(insideString.length()) + "X";
+        }
+        else if(location.area.weatherSystem != null
+        && location.area.weatherSystem.precipitationTimer > 0) {
+            if(location.area.currentTemperature > ((Planet) location.planetoid).getFreezingTemperature()) {
+                insideString = "(Raining) ";
+                insideColorCode = "1DR7SHIAB2DR";
+                insideEffectCode = "10X";
+            }
+            else {
+                insideString = "(Snowing) ";
+                insideColorCode = "1DR7SHIA2DR";
+                insideEffectCode = "10X";
+            }
+        }
+
+        Line nameLine = new Line(insideString + "Darkness..", insideColorCode + "1DW1DW1DDW1DDW1DDDW1DDDW1DDDGR1DDDGR1DDDGR1DDDGR", insideEffectCode + "10FADA", false, true);
         GameScreen.userInterface.console.writeToConsole(nameLine);
         Line underlineLine = new Line(Line.getUnderlineString("Darkness.."), "10ALTADY", "", false, true);
         GameScreen.userInterface.console.writeToConsole(underlineLine);
