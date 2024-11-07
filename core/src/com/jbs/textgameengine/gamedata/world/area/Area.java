@@ -4,8 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.planetoid.Planetoid;
 import com.jbs.textgameengine.gamedata.world.planetoid.Star;
-import com.jbs.textgameengine.gamedata.world.planetoid.planet.Planet;
-import com.jbs.textgameengine.gamedata.world.planetoid.planet.WeatherSystem;
+import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
@@ -23,7 +22,6 @@ public class Area {
     public ArrayList<Room> roomList;
 
     float latitude; // 1.0 - Equator, 0.0 - Pole (Only Affects Weather, Not Day/Night Cycle)
-    int weatherStartTimer;
     public WeatherSystem weatherSystem;
 
     public Area(Line name, Location location) {
@@ -41,40 +39,11 @@ public class Area {
         roomList = new ArrayList<>();
 
         latitude = 0.50f;
-        weatherStartTimer = 1;
-        weatherSystem = null;
+        weatherSystem = new WeatherSystem(this);
     }
 
     public void update() {
-
-        getTemperature();
-
-        // Update Weather Timer //
-        if(weatherSystem == null) {
-            if(weatherStartTimer != -1 && weatherStartTimer > 0) {
-                weatherStartTimer -= 1;
-                if(weatherStartTimer == 0) {
-                    weatherSystem = new WeatherSystem();
-
-                    // Weather Message //
-                    if(GameScreen.player.location.area == this) {
-                        weatherSystem.displayMessage("Weather Start");
-                    }
-                }
-            }
-        }
-        else {
-            weatherSystem.update();
-            if(weatherSystem.timer <= 0) {
-
-                // Weather Message //
-                if(GameScreen.player.location.area == this) {
-                    weatherSystem.displayMessage("Weather Stop");
-                }
-
-                weatherSystem = null;
-            }
-        }
+        weatherSystem.update();
     }
 
     public float getTemperature() {

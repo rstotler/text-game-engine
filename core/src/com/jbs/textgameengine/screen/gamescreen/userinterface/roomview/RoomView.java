@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.jbs.textgameengine.Settings;
 import com.jbs.textgameengine.gamedata.world.Location;
-import com.jbs.textgameengine.gamedata.world.planetoid.planet.Planet;
+import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.gamedata.world.utility.AreaAndRoomData;
 import com.jbs.textgameengine.gamedata.world.utility.TargetRoomData;

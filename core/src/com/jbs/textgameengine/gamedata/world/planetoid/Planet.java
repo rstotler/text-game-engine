@@ -1,4 +1,4 @@
-package com.jbs.textgameengine.gamedata.world.planetoid.planet;
+package com.jbs.textgameengine.gamedata.world.planetoid;
 
 import com.badlogic.gdx.graphics.Color;
 import com.jbs.textgameengine.gamedata.world.Location;
@@ -330,5 +330,9 @@ public class Planet extends Planetoid {
         String timeLineColorCode = "3CONT3CONT10CONT" + String.valueOf(currentHoursString.length()) + "W1DY" + String.valueOf(currentMinutesString.length()) + "W" + amPMColorCode + "1W3CONT" + name.colorCode + "1DY";
 
         return new Line(timeLineLabel, timeLineColorCode, "", true, true);
+    }
+
+    public float getFreezingTemperature() {
+        return 32.0f;
     }
 }

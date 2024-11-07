@@ -5,7 +5,7 @@ import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.area.Area;
 import com.jbs.textgameengine.gamedata.world.planetoid.Moon;
 import com.jbs.textgameengine.gamedata.world.planetoid.Planetoid;
-import com.jbs.textgameengine.gamedata.world.planetoid.planet.Planet;
+import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
 import com.jbs.textgameengine.gamedata.world.planetoid.Star;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.gamedata.world.solarsystem.SolarSystem;
