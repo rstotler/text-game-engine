@@ -476,7 +476,7 @@ public class Get extends Action {
             && multipleItemTypes
             && parentEntity.location.room.itemList.isEmpty()) {
                 if(parentEntity.isPlayer) {
-                    GameScreen.userInterface.console.writeToConsole(new Line("You pick everything up.", "4CONT5CONT11CONT2CONT1DY", "", true, true));
+                    GameScreen.userInterface.console.writeToConsole(new Line("You pick everything up from the ground.", "4CONT5CONT11CONT3CONT5CONT4CONT6CONT1DY", "", true, true));
                 }
             }
 

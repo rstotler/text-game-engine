@@ -2,6 +2,7 @@ package com.jbs.textgameengine.gamedata.world.room;
 
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
+import com.jbs.textgameengine.gamedata.entity.item.type.Seed;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.entity.spaceship.Spaceship;
@@ -39,6 +40,7 @@ public class Room {
 
     public String groundType;
     public float groundSaturation;
+    public ArrayList<Seed> plantedSeedList;
 
     public Room(int index, Line name, Line description, Location location) {
         this.index = index;
@@ -70,6 +72,7 @@ public class Room {
 
         groundType = "Dirt";
         groundSaturation = 0.0f;
+        plantedSeedList = new ArrayList<>();
     }
 
     public void update() {
@@ -344,7 +347,7 @@ public class Room {
                             countString = " (" + countLine.label + ")";
                             countColorCode = "2DR" + countLine.colorCode + "1DR";
                         }
-                        else if(item.isQuantity) {
+                        else if(item.isQuantity && item.quantity > 1) {
                             Line countLine = Utility.insertCommas(item.quantity);
                             countString = " (" + countLine.label + ")";
                             countColorCode = "2DR" + countLine.colorCode + "1DR";

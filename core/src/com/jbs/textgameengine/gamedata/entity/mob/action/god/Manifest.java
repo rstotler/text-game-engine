@@ -27,19 +27,19 @@ public class Manifest extends Action {
 
     public Action getActionFromInput(String input, Mob parentEntity) {
         ArrayList<String> inputList = new ArrayList<>(Arrays.asList(input.split(" ")));
-        ArrayList<String> entityTypeList = new ArrayList<>(Arrays.asList("mob", "item", "general", "gear", "weapon", "firearm", "throwable", "ammo", "magazine", "quiver", "food", "drink"));
+        ArrayList<String> entityTypeList = new ArrayList<>(Arrays.asList("mob", "item", "general", "gear", "weapon", "firearm", "throwable", "ammo", "magazine", "quiver", "food", "drink", "seed"));
 
         if(Arrays.asList("manifest", "manifes", "manife", "manif", "mani", "man").contains(inputList.get(0))) {
             Manifest lookAction = new Manifest(parentEntity);
 
-            // Manifest EntityType # EntityNum //
+            // Manifest EntityType EntityNum # //
             if(inputList.size() == 4
             && entityTypeList.contains(inputList.get(1))
             && Utility.isInteger(inputList.get(2))
             && Utility.isInteger(inputList.get(3))) {
                 lookAction.entityType = inputList.get(1);
-                lookAction.targetCount = Integer.valueOf(inputList.get(2));
-                lookAction.targetNum = Integer.valueOf(inputList.get(3));
+                lookAction.targetNum = Integer.valueOf(inputList.get(2));
+                lookAction.targetCount = Integer.valueOf(inputList.get(3));
                 lookAction.parentEntity = parentEntity;
             }
 
@@ -111,10 +111,10 @@ public class Manifest extends Action {
             }
         }
 
-        // Message - You utter an incantation and some EntityTypes appear in a puff of smoke. //
+        // Message - You utter an incantation and some EntityType appears in a puff of smoke. //
         else if(targetCount > 1) {
             if(parentEntity.isPlayer) {
-                GameScreen.userInterface.console.writeToConsole(new Line("You utter an incantation and some " + entityType + "s appear in a puff of smoke.", "4CONT6CONT3CONT12CONT4CONT5CONT" + String.valueOf(entityType.length() + 2) + "CONT7CONT3CONT2W5CONT3CONT5CONT1DY", "", true, true));
+                GameScreen.userInterface.console.writeToConsole(new Line("You utter an incantation and some " + entityType.toLowerCase() + " appears in a puff of smoke.", "4CONT6CONT3CONT12CONT4CONT5CONT" + String.valueOf(entityType.length() + 1) + "CONT8CONT3CONT2W5CONT3CONT5CONT1DY", "", true, true));
             }
         }
     }
