@@ -3,8 +3,6 @@ package com.jbs.textgameengine.gamedata.world.planetoid;
 import com.badlogic.gdx.graphics.Color;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.area.Area;
-import com.jbs.textgameengine.gamedata.world.planetoid.Moon;
-import com.jbs.textgameengine.gamedata.world.planetoid.Planetoid;
 import com.jbs.textgameengine.gamedata.world.room.Room;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
@@ -334,5 +332,9 @@ public class Planet extends Planetoid {
 
     public float getFreezingTemperature() {
         return 32.0f;
+    }
+
+    public float getEvaporateTemperature() {
+        return 212.0f;
     }
 }

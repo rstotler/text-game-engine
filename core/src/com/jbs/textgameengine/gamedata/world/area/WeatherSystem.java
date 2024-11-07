@@ -13,6 +13,7 @@ public class WeatherSystem {
     public int weatherTimer;
     public int startPrecipitationTimer;
     public int precipitationTimer;
+    public String precipitationType;
 
     public WeatherSystem(Area parentArea) {
         this.parentArea = parentArea;
@@ -21,9 +22,11 @@ public class WeatherSystem {
         weatherTimer = -1;
         startPrecipitationTimer = -1;
         precipitationTimer = -1;
+        precipitationType = "";
     }
 
     public void update() {
+        adjustWeather();
 
         // Start Weather //
         if(startTimer > 0) {
@@ -31,12 +34,16 @@ public class WeatherSystem {
             if(startTimer == 0) {
                 startTimer = -1;
                 startPrecipitationTimer = -1;
-                weatherTimer = 10;
-                if(new Random().nextInt(2) == 0) {
+                weatherTimer = new Random().nextInt(1000) + 60;
+                if(parentArea.currentTemperature < ((Planet) parentArea.location.planetoid).getEvaporateTemperature()
+                && new Random().nextInt(2) == 0) {
                     precipitationTimer = new Random().nextInt((int) (weatherTimer * 1.5));
+                    precipitationType = "Rain";
+                    if(parentArea.currentTemperature <= ((Planet) parentArea.location.planetoid).getFreezingTemperature()) {precipitationType = "Snow";}
                 }
 
-                if(GameScreen.player.location.room.location.area == parentArea) {
+                if(GameScreen.player.location.room.location.area == parentArea
+                && !GameScreen.player.location.room.inside) {
                     displayMessage("Start", true, precipitationTimer != -1);
                 }
             }
@@ -50,46 +57,95 @@ public class WeatherSystem {
 
             // Stop Weather (And Precipitation) //
             if(weatherTimer == 0) {
-                if(GameScreen.player.location.room.location.area == parentArea) {
+                if(GameScreen.player.location.room.location.area == parentArea
+                && !GameScreen.player.location.room.inside) {
                     displayMessage("Stop", true, precipitationTimer != -1);
                 }
 
                 weatherTimer = -1;
                 precipitationTimer = -1;
-                startTimer = 10;
+                precipitationType = "";
+                startTimer = new Random().nextInt(700) + 120;
             }
 
             // Start Precipitation //
             else if(startPrecipitationTimer == 0) {
                 startPrecipitationTimer = -1;
-                precipitationTimer = new Random().nextInt((int) (weatherTimer * 1.5));
 
-                if(GameScreen.player.location.room.location.area == parentArea) {
-                    displayMessage("Start", false, true);
+                if(parentArea.currentTemperature < ((Planet) parentArea.location.planetoid).getEvaporateTemperature()) {
+                    precipitationTimer = new Random().nextInt((int) (weatherTimer * 1.5));
+                    precipitationType = "Rain";
+                    if(parentArea.currentTemperature <= ((Planet) parentArea.location.planetoid).getFreezingTemperature()) {precipitationType = "Snow";}
+
+                    if(GameScreen.player.location.room.location.area == parentArea
+                    && !GameScreen.player.location.room.inside) {
+                        displayMessage("Start", false, true);
+                    }
                 }
             }
 
             // Stop Precipitation Only //
             else if(precipitationTimer == 0) {
-                if(GameScreen.player.location.room.location.area == parentArea) {
+                if(GameScreen.player.location.room.location.area == parentArea
+                && !GameScreen.player.location.room.inside) {
                     displayMessage("Stop", false, true);
                 }
 
                 precipitationTimer = -1;
+                precipitationType = "";
                 startPrecipitationTimer = new Random().nextInt((int) (weatherTimer * 1.5));
             }
         }
     }
 
-    public void displayMessage(String messageType, boolean cloudCheck, boolean precipitationCheck) {
-        float currentTemperature = parentArea.getTemperature();
+    public void adjustWeather() {
 
+        // Evaporate Rain //
+        if(precipitationTimer > 1
+        && parentArea.currentTemperature >= ((Planet) parentArea.location.planetoid).getEvaporateTemperature()) {
+            precipitationTimer = -1;
+
+            // Display Message //
+            if(GameScreen.player.location.room.location.area == parentArea
+            && !GameScreen.player.location.room.inside) {
+                GameScreen.userInterface.console.writeToConsole(new Line("The rain boils away into the air.", "4CONT5SHIAB6CONT5CONT5CONT4CONT3CONT1DY", "", true, true));
+            }
+        }
+
+        // Rain Turn To Snow //
+        else if(precipitationTimer > 1
+        && precipitationType.equals("Rain")
+        && parentArea.currentTemperature <= ((Planet) parentArea.location.planetoid).getFreezingTemperature()) {
+            precipitationType = "Snow";
+
+            // Display Message //
+            if(GameScreen.player.location.room.location.area == parentArea
+            && !GameScreen.player.location.room.inside) {
+                GameScreen.userInterface.console.writeToConsole(new Line("The rain turns into snow.", "4CONT5SHIAB6CONT5CONT4SHIA1DY", "", true, true));
+            }
+        }
+
+        // Snow Turn To Rain //
+        else if(precipitationTimer > 1
+        && precipitationType.equals("Snow")
+        && parentArea.currentTemperature > ((Planet) parentArea.location.planetoid).getFreezingTemperature()) {
+            precipitationType = "Rain";
+
+            // Display Message //
+            if(GameScreen.player.location.room.location.area == parentArea
+            && !GameScreen.player.location.room.inside) {
+                GameScreen.userInterface.console.writeToConsole(new Line("The snow turns into rain.", "4CONT5SHIA6CONT5CONT4SHIAB1DY", "", true, true));
+            }
+        }
+    }
+
+    public void displayMessage(String messageType, boolean cloudCheck, boolean precipitationCheck) {
         String precipitationString = "";
         String precipitationColorCode = "";
         if(precipitationCheck) {
             precipitationString = "rain";
             precipitationColorCode = "4SHIAB";
-            if(currentTemperature <= ((Planet) parentArea.location.planetoid).getFreezingTemperature()) {
+            if(parentArea.currentTemperature <= ((Planet) parentArea.location.planetoid).getFreezingTemperature()) {
                 precipitationString = "snow";
                 precipitationColorCode = "4SHIA";
             }
@@ -108,7 +164,7 @@ public class WeatherSystem {
         else if(messageType.equals("Stop")) {
             precipitationString = "raining";
             precipitationColorCode = "7SHIAB";
-            if(currentTemperature <= ((Planet) parentArea.location.planetoid).getFreezingTemperature()) {
+            if(parentArea.currentTemperature <= ((Planet) parentArea.location.planetoid).getFreezingTemperature()) {
                 precipitationString = "snowing";
                 precipitationColorCode = "7SHIA";
             }

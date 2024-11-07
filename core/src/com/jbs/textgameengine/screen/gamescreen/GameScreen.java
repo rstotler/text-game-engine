@@ -25,8 +25,7 @@ import com.jbs.textgameengine.screen.utility.Mouse;
 import java.util.HashMap;
 import java.util.Random;
 
-// 1 - Basic Plant Life
-// 2 - "Get Gold Ring From All" Bug
+// "Get Gold Ring From All" Bug
 
 public class GameScreen extends Screen {
     public static UserInterface userInterface;

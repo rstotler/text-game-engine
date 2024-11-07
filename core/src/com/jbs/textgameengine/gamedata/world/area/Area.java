@@ -22,6 +22,8 @@ public class Area {
     public ArrayList<Room> roomList;
 
     float latitude; // 1.0 - Equator, 0.0 - Pole (Only Affects Weather, Not Day/Night Cycle)
+
+    public float currentTemperature;
     public WeatherSystem weatherSystem;
 
     public Area(Line name, Location location) {
@@ -39,11 +41,16 @@ public class Area {
         roomList = new ArrayList<>();
 
         latitude = 0.50f;
+
+        currentTemperature = getTemperature();
         weatherSystem = new WeatherSystem(this);
     }
 
     public void update() {
-        weatherSystem.update();
+        currentTemperature = getTemperature();
+        if(weatherSystem != null) {
+            weatherSystem.update();
+        }
     }
 
     public float getTemperature() {
