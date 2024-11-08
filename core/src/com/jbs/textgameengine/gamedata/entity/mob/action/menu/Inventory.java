@@ -20,6 +20,7 @@ public class Inventory extends Action {
         inventoryNameKeyMap.put("Weapons", new ArrayList<>(Arrays.asList("weapons", "weapon", "weapo", "weap")));
         inventoryNameKeyMap.put("Ammo", new ArrayList<>(Arrays.asList("ammo", "amm")));
         inventoryNameKeyMap.put("Food", new ArrayList<>(Arrays.asList("food", "foo")));
+        inventoryNameKeyMap.put("Organic", new ArrayList<>(Arrays.asList("organic", "organi", "organ", "orga", "org")));
 
         return inventoryNameKeyMap;
     }
@@ -108,7 +109,7 @@ public class Inventory extends Action {
                         countString = " (" + countLine.label + ")";
                         countColorCode = "2DR" + countLine.colorCode + "1DR";
                     }
-                    else if(((Item) item).isQuantity) {
+                    else if(((Item) item).isQuantity && ((Item) item).quantity > 1) {
                         Line countLine = Utility.insertCommas(((Item) item).quantity);
                         countString = " (" + countLine.label + ")";
                         countColorCode = "2DR" + countLine.colorCode + "1DR";

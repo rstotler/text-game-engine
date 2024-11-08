@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 // "Get Gold Ring From All" Bug
+// "Get 20 Seed" (Quantity Error: Gets More Than 20)
 
 public class GameScreen extends Screen {
     public static UserInterface userInterface;

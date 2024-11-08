@@ -1,7 +1,6 @@
 package com.jbs.textgameengine.gamedata.entity.mob.action.item.skill;
 
 import com.jbs.textgameengine.gamedata.entity.item.Item;
-import com.jbs.textgameengine.gamedata.entity.item.type.Seed;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
@@ -69,7 +68,7 @@ public class Plant extends Action {
     }
 
     public void initiate() {
-        Seed targetSeed = null;
+        com.jbs.textgameengine.gamedata.entity.item.type.Plant targetSeed = null;
         boolean multipleItemTypes = false;
         boolean cantPlantCheck = false;
         boolean breakCheck = false;
@@ -82,7 +81,8 @@ public class Plant extends Action {
 
                 if((targetEntityString.isEmpty() && allCheck)
                 || (!targetEntityString.isEmpty() && item.nameKeyList.contains(targetEntityString))) {
-                    if(!item.type.equals("Seed")) {
+                    if(!item.type.equals("Plant")
+                    || !((com.jbs.textgameengine.gamedata.entity.item.type.Plant) item).growthStage.equals("Seed")) {
                         cantPlantCheck = true;
                     }
                     else {
@@ -93,15 +93,15 @@ public class Plant extends Action {
                             itemQuantity -= quantityRemainder;
                         }
                         for(int ii = 0; ii < itemQuantity; ii++) {
-                            Item quantityItem = Item.load("Seed", item.id, item.location, 1);
-                            parentEntity.location.room.plantedSeedList.add((Seed) quantityItem);
+                            Item quantityItem = Item.load("Plant", item.id, parentEntity.location, 1);
+                            parentEntity.location.room.plantedPlantList.add((com.jbs.textgameengine.gamedata.entity.item.type.Plant) quantityItem);
                         }
 
                         if(quantityRemainder == 0) {deleteIndexList.add(0, i);}
                         else {item.quantity = quantityRemainder;}
                         plantCount += itemQuantity;
 
-                        if(targetSeed == null) {targetSeed = (Seed) item;}
+                        if(targetSeed == null) {targetSeed = (com.jbs.textgameengine.gamedata.entity.item.type.Plant) item;}
                         else if(targetSeed.id != item.id || !targetSeed.type.equals(item.type)) {multipleItemTypes = true;}
 
                         if(targetCount != -1 && plantCount >= targetCount) {

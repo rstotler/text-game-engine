@@ -2,7 +2,7 @@ package com.jbs.textgameengine.gamedata.world.room;
 
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
-import com.jbs.textgameengine.gamedata.entity.item.type.Seed;
+import com.jbs.textgameengine.gamedata.entity.item.type.Plant;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.entity.spaceship.Spaceship;
@@ -40,7 +40,7 @@ public class Room {
 
     public String groundType;
     public float groundSaturation;
-    public ArrayList<Seed> plantedSeedList;
+    public ArrayList<Plant> plantedPlantList;
 
     public Room(int index, Line name, Line description, Location location) {
         this.index = index;
@@ -72,7 +72,7 @@ public class Room {
 
         groundType = "Dirt";
         groundSaturation = 0.0f;
-        plantedSeedList = new ArrayList<>();
+        plantedPlantList = new ArrayList<>();
     }
 
     public void update() {
@@ -99,6 +99,11 @@ public class Room {
                     }
                 }
             }
+        }
+
+        // Update Planted Plants //
+        for(Plant plant : plantedPlantList) {
+            plant.updateGrowth();
         }
 
         // Update Mobs //

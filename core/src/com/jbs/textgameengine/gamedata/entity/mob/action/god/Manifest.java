@@ -27,46 +27,47 @@ public class Manifest extends Action {
 
     public Action getActionFromInput(String input, Mob parentEntity) {
         ArrayList<String> inputList = new ArrayList<>(Arrays.asList(input.split(" ")));
-        ArrayList<String> entityTypeList = new ArrayList<>(Arrays.asList("mob", "item", "general", "gear", "weapon", "firearm", "throwable", "ammo", "magazine", "quiver", "food", "drink", "seed"));
+        ArrayList<String> entityTypeList = new ArrayList<>(Arrays.asList("mob", "item", "general", "gear", "weapon", "firearm", "throwable", "ammo", "magazine", "quiver", "food", "drink", "plant", "seed"));
 
         if(Arrays.asList("manifest", "manifes", "manife", "manif", "mani", "man").contains(inputList.get(0))) {
-            Manifest lookAction = new Manifest(parentEntity);
+            Manifest manifestAction = new Manifest(parentEntity);
 
             // Manifest EntityType EntityNum # //
             if(inputList.size() == 4
             && entityTypeList.contains(inputList.get(1))
             && Utility.isInteger(inputList.get(2))
             && Utility.isInteger(inputList.get(3))) {
-                lookAction.entityType = inputList.get(1);
-                lookAction.targetNum = Integer.valueOf(inputList.get(2));
-                lookAction.targetCount = Integer.valueOf(inputList.get(3));
-                lookAction.parentEntity = parentEntity;
+                manifestAction.entityType = inputList.get(1);
+                manifestAction.targetNum = Integer.valueOf(inputList.get(2));
+                manifestAction.targetCount = Integer.valueOf(inputList.get(3));
+                manifestAction.parentEntity = parentEntity;
             }
 
             // Manifest EntityType EntityNum //
             else if(inputList.size() == 3
             && entityTypeList.contains(inputList.get(1))
             && Utility.isInteger(inputList.get(2))) {
-                lookAction.entityType = inputList.get(1);
-                lookAction.targetCount = 1;
-                lookAction.targetNum = Integer.valueOf(inputList.get(2));
-                lookAction.parentEntity = parentEntity;
+                manifestAction.entityType = inputList.get(1);
+                manifestAction.targetCount = 1;
+                manifestAction.targetNum = Integer.valueOf(inputList.get(2));
+                manifestAction.parentEntity = parentEntity;
             }
 
             else {
-                lookAction.parentEntity = null;
+                manifestAction.parentEntity = null;
                 if(parentEntity.isPlayer) {
                     GameScreen.userInterface.console.writeToConsole(new Line("Manifest what?", "9CONT4CONT1DY", "", true, true));
                 }
             }
 
             // Entity Type Check (Action Type) //
-            if(lookAction.entityType.length() > 1) {
-                lookAction.entityType = String.valueOf(lookAction.entityType.charAt(0)).toUpperCase() + lookAction.entityType.substring(1);
-                if(lookAction.entityType.equals("Item")) {lookAction.entityType = "General";}
+            if(manifestAction.entityType.length() > 1) {
+                manifestAction.entityType = String.valueOf(manifestAction.entityType.charAt(0)).toUpperCase() + manifestAction.entityType.substring(1);
+                if(manifestAction.entityType.equals("Item")) {manifestAction.entityType = "General";}
+                else if(manifestAction.entityType.equals("Seed")) {manifestAction.entityType = "Plant";}
             }
 
-            return lookAction;
+            return manifestAction;
         }
 
         return null;
