@@ -2,7 +2,7 @@ package com.jbs.textgameengine.gamedata.entity.item;
 
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.type.Drink;
-import com.jbs.textgameengine.gamedata.entity.item.type.Food;
+import com.jbs.textgameengine.gamedata.entity.item.type.food.Food;
 import com.jbs.textgameengine.gamedata.entity.item.type.Gear;
 import com.jbs.textgameengine.gamedata.entity.item.type.Plant;
 import com.jbs.textgameengine.gamedata.entity.item.type.ammo.Ammo;
@@ -231,7 +231,7 @@ public class Item extends Entity {
         }
 
         if(item.containerItemList != null
-        && !(item.type.equals("Magazine") || item.type.equals("Quiver"))) {
+        && !(item.type.equals("Magazine") || item.type.equals("Quiver") || item.type.equals("Plant"))) {
             item.status = "Closed";
         }
 

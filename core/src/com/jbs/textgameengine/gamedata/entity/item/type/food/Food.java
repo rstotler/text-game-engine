@@ -1,4 +1,4 @@
-package com.jbs.textgameengine.gamedata.entity.item.type;
+package com.jbs.textgameengine.gamedata.entity.item.type.food;
 
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.world.Location;
