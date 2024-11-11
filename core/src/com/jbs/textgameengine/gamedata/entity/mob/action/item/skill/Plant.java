@@ -120,7 +120,7 @@ public class Plant extends Action {
 
         // Message - The ground is too hard to plant anything here. //
         if(targetSeed == null
-        && !Arrays.asList("Dirt", "Soil").contains(parentEntity.location.room.groundType)) {
+        && !parentEntity.location.room.canSaturate) {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("The ground is too hard to plant anything here.", "4CONT7CONT3CONT4CONT5CONT3CONT6CONT9CONT4CONT1DY", "", true, true));
             }

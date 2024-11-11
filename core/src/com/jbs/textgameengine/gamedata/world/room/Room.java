@@ -38,7 +38,7 @@ public class Room {
     public ArrayList<Entity> spaceshipList;
     public ArrayList<Entity> itemList;
 
-    public String groundType;
+    public boolean canSaturate;
     public float groundSaturation;
     public ArrayList<Plant> plantedPlantList;
 
@@ -70,7 +70,7 @@ public class Room {
         spaceshipList = new ArrayList<>();
         itemList = new ArrayList<>();
 
-        groundType = "Dirt";
+        canSaturate = true;
         groundSaturation = 0.0f;
         plantedPlantList = new ArrayList<>();
     }
@@ -78,7 +78,7 @@ public class Room {
     public void update() {
 
         // Update Room Saturation Timers //
-        if(Arrays.asList("Dirt", "Soil").contains(groundType)) {
+        if(canSaturate) {
             if(!inside
             && location.area.weatherSystem != null
             && location.area.weatherSystem.precipitationTimer > 0
@@ -107,10 +107,44 @@ public class Room {
         }
 
         // Update Decaying/Rotting Items //
-        for(Entity entity : itemList) {
-            Item item = (Item) entity;
+        Item decayItem = null;
+        ArrayList<Integer> deleteIndexList = new ArrayList<>();
+        for(int i = 0; i < itemList.size(); i++) {
+            Item item = (Item) itemList.get(i);
             if(item.decayPercent >= 0) {
+                item.updateDecay(true);
+                if(item.decayStage.equals("Rotten")
+                && item.decayPercent >= 1.0) {
+                    deleteIndexList.add(0, i);
+                    if(decayItem == null) {decayItem = item;}
+
+                    // Decaying Fruit Leaves Seeds Behind //
+                    if(item.decayIntoSeed) {
+                        int quantity = new Random().nextInt(item.decaySeedMax) + 1;
+                        Item seedItem = Item.load("Plant", item.id, location, quantity);
+                        addItemToRoom(seedItem);
+                    }
+                }
             }
+        }
+        for(int deleteIndex : deleteIndexList) {
+            itemList.remove(deleteIndex);
+        }
+
+        // Display Message - A FoodItem decays and turns to dust. //
+        if(decayItem != null
+        && GameScreen.player.location.room == this
+        && isLit()) {
+            String countString = "";
+            String countColorCode = "";
+            if(deleteIndexList.size() > 1) {
+                Line countLine = Utility.insertCommas(deleteIndexList.size());
+                countString = " (" + countLine.label + ")";
+                countColorCode = "2DR" + countLine.colorCode + "1DR";
+            }
+            String messageLabel = decayItem.prefix + decayItem.name.label + countString + " decays and turns to dust.";
+            String messageColorCode = String.valueOf(decayItem.prefix.length()) + "CONT" + decayItem.name.colorCode + countColorCode + "1W7CONT4CONT6CONT3CONT4CONT1DY";
+            GameScreen.userInterface.console.writeToConsole(new Line(messageLabel, messageColorCode, "", true, true));
         }
 
         // Update Mobs //

@@ -7,6 +7,7 @@ import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
+import com.jbs.textgameengine.screen.utility.Utility;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +40,7 @@ public class Plant extends Item {
         saturationPercent = 0.0f;
         budTimer = -1;
         maxBudCount = 5;
+        decayIntoSeed = true;
     }
 
     public void updateGrowth() {
@@ -58,7 +60,8 @@ public class Plant extends Item {
         // Update Growth Percent/Stage //
         if(!growthStage.equals("Mature")
         && saturationPercent > 0
-        && location.planetoid.isDay()) {
+        && location.planetoid.isDay()
+        && !location.room.inside) {
             growthPercent += .01f;
             if(growthPercent >= 1.0) {
                 growthPercent = 0;
@@ -73,7 +76,7 @@ public class Plant extends Item {
 
                 updateName();
 
-                // Display Message - (Sprout From Ground/Grows Into Next Stage) //
+                // Display Message - Sprout From Ground/Grows Into Next Stage //
                 if(GameScreen.player.location.room == location.room) {
                     if(growthStage.equals("Seedling")) {
                         GameScreen.userInterface.console.writeToConsole(new Line(prefix + name.label + " sprouts out of the ground.", String.valueOf(prefix.length()) + "CONT" + name.colorCode + "1W8CONT4CONT3CONT4CONT6CONT1DY", "", true, true));
@@ -98,16 +101,18 @@ public class Plant extends Item {
         }
 
         // Update Fruit Growth //
+        Fruit rottenFruit = null;
         ArrayList<Integer> removeFruitList = new ArrayList<>();
         for(int i = 0; i < containerItemList.size(); i++) {
             Fruit fruit = (Fruit) containerItemList.get(i);
             if(!(fruit.growthStage.equals("Mature") && growthPercent >= 0)) {
                 if(saturationPercent > 0
-                && location.planetoid.isDay()) {
+                && location.planetoid.isDay()
+                && !location.room.inside) {
                     fruit.updateGrowth();
                 }
             }
-            else {fruit.updateDecay();}
+            else {fruit.updateDecay(false);}
 
             // Rotten Fruit Fall From Plant //
             if(fruit.decayStage.equals("Rotten")
@@ -115,18 +120,27 @@ public class Plant extends Item {
                 fruit.decayPercent = 0.0f;
                 removeFruitList.add(0, i);
                 location.room.addItemToRoom(fruit);
-
-                // Display Message //
-                if(GameScreen.player.location.room == location.room
-                && location.room.isLit()) {
-                    String messageLabel = "A rotten " + fruit.name.label + " falls off of " + masterPrefix.toLowerCase() + plantName.label + " " + plantType.label + ".";
-                    String messageColorCode = "2CONT7CONT" + fruit.name.colorCode + "1W6CONT4CONT3CONT" + String.valueOf(masterPrefix.length()) + "CONT" + plantName.colorCode + "1W" + plantType.colorCode + "1DY";
-                    GameScreen.userInterface.console.writeToConsole(new Line(messageLabel, messageColorCode, "", true, true));
-                }
+                if(rottenFruit == null) {rottenFruit = fruit;}
             }
         }
         for(int deleteIndex : removeFruitList) {
             containerItemList.remove(deleteIndex);
+        }
+
+        // Display Message - A rotten Fruit falls off of Plant. //
+        if(rottenFruit != null
+        && GameScreen.player.location.room == location.room
+        && location.room.isLit()) {
+            String countString = "";
+            String countColorCode = "";
+            if(removeFruitList.size() > 1) {
+                Line countLine = Utility.insertCommas(removeFruitList.size());
+                countString = " (" + countLine.label + ")";
+                countColorCode = "2DR" + countLine.colorCode + "1DR";
+            }
+            String messageLabel = "A rotten " + rottenFruit.name.label + countString + " falls off of " + masterPrefix.toLowerCase() + plantName.label + " " + plantType.label + ".";
+            String messageColorCode = "2CONT7CONT" + rottenFruit.name.colorCode + countColorCode + "1W6CONT4CONT3CONT" + String.valueOf(masterPrefix.length()) + "CONT" + plantName.colorCode + "1W" + plantType.colorCode + "1DY";
+            GameScreen.userInterface.console.writeToConsole(new Line(messageLabel, messageColorCode, "", true, true));
         }
 
         // Update Bud Timer //

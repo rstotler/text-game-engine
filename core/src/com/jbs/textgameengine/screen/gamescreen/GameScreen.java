@@ -27,6 +27,7 @@ import java.util.Random;
 
 // "Get Gold Ring From All" Bug
 // "Get 20 Seed" (Quantity Error: Gets More Than 20)
+// Update "Eat" Command For All Item Pocket Types
 
 public class GameScreen extends Screen {
     public static UserInterface userInterface;

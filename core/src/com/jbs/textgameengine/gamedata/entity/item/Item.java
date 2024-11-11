@@ -27,6 +27,7 @@ public class Item extends Entity {
     public int keyNum;
 
     public boolean isWeapon;
+    public boolean isEdible;
 
     public int quantity;
     public boolean isQuantity;
@@ -38,8 +39,10 @@ public class Item extends Entity {
     public int containerCapacity;
     public float containerMaxWeight;
 
-    public String decayStage;
+    public String decayStage; // Fresh, Spoiled, Rotten
     public float decayPercent;
+    public boolean decayIntoSeed;
+    public int decaySeedMax;
 
     public Item(int id, Location startLocation) {
         super(id, startLocation);
@@ -53,6 +56,7 @@ public class Item extends Entity {
         keyNum = -9999;
 
         isWeapon = false;
+        isEdible = false;
 
         quantity = -1;
         isQuantity = false;
@@ -66,6 +70,34 @@ public class Item extends Entity {
 
         decayStage = "";
         decayPercent = -1.0f;
+        decayIntoSeed = true;
+        decaySeedMax = 3;
+    }
+
+    public void updateDecay(boolean displayMessage) {
+        if(decayPercent >= 0
+        && !(decayStage.equals("Rotten") && decayPercent >= 1.0)) {
+            decayPercent += .01f;
+            if(decayPercent >= 1.0) {
+                if(!decayStage.equals("Rotten")) {decayPercent = 0.0f;}
+
+                String priorStage = decayStage;
+                if(decayStage.equals("Fresh")) {decayStage = "Spoiled";}
+                else if(decayStage.equals("Spoiled")) {decayStage = "Rotten";}
+
+                // Display Message //
+                if(displayMessage
+                && GameScreen.player.location.room == location.room
+                && location.room.isLit()) {
+                    if(decayStage.equals("Fresh")) {
+                        GameScreen.userInterface.console.writeToConsole(new Line(prefix + name.label + " begins to spoil.", String.valueOf(prefix.length()) + "CONT" + name.colorCode + "1W7CONT3CONT5CONT1DY", "", true, true));
+                    }
+                    else if(decayStage.equals("Spoiled")) {
+                        GameScreen.userInterface.console.writeToConsole(new Line(prefix + name.label + " begins emitting a foul odor.", String.valueOf(prefix.length()) + "CONT" + name.colorCode + "1W7CONT9CONT2CONT5CONT4CONT1DY", "", true, true));
+                    }
+                }
+            }
+        }
     }
 
     public float getWeight() {

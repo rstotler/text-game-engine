@@ -56,7 +56,7 @@ public class Eat extends Action {
             if(item.nameKeyList.contains(targetEntityString)) {
                 targetItem = item;
 
-                if(!item.type.equals("Food") && !item.type.equals("Drink")) {
+                if(!item.isEdible) {
                     cantConsumeCheck = true;
                 }
                 else {

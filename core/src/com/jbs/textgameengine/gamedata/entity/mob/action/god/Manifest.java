@@ -4,6 +4,8 @@ import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.entity.mob.action.Action;
+import com.jbs.textgameengine.gamedata.world.area.WeatherSystem;
+import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 import com.jbs.textgameengine.screen.utility.Utility;
@@ -12,12 +14,14 @@ import java.util.*;
 
 public class Manifest extends Action {
     public String entityType;
+    public String entitySubType;
     public int targetNum;
 
     public Manifest(Mob parentEntity) {
         super(parentEntity);
 
         entityType = "";
+        entitySubType = "";
         targetNum = -1;
     }
 
@@ -32,8 +36,23 @@ public class Manifest extends Action {
         if(Arrays.asList("manifest", "manifes", "manife", "manif", "mani", "man").contains(inputList.get(0))) {
             Manifest manifestAction = new Manifest(parentEntity);
 
+            // Manifest Weather WeatherType //
+            if(inputList.size() == 3
+            && inputList.get(1).equals("weather")
+            && Arrays.asList("rain", "snow", "precipitation", "clouds", "cloudy", "stop").contains(inputList.get(2))) {
+                manifestAction.entityType = "Weather";
+                if(inputList.get(2).equals("stop")) {
+                    manifestAction.entitySubType = "Stop";
+                }
+                else if(Arrays.asList("rain", "snow", "precipitation").contains(inputList.get(2))) {
+                    manifestAction.entitySubType = "Precipitation";
+                } else {
+                    manifestAction.entitySubType = "Clouds";
+                }
+            }
+
             // Manifest EntityType EntityNum # //
-            if(inputList.size() == 4
+            else if(inputList.size() == 4
             && entityTypeList.contains(inputList.get(1))
             && Utility.isInteger(inputList.get(2))
             && Utility.isInteger(inputList.get(3))) {
@@ -61,7 +80,8 @@ public class Manifest extends Action {
             }
 
             // Entity Type Check (Action Type) //
-            if(manifestAction.entityType.length() > 1) {
+            if(!manifestAction.entityType.equals("Weather")
+            && manifestAction.entityType.length() > 1) {
                 manifestAction.entityType = String.valueOf(manifestAction.entityType.charAt(0)).toUpperCase() + manifestAction.entityType.substring(1);
                 if(manifestAction.entityType.equals("Item")) {manifestAction.entityType = "General";}
                 else if(manifestAction.entityType.equals("Seed")) {manifestAction.entityType = "Plant";}
@@ -75,9 +95,35 @@ public class Manifest extends Action {
 
     public void initiate() {
         Entity targetEntity = null;
+        String weatherType = "";
+
+        // Manifest Weather //
+        if(entityType.equals("Weather")) {
+            WeatherSystem newWeatherSystem = new WeatherSystem(parentEntity.location.area);
+
+            if(entitySubType.equals("Stop")) {
+                newWeatherSystem.startTimer = -1;
+            }
+            else if(entitySubType.equals("Precipitation")) {
+                newWeatherSystem.startTimer = -1;
+                newWeatherSystem.weatherTimer = 500;
+                newWeatherSystem.precipitationTimer = 500;
+                newWeatherSystem.precipitationType = "Rain";
+                if(parentEntity.location.area.currentTemperature < ((Planet) parentEntity.location.planetoid).getFreezingTemperature()) {
+                    newWeatherSystem.precipitationType = "Snow";
+                }
+                weatherType = newWeatherSystem.precipitationType;
+            }
+            else {
+                newWeatherSystem.startTimer = -1;
+                newWeatherSystem.weatherTimer = 500;
+            }
+
+            parentEntity.location.area.weatherSystem = newWeatherSystem;
+        }
 
         // Manifest Mob //
-        if(entityType.equals("Mob")) {
+        else if(entityType.equals("Mob")) {
             for(int i = 0; i < targetCount; i++) {
                 Entity mob = Mob.load(targetNum, parentEntity.location);
                 if(!mob.name.label.equals("Default Mob")) {
@@ -98,8 +144,32 @@ public class Manifest extends Action {
             }
         }
 
+        // Message - The weather above dissipates. //
+        if(entityType.equals("Weather")
+        && entitySubType.equals("Stop")) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("The weather above dissipates.", "4CONT8CONT6CONT10CONT1DY", "", true, true));
+            }
+        }
+
+        // Message - Clouds roll in overhead. //
+        else if(entityType.equals("Weather")
+        && entitySubType.equals("Clouds")) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("Clouds roll in overhead.", "7CONT5CONT3CONT8CONT1DY", "", true, true));
+            }
+        }
+
+        // Message - It begins to rain/snow. //
+        else if(entityType.equals("Weather")
+        && !weatherType.isEmpty()) {
+            if(parentEntity.isPlayer) {
+                GameScreen.userInterface.console.writeToConsole(new Line("It begins to " + weatherType.toLowerCase() + ".", "3CONT7CONT3CONT" + String.valueOf(weatherType.length()) + "CONT1DY", "", true, true));
+            }
+        }
+
         // Message - You utter an incantation, but nothing happens. //
-        if(targetEntity == null) {
+        else if(targetEntity == null) {
             if(parentEntity.isPlayer) {
                 GameScreen.userInterface.console.writeToConsole(new Line("You utter an incantation, but nothing happens.", "4CONT6CONT3CONT11CONT2DY4CONT8CONT7CONT1DY", "", true, true));
             }
