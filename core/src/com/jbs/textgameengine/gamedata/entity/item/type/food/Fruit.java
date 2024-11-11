@@ -10,7 +10,7 @@ public class Fruit extends Food {
     public String masterPrefix;
     public Line plantName;
 
-    public String growthStage; // Bud, Blossom, Immature, Unripe, Ripe, Overripe, Rotten
+    public String growthStage; // Bud, Blossom, Immature, Unripe, Mature
     public float growthPercent;
 
     public Fruit(int id, Location startLocation, String prefix, Line plantName) {
@@ -25,17 +25,15 @@ public class Fruit extends Food {
     }
 
     public void updateGrowth() {
-        if(!(growthStage.equals("Rotten") && growthPercent >= 1.0)) {
+        if(!(growthStage.equals("Mature") && growthPercent >= 1.0)) {
             growthPercent += .01f;
-            if(growthPercent >= 1.0 && !growthStage.equals("Rotten")) {
+            if(growthPercent >= 1.0) {
                 growthPercent = 0.0f;
 
                 if(growthStage.equals("Bud")) {growthStage = "Blossom";}
                 else if(growthStage.equals("Blossom")) {growthStage = "Immature";}
                 else if(growthStage.equals("Immature")) {growthStage = "Unripe";}
-                else if(growthStage.equals("Unripe")) {growthStage = "Ripe";}
-                else if(growthStage.equals("Ripe")) {growthStage = "Overripe";}
-                else if(growthStage.equals("Overripe")) {growthStage = "Rotten";}
+                else if(growthStage.equals("Unripe")) {growthStage = "Mature";}
 
                 updateName();
             }
@@ -47,7 +45,7 @@ public class Fruit extends Food {
             name.label = plantName.label + " Flower " + growthStage;
             name.colorCode = plantName.colorCode + "1W7CONT" + String.valueOf(growthStage.length()) + "CONT";
         }
-        else if(Arrays.asList("Immature", "Unripe", "Ripe", "Overripe", "Rotten").contains(growthStage)) {
+        else if(Arrays.asList("Immature", "Unripe", "Mature").contains(growthStage)) {
             prefix = masterPrefix;
             name.label = plantName.label;
             name.colorCode = plantName.colorCode;

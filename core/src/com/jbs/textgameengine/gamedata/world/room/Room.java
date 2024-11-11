@@ -106,6 +106,13 @@ public class Room {
             plant.updateGrowth();
         }
 
+        // Update Decaying/Rotting Items //
+        for(Entity entity : itemList) {
+            Item item = (Item) entity;
+            if(item.decayPercent >= 0) {
+            }
+        }
+
         // Update Mobs //
         for(int i = mobList.size() - 1; i >= 0; i--) {
             Mob mob = (Mob) mobList.get(i);

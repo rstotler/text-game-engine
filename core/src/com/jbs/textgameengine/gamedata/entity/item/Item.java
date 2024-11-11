@@ -38,6 +38,9 @@ public class Item extends Entity {
     public int containerCapacity;
     public float containerMaxWeight;
 
+    public String decayStage;
+    public float decayPercent;
+
     public Item(int id, Location startLocation) {
         super(id, startLocation);
         isItem = true;
@@ -60,6 +63,9 @@ public class Item extends Entity {
         ammoTypeList = null;
         containerCapacity = -1;
         containerMaxWeight = -1.0f;
+
+        decayStage = "";
+        decayPercent = -1.0f;
     }
 
     public float getWeight() {

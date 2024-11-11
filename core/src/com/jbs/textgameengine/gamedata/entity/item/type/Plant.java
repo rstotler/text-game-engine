@@ -4,6 +4,7 @@ import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.item.type.food.Fruit;
 import com.jbs.textgameengine.gamedata.world.Location;
+import com.jbs.textgameengine.gamedata.world.planetoid.Planet;
 import com.jbs.textgameengine.screen.gamescreen.GameScreen;
 import com.jbs.textgameengine.screen.gamescreen.userinterface.console.line.Line;
 
@@ -41,22 +42,23 @@ public class Plant extends Item {
     }
 
     public void updateGrowth() {
-        if(location.room.plantedPlantList.contains(this)) {
-            if(location.room.groundSaturation > 0
-            && saturationPercent < 1.0) {
-                saturationPercent += .01f;
-                if(saturationPercent > 1.0) {saturationPercent = 1.0f;}
-            }
-            else if(location.room.groundSaturation == 0
-            && saturationPercent > 0) {
-                saturationPercent -= .01f;
-                if(saturationPercent < 0) {saturationPercent = 0.0f;}
-            }
+
+        // Update Plant Saturation //
+        if(location.room.groundSaturation > 0
+        && saturationPercent < 1.0) {
+            saturationPercent += .01f;
+            if(saturationPercent > 1.0) {saturationPercent = 1.0f;}
+        }
+        else if(location.room.groundSaturation == 0
+        && saturationPercent > 0) {
+            saturationPercent -= .01f;
+            if(saturationPercent < 0) {saturationPercent = 0.0f;}
         }
 
         // Update Growth Percent/Stage //
         if(!growthStage.equals("Mature")
-        && saturationPercent > 0) {
+        && saturationPercent > 0
+        && location.planetoid.isDay()) {
             growthPercent += .01f;
             if(growthPercent >= 1.0) {
                 growthPercent = 0;
@@ -71,7 +73,7 @@ public class Plant extends Item {
 
                 updateName();
 
-                // Display Message //
+                // Display Message - (Sprout From Ground/Grows Into Next Stage) //
                 if(GameScreen.player.location.room == location.room) {
                     if(growthStage.equals("Seedling")) {
                         GameScreen.userInterface.console.writeToConsole(new Line(prefix + name.label + " sprouts out of the ground.", String.valueOf(prefix.length()) + "CONT" + name.colorCode + "1W8CONT4CONT3CONT4CONT6CONT1DY", "", true, true));
@@ -95,24 +97,22 @@ public class Plant extends Item {
             }
         }
 
-        // Update Bud Timer //
-        if(budTimer != -1
-        && containerItemList.size() < maxBudCount) {
-            budTimer -= 1;
-            if(budTimer == 0) {
-                budTimer = 10;
-                containerItemList.add(createFruitBud());
-            }
-        }
-
         // Update Fruit Growth //
         ArrayList<Integer> removeFruitList = new ArrayList<>();
         for(int i = 0; i < containerItemList.size(); i++) {
             Fruit fruit = (Fruit) containerItemList.get(i);
-            fruit.updateGrowth();
+            if(!(fruit.growthStage.equals("Mature") && growthPercent >= 0)) {
+                if(saturationPercent > 0
+                && location.planetoid.isDay()) {
+                    fruit.updateGrowth();
+                }
+            }
+            else {fruit.updateDecay();}
 
-            if(fruit.growthStage.equals("Rotten")
-            && fruit.growthPercent >= 1.0) {
+            // Rotten Fruit Fall From Plant //
+            if(fruit.decayStage.equals("Rotten")
+            && fruit.decayPercent >= 1.0) {
+                fruit.decayPercent = 0.0f;
                 removeFruitList.add(0, i);
                 location.room.addItemToRoom(fruit);
 
@@ -127,6 +127,16 @@ public class Plant extends Item {
         }
         for(int deleteIndex : removeFruitList) {
             containerItemList.remove(deleteIndex);
+        }
+
+        // Update Bud Timer //
+        if(budTimer != -1
+        && containerItemList.size() < maxBudCount) {
+            budTimer -= 1;
+            if(budTimer == 0) {
+                budTimer = 10;
+                containerItemList.add(createFruitBud());
+            }
         }
     }
 
