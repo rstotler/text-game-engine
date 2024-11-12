@@ -3,6 +3,7 @@ package com.jbs.textgameengine.gamedata.world.room;
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.Item;
 import com.jbs.textgameengine.gamedata.entity.item.type.Plant;
+import com.jbs.textgameengine.gamedata.entity.item.type.Seed;
 import com.jbs.textgameengine.gamedata.entity.mob.Mob;
 import com.jbs.textgameengine.gamedata.world.Location;
 import com.jbs.textgameengine.gamedata.entity.spaceship.Spaceship;
@@ -40,7 +41,7 @@ public class Room {
 
     public boolean canSaturate;
     public float groundSaturation;
-    public ArrayList<Plant> plantedPlantList;
+    public ArrayList<Item> plantedPlantList;
 
     public Room(int index, Line name, Line description, Location location) {
         this.index = index;
@@ -101,11 +102,6 @@ public class Room {
             }
         }
 
-        // Update Planted Plants //
-        for(Plant plant : plantedPlantList) {
-            plant.updateGrowth();
-        }
-
         // Update Decaying/Rotting Items //
         Item decayItem = null;
         ArrayList<Integer> deleteIndexList = new ArrayList<>();
@@ -121,7 +117,7 @@ public class Room {
                     // Decaying Fruit Leaves Seeds Behind //
                     if(item.decayIntoSeed) {
                         int quantity = new Random().nextInt(item.decaySeedMax) + 1;
-                        Item seedItem = Item.load("Plant", item.id, location, quantity);
+                        Item seedItem = Item.load("Seed", item.id, location, quantity);
                         addItemToRoom(seedItem);
                     }
                 }
@@ -131,7 +127,7 @@ public class Room {
             itemList.remove(deleteIndex);
         }
 
-        // Display Message - A FoodItem decays and turns to dust. //
+        // Display Message - A FoodItem crumbles and turns to dust. //
         if(decayItem != null
         && GameScreen.player.location.room == this
         && isLit()) {
@@ -142,8 +138,8 @@ public class Room {
                 countString = " (" + countLine.label + ")";
                 countColorCode = "2DR" + countLine.colorCode + "1DR";
             }
-            String messageLabel = decayItem.prefix + decayItem.name.label + countString + " decays and turns to dust.";
-            String messageColorCode = String.valueOf(decayItem.prefix.length()) + "CONT" + decayItem.name.colorCode + countColorCode + "1W7CONT4CONT6CONT3CONT4CONT1DY";
+            String messageLabel = decayItem.prefix + decayItem.name.label + countString + " crumbles and turns to dust.";
+            String messageColorCode = String.valueOf(decayItem.prefix.length()) + "CONT" + decayItem.name.colorCode + countColorCode + "1W9CONT4CONT6CONT3CONT4CONT1DY";
             GameScreen.userInterface.console.writeToConsole(new Line(messageLabel, messageColorCode, "", true, true));
         }
 
@@ -151,6 +147,46 @@ public class Room {
         for(int i = mobList.size() - 1; i >= 0; i--) {
             Mob mob = (Mob) mobList.get(i);
             mob.update();
+        }
+
+        // Update Planted Plants //
+        ArrayList<Integer> seedlingIndexList = new ArrayList<>();
+        for(int i = 0; i < plantedPlantList.size(); i++) {
+            Item plantedItem = plantedPlantList.get(i);
+
+            if(plantedItem.type.equals("Seed")) {((Seed) plantedItem).updateGrowth();}
+            else if(plantedItem.type.equals("Plant")) {((Plant) plantedItem).updateGrowth();}
+
+            if(plantedItem.type.equals("Seed")
+            && ((Seed) plantedItem).growthPercent >= 1.0) {
+                seedlingIndexList.add(0, i);
+            }
+        }
+
+        // Seed Grows Into Seedling (Plant) //
+        Plant targetSeedling = null;
+        boolean multipleSeedTypes = false;
+        for(int seedlingIndex : seedlingIndexList) {
+            Seed targetSeed = (Seed) plantedPlantList.get(seedlingIndex);
+            plantedPlantList.remove(seedlingIndex);
+
+            Plant newSeedling = Plant.load(targetSeed, this.location);
+            plantedPlantList.add(seedlingIndex, newSeedling);
+            itemList.add(0, newSeedling);
+
+            if(targetSeedling == null) {targetSeedling = newSeedling;}
+            else if(targetSeedling.id != newSeedling.id) {multipleSeedTypes = true;}
+        }
+
+        // Display Message - Sprout From Ground //
+        if(targetSeedling != null
+        && GameScreen.player.location.room == location.room) {
+            if(multipleSeedTypes) {
+                GameScreen.userInterface.console.writeToConsole(new Line("Some seedlings sprout from the ground.", "5CONT10CONT7CONT5CONT4CONT6CONT1DY", "", true, true));
+            }
+            else {
+                GameScreen.userInterface.console.writeToConsole(new Line(targetSeedling.prefix + targetSeedling.name.label + " sprouts out of the ground.", String.valueOf(targetSeedling.prefix.length()) + "CONT" + targetSeedling.name.colorCode + "1W8CONT4CONT3CONT4CONT6CONT1DY", "", true, true));
+            }
         }
     }
 

@@ -27,6 +27,8 @@ import java.util.Random;
 
 // "Get Gold Ring From All" Bug
 // "Get 20 Seed" (Quantity Error: Gets More Than 20)
+// "Get Seed" (Error: Gets ALL Quantity Item)
+// Item Quantity Incorrect In Room Description (Dark)
 // Update "Eat" Command For All Item Pocket Types
 
 public class GameScreen extends Screen {

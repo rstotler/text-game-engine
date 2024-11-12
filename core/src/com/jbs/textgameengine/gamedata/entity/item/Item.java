@@ -2,6 +2,7 @@ package com.jbs.textgameengine.gamedata.entity.item;
 
 import com.jbs.textgameengine.gamedata.entity.Entity;
 import com.jbs.textgameengine.gamedata.entity.item.type.Drink;
+import com.jbs.textgameengine.gamedata.entity.item.type.Seed;
 import com.jbs.textgameengine.gamedata.entity.item.type.food.Food;
 import com.jbs.textgameengine.gamedata.entity.item.type.Gear;
 import com.jbs.textgameengine.gamedata.entity.item.type.Plant;
@@ -201,7 +202,7 @@ public class Item extends Entity {
         else if(itemType.equals("Magazine")) {item = Magazine.load(id, startLocation);}
         else if(itemType.equals("Food")) {item = Food.load(id, startLocation);}
         else if(itemType.equals("Drink")) {item = Drink.load(id, startLocation);}
-        else if(itemType.equals("Plant")) {item = Plant.load(id, startLocation);}
+        else if(itemType.equals("Seed")) {item = Seed.load(id, startLocation);}
 
         else {
             item = new Item(id, startLocation);

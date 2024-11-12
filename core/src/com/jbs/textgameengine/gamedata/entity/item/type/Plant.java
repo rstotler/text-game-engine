@@ -17,7 +17,7 @@ public class Plant extends Item {
     public Line plantName;
     public Line plantType;
 
-    public String growthStage; // Seed, Seedling, Sapling, Adult, Mature
+    public String growthStage; // Seedling, Sapling, Adult, Mature
     public float growthPercent;
     public float saturationPercent;
     public float budTimer;
@@ -34,8 +34,9 @@ public class Plant extends Item {
         name = new Line("", "", "", true, true);
         plantName = new Line("", "", "", true, true);
         plantType = new Line("", "", "", true, true);
+        roomDescription = new Line(" is planted in the ground.", "1W3CONT8CONT3CONT4CONT6CONT1DY", "", true, true);
 
-        growthStage = "Seed";
+        growthStage = "Seedling";
         growthPercent = 0.0f;
         saturationPercent = 0.0f;
         budTimer = -1;
@@ -69,32 +70,19 @@ public class Plant extends Item {
                 String previousNameLabel = prefix + name.label;
                 String previousNameColorCode = String.valueOf(prefix.length()) + "CONT" + name.colorCode;
 
-                if(growthStage.equals("Seed")) {growthStage = "Seedling";}
-                else if(growthStage.equals("Seedling")) {growthStage = "Sapling";}
+                if(growthStage.equals("Seedling")) {growthStage = "Sapling";}
                 else if(growthStage.equals("Sapling")) {growthStage = "Adult";}
                 else if(growthStage.equals("Adult")) {growthStage = "Mature";}
 
                 updateName();
 
-                // Display Message - Sprout From Ground/Grows Into Next Stage //
+                // Display Message - Grows Into Next Stage //
                 if(GameScreen.player.location.room == location.room) {
-                    if(growthStage.equals("Seedling")) {
-                        GameScreen.userInterface.console.writeToConsole(new Line(prefix + name.label + " sprouts out of the ground.", String.valueOf(prefix.length()) + "CONT" + name.colorCode + "1W8CONT4CONT3CONT4CONT6CONT1DY", "", true, true));
-                    }
-                    else {
-                        GameScreen.userInterface.console.writeToConsole(new Line(previousNameLabel + " grows into " + prefix.toLowerCase() + name.label + ".", previousNameColorCode + "1W6CONT5CONT" + String.valueOf(prefix.length()) + "CONT" + name.colorCode + "1DY", "", true, true));
-                    }
-                }
-
-                // Add New Seedling To Room Item List //
-                if(growthStage.equals("Seedling")) {
-                    roomDescription = new Line(" is planted in the ground.", "1W3CONT8CONT3CONT4CONT6CONT1DY", "", true, true);
-                    isQuantity = false;
-                    location.room.itemList.add(0, this);
+                    GameScreen.userInterface.console.writeToConsole(new Line(previousNameLabel + " grows into " + prefix.toLowerCase() + name.label + ".", previousNameColorCode + "1W6CONT5CONT" + String.valueOf(prefix.length()) + "CONT" + name.colorCode + "1DY", "", true, true));
                 }
 
                 // Set Adult Plant Bud Timer //
-                else if(growthStage.equals("Adult")) {
+                if(growthStage.equals("Adult")) {
                     budTimer = 10;
                 }
             }
@@ -155,7 +143,7 @@ public class Plant extends Item {
     }
 
     public void updateName() {
-        if(Arrays.asList("Seed", "Seedling", "Sapling").contains(growthStage)) {
+        if(Arrays.asList("Seedling", "Sapling").contains(growthStage)) {
             name.label = plantName.label + " " + plantType.label + " " + growthStage;
             name.colorCode = plantName.colorCode + "1W" + plantType.colorCode + "1W" + String.valueOf(growthStage.length()) + "CONT";
         }
@@ -165,6 +153,7 @@ public class Plant extends Item {
         }
         if(growthStage.equals("Adult")) {prefix = "An ";}
         else if(growthStage.equals("Mature")) {prefix = "A ";}
+        else {prefix = masterPrefix;}
         nameKeyList = Entity.createNameKeyList(prefix.toLowerCase() + name.label.toLowerCase());
     }
 
@@ -175,25 +164,13 @@ public class Plant extends Item {
         return fruit;
     }
 
-    public static Plant load(int id, Location startLocation) {
-        Plant seedItem = new Plant(id, startLocation);
+    public static Plant load(Seed targetSeed, Location startLocation) {
+        Plant plantItem = new Plant(targetSeed.id, startLocation);
+        plantItem.masterPrefix = targetSeed.masterPrefix;
+        plantItem.plantName = targetSeed.plantName;
+        plantItem.plantType = targetSeed.plantType;
+        plantItem.updateName();
 
-        // 001 - An Apple Tree Seed //
-        if(id == 1) {
-            seedItem.prefix = "An ";
-            seedItem.plantName = new Line("Apple", "5SHIAR", "", true, true);
-            seedItem.plantType = new Line("Tree", "4SHIA", "", true, true);
-            seedItem.isQuantity = true;
-        }
-
-        // Default Seed Item //
-        else {
-            seedItem.name = new Line("Default Seed Item", "8CONT5CONT4CONT", "", true, true);
-        }
-
-        seedItem.masterPrefix = seedItem.prefix;
-        seedItem.updateName();
-
-        return seedItem;
+        return plantItem;
     }
 }
